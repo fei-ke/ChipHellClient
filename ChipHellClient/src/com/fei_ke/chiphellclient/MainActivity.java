@@ -12,6 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.apache.http.Header;
+
 public class MainActivity extends Activity {
 
     @Override
@@ -57,6 +62,14 @@ public class MainActivity extends Activity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get("http://www.chiphell.com/forum.php?mobile=yes", new TextHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseBody) {
+                    HtmlParse.parseMainList(responseBody);
+                }
+
+            });
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
