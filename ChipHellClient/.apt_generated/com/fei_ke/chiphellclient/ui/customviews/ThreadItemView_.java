@@ -6,6 +6,7 @@
 package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.fei_ke.chiphellclient.R.id;
 import com.fei_ke.chiphellclient.R.layout;
@@ -66,10 +67,11 @@ public final class ThreadItemView_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        textViewDate = ((TextView) hasViews.findViewById(id.textView_date));
-        textViewBy = ((TextView) hasViews.findViewById(id.textView_by));
         textViewCount = ((TextView) hasViews.findViewById(id.textView_count));
         textViewTitle = ((TextView) hasViews.findViewById(id.textView_title));
+        imageViewIcon = ((ImageView) hasViews.findViewById(id.imageView_icon));
+        textViewBy = ((TextView) hasViews.findViewById(id.textView_by));
+        textViewDate = ((TextView) hasViews.findViewById(id.textView_date));
     }
 
 }

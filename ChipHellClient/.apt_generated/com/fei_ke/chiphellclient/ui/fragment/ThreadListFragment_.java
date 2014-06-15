@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import com.fei_ke.chiphellclient.R.layout;
 import com.fei_ke.chiphellclient.bean.Plate;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
 import org.androidannotations.api.view.OnViewChangedNotifier;
@@ -66,7 +66,7 @@ public final class ThreadListFragment_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        mListViewThreads = ((ListView) hasViews.findViewById(com.fei_ke.chiphellclient.R.id.listView_threads));
+        mListViewThreads = ((PullToRefreshListView) hasViews.findViewById(com.fei_ke.chiphellclient.R.id.listView_threads));
         onAfterViews();
         onAfterViews();
     }

@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.LoginActivity_" />
+        <activity android:name="com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity_" />
     </application>
 
 </manifest>

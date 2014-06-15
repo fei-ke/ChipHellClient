@@ -8,5 +8,8 @@ package com.fei_ke.chiphellclient.constant;
  * @2014-6-14
  */
 public class Constants {
-    public static final String BASE_URL = "http://www.chiphell.com";
+    /**
+     * 论坛地址，注意结尾的斜杠
+     */
+    public static final String BASE_URL = "http://www.chiphell.com/";
 }

@@ -1,6 +1,9 @@
 
 package com.fei_ke.chiphellclient.api;
 
+import android.graphics.Color;
+import android.text.TextUtils;
+
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 
@@ -80,6 +83,27 @@ public class HtmlParse {
                 Element a1 = as.get(0);
                 String url = a1.attr("href");
                 String title = a1.text();
+                String style = a1.attr("style");
+                if (!TextUtils.isEmpty(style)) {
+                    int s = style.indexOf("color");
+                    if (s != -1) {
+                        s += 5;
+                        s = style.indexOf(":", s);
+                        int e = style.indexOf(";", s);
+                        String color = style.substring(s + 1, e);
+                        try {
+                            thread.setTitleColor(Color.parseColor(color.trim()));
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
+                        }
+                    }
+                }
+
+                Elements imgElements = bmc.getElementsByTag("img");
+                if (imgElements != null && imgElements.size() != 0) {
+                    String src = imgElements.get(0).attr("src");
+                    thread.setImgSrc(src);
+                }
 
                 Element a2 = as.get(1);
                 String by = a2.text();

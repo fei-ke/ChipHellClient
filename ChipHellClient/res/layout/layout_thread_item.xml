@@ -7,16 +7,30 @@
     android:orientation="vertical"
     android:padding="10dp" >
 
-    <TextView
-        android:id="@+id/textView_title"
+    <LinearLayout
+        android:id="@+id/layout_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/textView_count"
-        android:maxLines="2"
-        android:textColor="@color/black"
-        tools:text="标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题" />
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/imageView_icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="1dp" />
+
+        <TextView
+            android:id="@+id/textView_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:textColor="@color/black"
+            tools:text="标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView_count"

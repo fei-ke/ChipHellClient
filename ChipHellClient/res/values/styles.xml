@@ -17,8 +17,8 @@
 
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <!-- <item name="android:homeAsUpIndicator">@drawable/home_up_indicator</item> -->
+        <!-- <item name="android:windowIsTranslucent">true</item> -->
+        <item name="android:homeAsUpIndicator">@drawable/home_up_indicator</item>
     </style>
 
     <style name="ActionBarStyle" parent="@android:style/Widget.ActionBar">

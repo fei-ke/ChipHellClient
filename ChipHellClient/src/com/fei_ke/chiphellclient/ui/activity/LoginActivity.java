@@ -3,8 +3,8 @@ package com.fei_ke.chiphellclient.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -14,7 +14,6 @@ import com.fei_ke.chiphellclient.constant.Constants;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.apache.http.cookie.Cookie;
 
 /**
  * 登录页面
@@ -40,6 +39,11 @@ public class LoginActivity extends BaseActivity {
                 return super.shouldOverrideUrlLoading(view, url);
             }
 
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                System.out.println("LoginActivity.onAfterViews().new WebViewClient() {...}.onPageStarted()");
+            }
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);

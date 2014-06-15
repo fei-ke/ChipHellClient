@@ -3,6 +3,9 @@ package com.fei_ke.chiphellclient.ui.fragment;
 
 import android.app.Activity;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
@@ -13,8 +16,10 @@ import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.HtmlParse;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
+import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PlateListAdapter;
+import com.fei_ke.chiphellclient.utils.DensityUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -63,6 +68,13 @@ public class PlateListFragment extends BaseContentFragment {
     @Override
     protected void onAfterViews() {
 
+        WebView webView = new WebView(getActivity());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(DensityUtil.dip2px(getActivity(), 240),
+                AbsListView.LayoutParams.WRAP_CONTENT);
+        webView.setLayoutParams(params);
+        webView.loadUrl(Constants.BASE_URL + "home.php?mod=space&uid=124477&do=profile&mobile=2");
+        mExpandableListView.addHeaderView(webView);
+
         mPlateListAdapter = new PlateListAdapter(mPlateGroups);
         WrapperExpandableListAdapter wrapperAdapter = new WrapperExpandableListAdapter(mPlateListAdapter);
         mExpandableListView.setAdapter(wrapperAdapter);
@@ -80,6 +92,7 @@ public class PlateListFragment extends BaseContentFragment {
             }
         });
         update();
+
     }
 
     public void update() {
@@ -89,8 +102,8 @@ public class PlateListFragment extends BaseContentFragment {
     private void getPlateGroups() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
-
-        client.get("http://www.chiphell.com/forum.php?mobile=yes", new TextHttpResponseHandler() {
+        client.setTimeout(30000);
+        client.get(Constants.BASE_URL + "forum.php?mobile=yes", new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();

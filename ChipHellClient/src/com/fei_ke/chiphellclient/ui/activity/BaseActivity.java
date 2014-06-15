@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -28,21 +29,33 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        if (Build.VERSION.SDK_INT >= 19) {
+        if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
             setTranslucentStatus(true);
             SystemBarTintManager tintManager = new SystemBarTintManager(this);
             tintManager.setStatusBarTintEnabled(true);
             tintManager.setNavigationBarTintEnabled(true);
             tintManager.setNavigationBarAlpha(0);
-//            tintManager.setNavigationBarTintResource(R.color.chh_red);
+            // tintManager.setNavigationBarTintResource(R.color.chh_red);
             tintManager.setStatusBarTintResource(R.color.chh_red);
         }
+        initActionBar();
+    }
+
+    private void initActionBar() {
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
 
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @TargetApi(19)

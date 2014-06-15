@@ -1,6 +1,7 @@
 
 package com.fei_ke.chiphellclient.bean;
 
+
 /**
  * 帖子列表item
  * 
@@ -14,6 +15,16 @@ public class Thread extends BaseBean {
     String timeAndCount;
     String date;
     String count;
+    String imgSrc;
+    int titleColor;
+
+    public String getImgSrc() {
+        return imgSrc;
+    }
+
+    public void setImgSrc(String imgSrc) {
+        this.imgSrc = imgSrc;
+    }
 
     public String getTitle() {
         return title;
@@ -49,7 +60,7 @@ public class Thread extends BaseBean {
             String[] s = timeAndCount.trim().split(" ");
             date = s[1];
             count = s[s.length - 1];
-            System.out.println(date+" "+count);
+            System.out.println(date + " " + count);
         }
     }
 
@@ -68,6 +79,14 @@ public class Thread extends BaseBean {
 
     public void setTimeAndCount(String timeAndCount) {
         this.timeAndCount = timeAndCount;
+    }
+
+    public int getTitleColor() {
+        return titleColor;
+    }
+
+    public void setTitleColor(int titleColor) {
+        this.titleColor = titleColor;
     }
 
     @Override

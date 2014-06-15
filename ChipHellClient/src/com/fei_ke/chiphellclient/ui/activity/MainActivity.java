@@ -21,13 +21,21 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+/**
+ * 主界面
+ * 
+ * @author 杨金阳
+ * @2014-6-15
+ */
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
 
     @ViewById(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
+
     PlateListFragment mPlateListFragment;
+
     ThreadListFragment mPostsListFragment;
 
     private MenuItem menuItemRefresh;
@@ -48,6 +56,7 @@ public class MainActivity extends BaseActivity {
                         .replace(R.id.content_frame, mPostsListFragment)
                         .commit();
                 mDrawerLayout.closeDrawers();
+                setTitle(plate.getTitle());
             }
         });
 
@@ -111,7 +120,11 @@ public class MainActivity extends BaseActivity {
                 if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                     mPlateListFragment.onRefresh();
                 } else {
-                    mPostsListFragment.onRefresh();
+                    if (mPostsListFragment != null) {
+                        mPostsListFragment.onRefresh();
+                    } else {
+                        mDrawerLayout.openDrawer(GravityCompat.START);
+                    }
                 }
                 return true;
             case R.id.action_settings:

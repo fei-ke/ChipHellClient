@@ -51,11 +51,19 @@ public class ThreadListAdapter extends BaseAdapter {
     public void update(List<Thread> threads) {
         if (mThreads == null) {
             mThreads = new ArrayList<Thread>();
-        } else {
-            mThreads.clear();
-        }
+        }/*
+          * else {
+          * mThreads.clear();
+          * }
+          */
         mThreads.addAll(threads);
         notifyDataSetChanged();
+    }
+
+    public void clear() {
+        if (mThreads != null) {
+            mThreads.clear();
+        }
     }
 
 }
