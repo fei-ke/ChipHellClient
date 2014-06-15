@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center" >
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="25dip"
+        android:layout_gravity="left"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="15dp"
+        android:layout_height="25dip"
+        android:indeterminateDrawable="@drawable/rotation_refresh"
+        android:indeterminateDuration="@android:integer/config_longAnimTime"
+        android:interpolator="@android:anim/linear_interpolator"
+        android:indeterminate="true" />
+
+</FrameLayout>
