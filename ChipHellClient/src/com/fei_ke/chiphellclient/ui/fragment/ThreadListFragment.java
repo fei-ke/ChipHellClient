@@ -40,7 +40,7 @@ import java.util.List;
  * @author 杨金阳
  * @2014-6-14
  */
-@EFragment(R.layout.fragment_posts_list)
+@EFragment(R.layout.fragment_thread_list)
 public class ThreadListFragment extends BaseContentFragment implements OnItemClickListener {
     @ViewById(R.id.listView_threads)
     PullToRefreshListView mListViewThreads;
@@ -114,7 +114,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
         client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
 
         RequestParams param = new RequestParams("page", String.valueOf(page));
-        client.get(Constants.BASE_URL + mPlate.getUrl(), param, new TextHttpResponseHandler() {
+        client.get(mPlate.getUrl(), param, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
@@ -123,7 +123,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseBody) {
-                List<Thread> threads = HtmlParse.parsePostsList(responseBody);
+                List<Thread> threads = HtmlParse.parseThreadList(responseBody);
                 if (page == 1) {
                     mThreadListAdapter.clear();
                 }

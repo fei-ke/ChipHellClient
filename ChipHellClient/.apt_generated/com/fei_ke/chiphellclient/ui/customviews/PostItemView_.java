@@ -6,6 +6,7 @@
 package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.fei_ke.chiphellclient.R.id;
@@ -23,21 +24,21 @@ import org.androidannotations.api.view.OnViewChangedNotifier;
  * 
  */
 @SuppressWarnings("unused")
-public final class ThreadItemView_
-    extends ThreadItemView
+public final class PostItemView_
+    extends PostItemView
     implements HasViews, OnViewChangedListener
 {
 
     private boolean alreadyInflated_ = false;
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
 
-    public ThreadItemView_(Context context) {
+    public PostItemView_(Context context) {
         super(context);
         init_();
     }
 
-    public static ThreadItemView build(Context context) {
-        ThreadItemView_ instance = new ThreadItemView_(context);
+    public static PostItemView build(Context context) {
+        PostItemView_ instance = new PostItemView_(context);
         instance.onFinishInflate();
         return instance;
     }
@@ -53,7 +54,7 @@ public final class ThreadItemView_
     public void onFinishInflate() {
         if (!alreadyInflated_) {
             alreadyInflated_ = true;
-            inflate(getContext(), layout.layout_thread_item, this);
+            inflate(getContext(), layout.layout_post_item, this);
             onViewChangedNotifier_.notifyViewChanged(this);
         }
         super.onFinishInflate();
@@ -67,11 +68,10 @@ public final class ThreadItemView_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        textViewCount = ((TextView) hasViews.findViewById(id.textView_count));
-        textViewTitle = ((TextView) hasViews.findViewById(id.textView_title));
-        textViewBy = ((TextView) hasViews.findViewById(id.textView_by));
-        textViewDate = ((TextView) hasViews.findViewById(id.textView_date));
-        imageViewIcon = ((ImageView) hasViews.findViewById(id.imageView_icon));
+        textViewContent = ((TextView) hasViews.findViewById(id.textView_content));
+        webViewContent = ((WebView) hasViews.findViewById(id.webView_content));
+        imageViewAvatar = ((ImageView) hasViews.findViewById(id.imageView_avatar));
+        init();
     }
 
 }

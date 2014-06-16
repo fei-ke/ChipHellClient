@@ -23,21 +23,21 @@ import org.androidannotations.api.view.OnViewChangedNotifier;
  * 
  */
 @SuppressWarnings("unused")
-public final class ThreadItemView_
-    extends ThreadItemView
+public final class UserView_
+    extends UserView
     implements HasViews, OnViewChangedListener
 {
 
     private boolean alreadyInflated_ = false;
     private final OnViewChangedNotifier onViewChangedNotifier_ = new OnViewChangedNotifier();
 
-    public ThreadItemView_(Context context) {
+    public UserView_(Context context) {
         super(context);
         init_();
     }
 
-    public static ThreadItemView build(Context context) {
-        ThreadItemView_ instance = new ThreadItemView_(context);
+    public static UserView build(Context context) {
+        UserView_ instance = new UserView_(context);
         instance.onFinishInflate();
         return instance;
     }
@@ -53,7 +53,7 @@ public final class ThreadItemView_
     public void onFinishInflate() {
         if (!alreadyInflated_) {
             alreadyInflated_ = true;
-            inflate(getContext(), layout.layout_thread_item, this);
+            inflate(getContext(), layout.layout_user, this);
             onViewChangedNotifier_.notifyViewChanged(this);
         }
         super.onFinishInflate();
@@ -67,11 +67,9 @@ public final class ThreadItemView_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        textViewCount = ((TextView) hasViews.findViewById(id.textView_count));
-        textViewTitle = ((TextView) hasViews.findViewById(id.textView_title));
-        textViewBy = ((TextView) hasViews.findViewById(id.textView_by));
-        textViewDate = ((TextView) hasViews.findViewById(id.textView_date));
-        imageViewIcon = ((ImageView) hasViews.findViewById(id.imageView_icon));
+        textViewName = ((TextView) hasViews.findViewById(id.textView_name));
+        textViewInfo = ((TextView) hasViews.findViewById(id.textView_info));
+        imageViewAvatar = ((ImageView) hasViews.findViewById(id.imageView_avatar));
     }
 
 }

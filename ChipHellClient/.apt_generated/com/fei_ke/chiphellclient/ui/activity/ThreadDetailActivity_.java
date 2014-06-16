@@ -13,10 +13,10 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.webkit.WebView;
 import com.fei_ke.chiphellclient.R.id;
 import com.fei_ke.chiphellclient.R.layout;
 import com.fei_ke.chiphellclient.bean.Thread;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import org.androidannotations.api.SdkVersionHelper;
 import org.androidannotations.api.view.HasViews;
 import org.androidannotations.api.view.OnViewChangedListener;
@@ -84,8 +84,7 @@ public final class ThreadDetailActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        mWebView = ((WebView) hasViews.findViewById(id.webView));
-        onAfterViews();
+        mRefreshListView = ((PullToRefreshListView) hasViews.findViewById(id.listView_post));
         onAfterViews();
     }
 

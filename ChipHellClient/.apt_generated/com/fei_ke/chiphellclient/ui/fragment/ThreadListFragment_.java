@@ -44,7 +44,7 @@ public final class ThreadListFragment_
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contentView_ = super.onCreateView(inflater, container, savedInstanceState);
         if (contentView_ == null) {
-            contentView_ = inflater.inflate(layout.fragment_posts_list, container, false);
+            contentView_ = inflater.inflate(layout.fragment_thread_list, container, false);
         }
         return contentView_;
     }

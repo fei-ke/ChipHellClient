@@ -10,12 +10,17 @@ import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Thread;
-import com.fei_ke.chiphellclient.constant.Constants;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
+/**
+ * 帖子列表的一个item
+ * 
+ * @author 杨金阳
+ * @2014-6-16
+ */
 @EViewGroup(R.layout.layout_thread_item)
 public class ThreadItemView extends FrameLayout {
     @ViewById(R.id.textView_title)
@@ -51,7 +56,7 @@ public class ThreadItemView extends FrameLayout {
             imageViewIcon.setVisibility(GONE);
         } else {
             imageViewIcon.setVisibility(VISIBLE);
-            ImageLoader.getInstance().displayImage(Constants.BASE_URL + imgSrc, imageViewIcon);
+            ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon);
         }
         if (thread.getTitleColor() != 0) {
             textViewTitle.setTextColor(thread.getTitleColor());
