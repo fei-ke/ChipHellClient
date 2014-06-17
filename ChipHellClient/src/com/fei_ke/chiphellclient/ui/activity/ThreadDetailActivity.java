@@ -11,6 +11,7 @@ import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.constant.Post;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
@@ -38,7 +39,7 @@ public class ThreadDetailActivity extends BaseActivity {
     PostListAdapter mPostListAdapter;
     @Extra
     Thread mThread;
-
+    int mPage = 1;
     private boolean mIsFreshing;
 
     public static Intent getStartIntent(Context context, Thread thread) {
@@ -47,14 +48,28 @@ public class ThreadDetailActivity extends BaseActivity {
 
     @Override
     protected void onAfterViews() {
-        mRefreshListView.setMode(Mode.DISABLED);
+        // mRefreshListView.setMode(Mode.DISABLED);
         
         mPostListAdapter = new PostListAdapter();
         mRefreshListView.setAdapter(mPostListAdapter);
         setTitle(mThread.getTitle());
+        
+        mRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
+
+            @Override
+            public void onLastItemVisible() {
+                if (!mIsFreshing) {
+                    getThreadList(++mPage);
+                }
+            }
+        });
+        
+        getThreadList();
+    }
+    private void getThreadList() {
+        mPage = 1;
         getThreadList(1);
     }
-
     private void getThreadList(final int page) {
         mIsFreshing = true;
         AsyncHttpClient client = new AsyncHttpClient();

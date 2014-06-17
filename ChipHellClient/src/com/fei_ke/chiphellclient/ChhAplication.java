@@ -34,9 +34,9 @@ public class ChhAplication extends Application {
 
         initImageLoader();
 
-        brandGlowEffect(this,  getResources().getColor(R.color.chh_red));
-        
-    setTheme(R.style.AppBaseTheme);
+        brandGlowEffect(this, getResources().getColor(R.color.chh_red));
+
+        setTheme(R.style.AppBaseTheme);
     }
 
     public String getCookie() {
@@ -51,6 +51,9 @@ public class ChhAplication extends Application {
     private void initImageLoader() {
         DisplayImageOptions defaultDisplayImageOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true).cacheOnDisc(true)
+                .showImageForEmptyUri(R.drawable.logo)
+                .showImageOnFail(R.drawable.logo)
+                .showImageOnLoading(R.drawable.logo)
                 // .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)

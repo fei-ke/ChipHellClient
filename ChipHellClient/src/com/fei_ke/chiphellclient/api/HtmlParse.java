@@ -170,6 +170,9 @@ public class HtmlParse {
         user.setName(elementUser.getElementsByClass("name").first().text());
         user.setInfo(elementUser.getElementsByClass("user_box").html());
         System.out.println(user);
+
+        String btn_exit = document.getElementsByClass("btn_exit").first().html();
+        System.out.println(btn_exit);
         return user;
     }
 }

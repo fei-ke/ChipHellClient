@@ -2,7 +2,14 @@
 package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.Html.ImageGetter;
+import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -15,8 +22,11 @@ import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.constant.Post;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
@@ -55,6 +65,7 @@ public class PostItemView extends FrameLayout {
                 return true;
             }
         });
+        webViewContent.setWebChromeClient(new WebChromeClient());
 
         WebSettings settings = webViewContent.getSettings();
         settings.setBuiltInZoomControls(true);
@@ -67,9 +78,67 @@ public class PostItemView extends FrameLayout {
 
     public void bindValue(Post post) {
         ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar);
-        webViewContent.loadDataWithBaseURL(/* "file:///android_asset/" */Constants.BASE_URL, post.getContent(), "text/html", "utf-8",
-                null);
-        // textViewContent.setText(Html.fromHtml(post.getContent()));
+        // webViewContent.loadDataWithBaseURL(/* "file:///android_asset/" */Constants.BASE_URL, post.getContent(), "text/html", "utf-8",
+        // null);
+        loadContent(post);
     }
 
+    // @Background
+    void loadContent(Post post) {
+        textViewContent.setText(Html.fromHtml(post.getContent(), new ImageGetter() {
+
+            @Override
+            public Drawable getDrawable(String source) {
+                if (!source.startsWith("http:")) {
+                    source = Constants.BASE_URL + source;
+                }
+                return getContext().getResources().getDrawable(R.drawable.logo);
+                // return new UrlDrawable(source, textViewContent);
+            }
+        }, null));
+    }
+
+    public static class UrlDrawable extends BitmapDrawable {
+        protected Drawable drawable;
+        View container;
+
+        @Override
+        public void draw(Canvas canvas) {
+            // override the draw to facilitate refresh function later
+            if (drawable != null) {
+                drawable.draw(canvas);
+            }
+        }
+
+        public UrlDrawable(String url, View container) {
+            this.container = container;
+            setBounds(0, 0, 30, 30);
+            ImageLoader.getInstance().loadImage(url, new ImageLoadingListener() {
+
+                @Override
+                public void onLoadingStarted(String arg0, View arg1) {
+                }
+
+                @Override
+                public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+                }
+
+                @Override
+                public void onLoadingComplete(String arg0, View arg1, Bitmap bitmap) {
+                    BitmapDrawable drawable = new BitmapDrawable(bitmap);
+                    setBounds(0, 0, 0 + bitmap.getWidth(), 0
+                            + bitmap.getHeight());
+                    UrlDrawable.this.drawable = drawable;
+
+                    // redraw the image by invalidating the container
+                    UrlDrawable.this.container.invalidate();
+                }
+
+                @Override
+                public void onLoadingCancelled(String arg0, View arg1) {
+
+                }
+            });
+        }
+    }
 }
