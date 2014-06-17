@@ -11,15 +11,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Plate;
+import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.apache.http.Header;
 
 /**
  * 主界面
@@ -131,6 +137,9 @@ public class MainActivity extends BaseActivity {
                 Intent intent = LoginActivity.getStartIntent(this);
                 startActivity(intent);
                 break;
+            case R.id.action_test:
+                test();
+                break;
             default:
                 break;
         }
@@ -156,4 +165,21 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    void test() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
+        String url = Constants.BASE_URL + "forum.php?mod=post&action=reply&fid=201&tid=1058176&replysubmit=yes&mobile=yes";
+        RequestParams param = new RequestParams();
+        param.add("message", "您当前的访问请求当中含有非法字符，已经被系统拒绝");
+        param.add("replysubmit", "回复");
+        param.add("formhash", "ccb13184");
+        client.post(url, param, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
+                super.onSuccess(statusCode, headers, responseBody);
+                System.out.println(responseBody);
+            }
+        });
+
+    }
 }

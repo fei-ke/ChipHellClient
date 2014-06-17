@@ -21,6 +21,7 @@
         android:layout_toRightOf="@id/imageView_avatar" />
 
     <TextView
+        android:autoLink="web"
         android:id="@+id/textView_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
