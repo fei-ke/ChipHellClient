@@ -22,11 +22,14 @@ import com.fei_ke.chiphellclient.ui.adapter.PlateListAdapter;
 import com.fei_ke.chiphellclient.ui.customviews.UserView;
 import com.fei_ke.chiphellclient.utils.DensityUtil;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
+import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +78,8 @@ public class PlateListFragment extends BaseContentFragment {
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
+        // CookieStore cookieStore = new PersistentCookieStore(getActivity());
+        // client.setCookieStore(cookieStore);
         client.get(Constants.BASE_URL + "home.php?mod=space&mobile=2", new TextHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseBody) {
@@ -118,6 +123,8 @@ public class PlateListFragment extends BaseContentFragment {
     private void getPlateGroups() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
+        // CookieStore cookieStore = new PersistentCookieStore(getActivity());
+        // client.setCookieStore(cookieStore);
         client.setTimeout(30000);
         client.get(Constants.BASE_URL + "forum.php?mobile=yes", new TextHttpResponseHandler() {
             @Override

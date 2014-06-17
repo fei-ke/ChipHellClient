@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginRight="3dp"
         android:layout_toLeftOf="@+id/textView_count"
         android:orientation="horizontal" >
 

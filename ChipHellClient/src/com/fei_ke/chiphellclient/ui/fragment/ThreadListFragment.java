@@ -23,6 +23,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleLis
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -31,6 +32,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 import org.apache.http.Header;
+import org.apache.http.client.CookieStore;
 
 import java.util.List;
 
@@ -112,7 +114,8 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
         mIsFreshing = true;
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
-
+        // CookieStore cookieStore = new PersistentCookieStore(getActivity());
+        // client.setCookieStore(cookieStore);
         RequestParams param = new RequestParams("page", String.valueOf(page));
         client.get(mPlate.getUrl(), param, new TextHttpResponseHandler() {
             @Override

@@ -8,9 +8,9 @@ package com.fei_ke.chiphellclient.bean;
  * @2014-6-16
  */
 public class User {
-    private String avatarUrl;
-    private String name;
-    private String info;
+    private String avatarUrl = "";
+    private String name = "";
+    private String info = "";
 
     public String getAvatarUrl() {
         return avatarUrl;

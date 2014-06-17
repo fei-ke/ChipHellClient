@@ -163,16 +163,21 @@ public class HtmlParse {
 
     public static User parseUserInfo(String responseBody) {
         User user = new User();
-        Document document = Jsoup.parse(responseBody);
-        Element elementUser = document.getElementsByClass("userinfo").first();
-        Element elementAvatar = elementUser.getElementsByTag("img").first();
-        user.setAvatarUrl(elementAvatar.attr("src"));
-        user.setName(elementUser.getElementsByClass("name").first().text());
-        user.setInfo(elementUser.getElementsByClass("user_box").html());
-        System.out.println(user);
+        try {
 
-        String btn_exit = document.getElementsByClass("btn_exit").first().html();
-        System.out.println(btn_exit);
+            Document document = Jsoup.parse(responseBody);
+            Element elementUser = document.getElementsByClass("userinfo").first();
+            Element elementAvatar = elementUser.getElementsByTag("img").first();
+            user.setAvatarUrl(elementAvatar.attr("src"));
+            user.setName(elementUser.getElementsByClass("name").first().text());
+            user.setInfo(elementUser.getElementsByClass("user_box").html());
+            System.out.println(user);
+
+            String btn_exit = document.getElementsByClass("btn_exit").first().html();
+            System.out.println(btn_exit);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return user;
     }
 }
