@@ -67,11 +67,11 @@ public final class ThreadItemView_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
+        textViewDate = ((TextView) hasViews.findViewById(id.textView_date));
         textViewCount = ((TextView) hasViews.findViewById(id.textView_count));
+        imageViewIcon = ((ImageView) hasViews.findViewById(id.imageView_icon));
         textViewTitle = ((TextView) hasViews.findViewById(id.textView_title));
         textViewBy = ((TextView) hasViews.findViewById(id.textView_by));
-        textViewDate = ((TextView) hasViews.findViewById(id.textView_date));
-        imageViewIcon = ((ImageView) hasViews.findViewById(id.imageView_icon));
     }
 
 }

@@ -68,9 +68,9 @@ public final class PostItemView_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        textViewContent = ((TextView) hasViews.findViewById(id.textView_content));
         webViewContent = ((WebView) hasViews.findViewById(id.webView_content));
         imageViewAvatar = ((ImageView) hasViews.findViewById(id.imageView_avatar));
+        textViewContent = ((TextView) hasViews.findViewById(id.textView_content));
         init();
     }
 
