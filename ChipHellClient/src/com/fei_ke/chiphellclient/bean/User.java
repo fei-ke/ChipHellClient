@@ -11,6 +11,7 @@ public class User {
     private String avatarUrl = "";
     private String name = "";
     private String info = "";
+    private String formHash;
 
     public String getAvatarUrl() {
         return avatarUrl;

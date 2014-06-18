@@ -19,6 +19,7 @@ import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PlateListAdapter;
 import com.fei_ke.chiphellclient.ui.customviews.UserView;
 import com.fei_ke.chiphellclient.utils.DensityUtil;
+import com.fei_ke.chiphellclient.utils.LogMessage;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -35,13 +36,15 @@ import java.util.List;
 @EFragment(R.layout.fragment_plate_list)
 public class PlateListFragment extends BaseContentFragment {
 
+    private static final String TAG = "PlateListFragment";
+
     @ViewById(R.id.expandableList_plates)
     FloatingGroupExpandableListView mExpandableListView;
-    
+
     PlateListAdapter mPlateListAdapter;
     List<PlateGroup> mPlateGroups = new ArrayList<PlateGroup>();
     OnPlateClickListener onPlateClickListener;
-
+    UserView mUserView;
     MainActivity mMainActivity;
 
     public static PlateListFragment getInstance() {
@@ -65,19 +68,10 @@ public class PlateListFragment extends BaseContentFragment {
     @Override
     protected void onAfterViews() {
 
-        final UserView userView = UserView.getInstance(getActivity());
+        mUserView = UserView.getInstance(getActivity());
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(DensityUtil.dip2px(getActivity(), 240),
                 AbsListView.LayoutParams.WRAP_CONTENT);
-
-        ChhApi api = new ChhApi();
-        api.getUserInfo(new ApiCallBack<User>() {
-            @Override
-            public void onSuccess(User result) {
-                userView.bindValue(result);
-            }
-        });
-
-        mExpandableListView.addHeaderView(userView);
+        mExpandableListView.addHeaderView(mUserView);
 
         mPlateListAdapter = new PlateListAdapter(mPlateGroups);
         WrapperExpandableListAdapter wrapperAdapter = new WrapperExpandableListAdapter(mPlateListAdapter);
@@ -107,6 +101,14 @@ public class PlateListFragment extends BaseContentFragment {
     private void getPlateGroups() {
 
         ChhApi api = new ChhApi();
+        api.getUserInfo(new ApiCallBack<User>() {
+            @Override
+            public void onSuccess(User result) {
+                LogMessage.d(TAG, result);
+                mUserView.bindValue(result);
+            }
+        });
+
         api.getPlateGroups(new ApiCallBack<List<PlateGroup>>() {
             @Override
             public void onSuccess(List<PlateGroup> result) {

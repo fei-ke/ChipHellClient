@@ -80,16 +80,17 @@ public class ChhApi {
 
         });
     }
+
     /**
      * 获取回复列表
      * 
-     * @param plate 版块
+     * @param thread 帖子
      * @param page 页码
      * @param apiCallBack
      */
     public void getPostList(Thread thread, int page, ApiCallBack<List<Post>> apiCallBack) {
         RequestParams param = new RequestParams("page", page);
-        param.add("mobile", 2);
+        param.add("mobile", 2);// 回帖列表使用触屏版来解析
         getAsyncHttpClient().get(thread.getUrl(), param, new ApiResponsHandler<List<Post>>(apiCallBack) {
 
             @Override
@@ -102,10 +103,27 @@ public class ChhApi {
         });
     }
 
+    public void reply(String fid, String tid, String formhash, String message, ApiCallBack<String> apiCallBack) {
+        String url = Constants.BASE_URL + "forum.php?mod=post&action=reply&replysubmit=yes&mobile=yes";
+        RequestParams param = new RequestParams();
+        param.add("message", message);
+        param.add("fid", fid);
+        param.add("tid", tid);
+        param.add("formhash", formhash);
+        getAsyncHttpClient().post(url, param, new ApiResponsHandler<String>(apiCallBack) {
+
+            @Override
+            public String onSuccessThenParse(String responseString) {
+                return responseString;
+            }
+        });
+    }
+
     private AsyncHttpClient getAsyncHttpClient() {
         if (mAsyncHttpClient == null) {
             mAsyncHttpClient = new AsyncHttpClient();
             mAsyncHttpClient.addHeader("Cookie", CookieManager.getInstance().getCookie(Constants.BASE_URL));
+            mAsyncHttpClient.addHeader("Referer", Constants.BASE_URL+"home.php?mod=space&do=profile&mobile=2");
         }
         return mAsyncHttpClient;
     }

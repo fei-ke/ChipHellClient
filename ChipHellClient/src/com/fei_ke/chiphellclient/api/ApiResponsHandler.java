@@ -30,6 +30,7 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     @Override
     // TODO 放到后台线程解析
     public void onSuccess(int statusCode, Header[] headers, String responseString) {
+        System.out.println("satatusCode " + statusCode);
         T t = onSuccessThenParse(responseString);
         mApiCallBack.onSuccess(t);
     }

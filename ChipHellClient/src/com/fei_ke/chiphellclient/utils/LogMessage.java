@@ -13,33 +13,33 @@ public class LogMessage {
     // 日志标签
     public static String LOG_TAG = "frame";
 
-    public static void v(String tag, String msg) {
+    public static void v(String tag, Object msg) {
         if (isDebug) {
-            Log.v(tag, msg != null ? msg : "");
+            Log.v(tag, msg != null ? msg.toString() : "null");
         }
     }
 
-    public static void i(String tag, String msg) {
+    public static void i(String tag, Object msg) {
         if (isDebug) {
-            Log.i(tag, msg != null ? msg : "");
+            Log.i(tag, msg != null ? msg.toString() : "null");
         }
     }
 
-    public static void d(String tag, String msg) {
+    public static void d(String tag, Object msg) {
         if (isDebug) {
-            Log.d(tag, msg != null ? msg : "");
+            Log.d(tag, msg != null ? msg.toString() : "null");
         }
     }
 
-    public static void w(String tag, String msg) {
+    public static void w(String tag, Object msg) {
         if (isDebug) {
-            Log.w(tag, msg != null ? msg : "");
+            Log.w(tag, msg != null ? msg.toString() : "null");
         }
     }
 
-    public static void e(String tag, String msg) {
+    public static void e(String tag, Object msg) {
         if (isDebug) {
-            Log.e(tag, msg != null ? msg : "");
+            Log.e(tag, msg != null ? msg.toString() : "null");
         }
     }
 
@@ -56,5 +56,5 @@ public class LogMessage {
     public static void setDebug(boolean isDebug) {
         LogMessage.isDebug = isDebug;
     }
-    
+
 }

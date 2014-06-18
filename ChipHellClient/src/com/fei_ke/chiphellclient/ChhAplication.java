@@ -19,6 +19,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 public class ChhAplication extends Application {
     private String cookie;
     private static ChhAplication instance;
+    private String formHash;
 
     @Override
     public void onCreate() {
@@ -45,6 +46,14 @@ public class ChhAplication extends Application {
 
     public void setCookie(String cookie) {
         this.cookie = cookie;
+    }
+
+    public String getFormHash() {
+        return formHash;
+    }
+
+    public void setFormHash(String formHash) {
+        this.formHash = formHash;
     }
 
     // 初始化ImageLoader

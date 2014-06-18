@@ -11,21 +11,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
+import com.fei_ke.chiphellclient.api.ApiCallBack;
+import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
-import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
-import org.apache.http.Header;
 
 /**
  * 主界面
@@ -42,27 +39,25 @@ public class MainActivity extends BaseActivity {
 
     PlateListFragment mPlateListFragment;
 
-    ThreadListFragment mPostsListFragment;
+    ThreadListFragment mThreadListFragment;
 
     private MenuItem menuItemRefresh;
+
+    @InstanceState
+    Plate mPlate;
 
     @Override
     @AfterViews
     protected void onAfterViews() {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
+        
         mPlateListFragment = PlateListFragment.getInstance();
         mPlateListFragment.setOnPlateClickListener(new OnPlateClickListener() {
 
             @Override
             public void onPlateClick(Plate plate) {
-                mPostsListFragment = ThreadListFragment.getInstance(plate);
-
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, mPostsListFragment)
-                        .commit();
-                mDrawerLayout.closeDrawers();
-                setTitle(plate.getTitle());
+                mPlate = plate;
+                replaceContent(plate);
             }
         });
 
@@ -91,6 +86,22 @@ public class MainActivity extends BaseActivity {
                 };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        if (mPlate != null) {
+            replaceContent(mPlate);
+        } else {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+
+    }
+
+    private void replaceContent(Plate plate) {
+        mThreadListFragment = ThreadListFragment.getInstance(plate);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, mThreadListFragment)
+                .commit();
+        mDrawerLayout.closeDrawers();
+        setTitle(plate.getTitle());
     }
 
     @Override
@@ -126,8 +137,8 @@ public class MainActivity extends BaseActivity {
                 if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                     mPlateListFragment.onRefresh();
                 } else {
-                    if (mPostsListFragment != null) {
-                        mPostsListFragment.onRefresh();
+                    if (mThreadListFragment != null) {
+                        mThreadListFragment.onRefresh();
                     } else {
                         mDrawerLayout.openDrawer(GravityCompat.START);
                     }
@@ -166,22 +177,16 @@ public class MainActivity extends BaseActivity {
     }
 
     void test() {
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
-        String url = Constants.BASE_URL + "forum.php?mod=post&action=reply&fid=201&tid=1058176&replysubmit=yes&mobile=yes";
-        RequestParams param = new RequestParams();
-        param.add("message", "您当前的访问请求当中含有非法字符，已经被系统拒绝");
-        param.add("replysubmit", "回复");
-        param.add("formhash", "ccb13184");
-        client.post(url, param, new TextHttpResponseHandler() {
+        ChhApi api = new ChhApi();
+        api.reply("201", "1058176", "d78e4ada", "最后一次。 ", new ApiCallBack<String>() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
-                System.out.println(responseBody);
+            public void onSuccess(String result) {
+                System.out.println(result);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                
+            public void onFailure(Throwable error, String content) {
+                error.printStackTrace();
             }
         });
 
