@@ -5,20 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.constant.Constants;
-import com.loopj.android.http.PersistentCookieStore;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.impl.cookie.BasicClientCookie2;
 
 /**
  * 登录页面

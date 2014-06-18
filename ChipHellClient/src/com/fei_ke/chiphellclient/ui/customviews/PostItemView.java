@@ -91,6 +91,7 @@ public class PostItemView extends FrameLayout {
                 if (!source.startsWith("http:")) {
                     source = Constants.BASE_URL + source;
                 }
+                System.out.println(source);
                 return getContext().getResources().getDrawable(R.drawable.logo);
                 // return new UrlDrawable(source, textViewContent);
             }

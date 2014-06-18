@@ -89,8 +89,8 @@ public class PlateListFragment extends BaseContentFragment {
             }
 
             @Override
-            public void onFailure(String responseBody, Throwable error) {
-                error.printStackTrace();
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                
             }
         });
 
@@ -144,6 +144,11 @@ public class PlateListFragment extends BaseContentFragment {
             @Override
             public void onFinish() {
                 mMainActivity.onEndRefresh();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                
             }
 
         });

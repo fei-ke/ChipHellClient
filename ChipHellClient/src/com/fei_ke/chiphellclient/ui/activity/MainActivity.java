@@ -176,8 +176,12 @@ public class MainActivity extends BaseActivity {
         client.post(url, param, new TextHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseBody) {
-                super.onSuccess(statusCode, headers, responseBody);
                 System.out.println(responseBody);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                
             }
         });
 

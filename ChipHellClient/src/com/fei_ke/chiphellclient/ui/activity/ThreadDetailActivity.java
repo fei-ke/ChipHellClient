@@ -10,14 +10,12 @@ import com.fei_ke.chiphellclient.api.HtmlParse;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.constant.Post;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
@@ -100,6 +98,11 @@ public class ThreadDetailActivity extends BaseActivity {
             public void onFinish() {
                 mIsFreshing = false;
                 mRefreshListView.onRefreshComplete();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                
             }
         });
     }
