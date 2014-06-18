@@ -19,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
+import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.constant.Constants;
-import com.fei_ke.chiphellclient.constant.Post;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;

@@ -1,5 +1,5 @@
 
-package com.fei_ke.chiphellclient.constant;
+package com.fei_ke.chiphellclient.bean;
 
 /**
  * 回帖

@@ -23,8 +23,18 @@ import org.androidannotations.annotations.EActivity;
  */
 @EActivity
 public abstract class BaseActivity extends FragmentActivity {
+    /**
+     * 切勿调用和复写此方法
+     */
     @AfterViews
-    abstract protected void onAfterViews();
+    protected void onPrivateAfterViews() {
+        onAfterViews();
+    }
+
+    /**
+     * 此方法在onCreate之后调用
+     */
+    protected abstract void onAfterViews();
 
     @Override
     protected void onCreate(Bundle arg0) {

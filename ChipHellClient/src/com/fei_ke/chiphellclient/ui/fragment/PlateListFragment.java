@@ -3,33 +3,25 @@ package com.fei_ke.chiphellclient.ui.fragment;
 
 import android.app.Activity;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.diegocarloslima.fgelv.lib.FloatingGroupExpandableListView;
 import com.diegocarloslima.fgelv.lib.WrapperExpandableListAdapter;
-import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.HtmlParse;
+import com.fei_ke.chiphellclient.api.ApiCallBack;
+import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.User;
-import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PlateListAdapter;
 import com.fei_ke.chiphellclient.ui.customviews.UserView;
 import com.fei_ke.chiphellclient.utils.DensityUtil;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.PersistentCookieStore;
-import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.apache.http.Header;
-import org.apache.http.client.CookieStore;
-import org.apache.http.cookie.Cookie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +37,7 @@ public class PlateListFragment extends BaseContentFragment {
 
     @ViewById(R.id.expandableList_plates)
     FloatingGroupExpandableListView mExpandableListView;
+    
     PlateListAdapter mPlateListAdapter;
     List<PlateGroup> mPlateGroups = new ArrayList<PlateGroup>();
     OnPlateClickListener onPlateClickListener;
@@ -76,21 +69,11 @@ public class PlateListFragment extends BaseContentFragment {
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(DensityUtil.dip2px(getActivity(), 240),
                 AbsListView.LayoutParams.WRAP_CONTENT);
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
-        // CookieStore cookieStore = new PersistentCookieStore(getActivity());
-        // client.setCookieStore(cookieStore);
-        client.get(Constants.BASE_URL + "home.php?mod=space&mobile=2", new TextHttpResponseHandler() {
+        ChhApi api = new ChhApi();
+        api.getUserInfo(new ApiCallBack<User>() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
-                System.out.println(responseBody);
-                User user = HtmlParse.parseUserInfo(responseBody);
-                userView.bindValue(user);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                
+            public void onSuccess(User result) {
+                userView.bindValue(result);
             }
         });
 
@@ -112,6 +95,7 @@ public class PlateListFragment extends BaseContentFragment {
                 return false;
             }
         });
+
         update();
 
     }
@@ -121,37 +105,28 @@ public class PlateListFragment extends BaseContentFragment {
     }
 
     private void getPlateGroups() {
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
-        // CookieStore cookieStore = new PersistentCookieStore(getActivity());
-        // client.setCookieStore(cookieStore);
-        client.setTimeout(30000);
-        client.get(Constants.BASE_URL + "forum.php?mobile=yes", new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                mMainActivity.onStartRefresh();
-            }
 
+        ChhApi api = new ChhApi();
+        api.getPlateGroups(new ApiCallBack<List<PlateGroup>>() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
-                List<PlateGroup> groups = HtmlParse.parsePlateGroupList(responseBody);
-                mPlateListAdapter.updateDatas(groups);
+            public void onSuccess(List<PlateGroup> result) {
+                mPlateListAdapter.updateDatas(result);
                 for (int i = 0; i < mPlateListAdapter.getGroupCount(); i++) {
                     mExpandableListView.expandGroup(i);
                 }
             }
 
             @Override
-            public void onFinish() {
-                mMainActivity.onEndRefresh();
+            public void onStart() {
+                mMainActivity.onStartRefresh();
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                
+            public void onFinish() {
+                mMainActivity.onEndRefresh();
             }
-
         });
+
     }
 
     public static interface OnPlateClickListener {

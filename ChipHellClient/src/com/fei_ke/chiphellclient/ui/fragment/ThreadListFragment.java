@@ -9,12 +9,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.HtmlParse;
+import com.fei_ke.chiphellclient.api.ApiCallBack;
+import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.Thread;
-import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.ThreadListAdapter;
@@ -22,17 +21,11 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.PersistentCookieStore;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
-import org.apache.http.Header;
-import org.apache.http.client.CookieStore;
 
 import java.util.List;
 
@@ -74,7 +67,6 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
     }
 
     @Override
-    @AfterViews
     protected void onAfterViews() {
         mThreadListAdapter = new ThreadListAdapter();
         mListViewThreads.setAdapter(mThreadListAdapter);
@@ -112,12 +104,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
 
     private void getThreadList(final int page) {
         mIsFreshing = true;
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
-        // CookieStore cookieStore = new PersistentCookieStore(getActivity());
-        // client.setCookieStore(cookieStore);
-        RequestParams param = new RequestParams("page", String.valueOf(page));
-        client.get(mPlate.getUrl(), param, new TextHttpResponseHandler() {
+
+        ChhApi api = new ChhApi();
+        api.getThreadList(mPlate, page, new ApiCallBack<List<Thread>>() {
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
@@ -125,15 +114,11 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
-                List<Thread> threads = HtmlParse.parseThreadList(responseBody);
+            public void onSuccess(List<Thread> result) {
                 if (page == 1) {
                     mThreadListAdapter.clear();
                 }
-                mThreadListAdapter.update(threads);
-                // for (Thread thread : threads) {
-                // System.out.println(thread);
-                // }
+                mThreadListAdapter.update(result);
             }
 
             @Override
@@ -143,11 +128,8 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
                 mListViewThreads.onRefreshComplete();
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                
-            }
         });
+
     }
 
     @Override

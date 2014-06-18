@@ -6,11 +6,11 @@ import android.text.TextUtils;
 
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
+import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.User;
 
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.constant.Constants;
-import com.fei_ke.chiphellclient.constant.Post;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -161,6 +161,12 @@ public class HtmlParse {
         return posts;
     }
 
+    /**
+     * 解析用户信息
+     * 
+     * @param responseBody
+     * @return
+     */
     public static User parseUserInfo(String responseBody) {
         User user = new User();
         try {

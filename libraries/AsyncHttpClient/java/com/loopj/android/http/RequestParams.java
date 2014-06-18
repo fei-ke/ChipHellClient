@@ -316,6 +316,27 @@ public class RequestParams {
             }
         }
     }
+    /**
+     * 
+     * @see #add(String, String)
+     */
+    public void add(String key, boolean value) {
+        add(key, String.valueOf(value));
+    }
+    /**
+     * 
+     * @see #add(String, String)
+     */
+    public void add(String key, long value) {
+        add(key, String.valueOf(value));
+    }
+    /**
+     * 
+     * @see #add(String, String)
+     */
+    public void add(String key, double value) {
+        add(key, String.valueOf(value));
+    }
 
     /**
      * Removes a parameter from the request.

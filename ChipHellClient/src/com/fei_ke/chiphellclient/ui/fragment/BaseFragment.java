@@ -15,9 +15,16 @@ import org.androidannotations.annotations.EFragment;
 @EFragment
 public abstract class BaseFragment extends Fragment {
     /**
-     * 此方法在onCreateView之后调用
+     * 切勿调用和复写此方法
      */
     @AfterViews
+    protected void onPrivateAfterViews() {
+        onAfterViews();
+    }
+
+    /**
+     * 此方法在onCreateView之后调用
+     */
     protected abstract void onAfterViews();
 
 }

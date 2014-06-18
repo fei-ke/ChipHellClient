@@ -4,22 +4,18 @@ package com.fei_ke.chiphellclient.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.HtmlParse;
+import com.fei_ke.chiphellclient.api.ApiCallBack;
+import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.Thread;
-import com.fei_ke.chiphellclient.constant.Post;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-import org.apache.http.Header;
 
 import java.util.List;
 
@@ -47,51 +43,45 @@ public class ThreadDetailActivity extends BaseActivity {
     @Override
     protected void onAfterViews() {
         // mRefreshListView.setMode(Mode.DISABLED);
-        
+
         mPostListAdapter = new PostListAdapter();
         mRefreshListView.setAdapter(mPostListAdapter);
         setTitle(mThread.getTitle());
-        
+
         mRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
 
             @Override
             public void onLastItemVisible() {
                 if (!mIsFreshing) {
-                    getThreadList(++mPage);
+                    getPostList(++mPage);
                 }
             }
         });
-        
+
         getThreadList();
     }
+
     private void getThreadList() {
         mPage = 1;
-        getThreadList(1);
+        getPostList(1);
     }
-    private void getThreadList(final int page) {
-        mIsFreshing = true;
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("Cookie", ChhAplication.getInstance().getCookie());
 
-        RequestParams param = new RequestParams("page", String.valueOf(page));
-        param.add("mobile", "2");
-        System.out.println(mThread.getUrl());
-        client.get(mThread.getUrl(), param, new TextHttpResponseHandler() {
+    private void getPostList(final int page) {
+        mIsFreshing = true;
+
+        ChhApi api = new ChhApi();
+        api.getPostList(mThread, page, new ApiCallBack<List<Post>>() {
             @Override
             public void onStart() {
                 System.out.println("onStart(): " + page);
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
-                List<Post> posts = HtmlParse.parsePostList(responseBody);
+            public void onSuccess(List<Post> result) {
                 if (page == 1) {
                     mPostListAdapter.clear();
                 }
-                mPostListAdapter.update(posts);
-                // for (Thread thread : threads) {
-                // System.out.println(thread);
-                // }
+                mPostListAdapter.update(result);
             }
 
             @Override
@@ -100,11 +90,8 @@ public class ThreadDetailActivity extends BaseActivity {
                 mRefreshListView.onRefreshComplete();
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                
-            }
         });
+
     }
 
 }
