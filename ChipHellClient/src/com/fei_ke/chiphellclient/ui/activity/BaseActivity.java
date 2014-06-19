@@ -32,7 +32,7 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     /**
-     * 此方法在onCreate之后调用
+     * 此方法在onCreate之后调用,勿在此方法上添加@AfterViews注解
      */
     protected abstract void onAfterViews();
 

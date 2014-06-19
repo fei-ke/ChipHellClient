@@ -2,8 +2,10 @@
 package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,9 +13,15 @@ import android.widget.TextView;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 帖子列表的一个item
@@ -56,7 +64,7 @@ public class ThreadItemView extends FrameLayout {
             imageViewIcon.setVisibility(GONE);
         } else {
             imageViewIcon.setVisibility(VISIBLE);
-            ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon);
+            ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon,new AnimateFirstDisplayListener());
         }
         if (thread.getTitleColor() != 0) {
             textViewTitle.setTextColor(thread.getTitleColor());
@@ -74,4 +82,23 @@ public class ThreadItemView extends FrameLayout {
     public void setOnFastReplyClickListener(OnClickListener listener) {
         textViewCount.setOnClickListener(listener);
     }
+
+    private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+
+        static final List<String> displayedImages = Collections
+                .synchronizedList(new LinkedList<String>());
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            if (loadedImage != null) {
+                ImageView imageView = (ImageView) view;
+                boolean firstDisplay = !displayedImages.contains(imageUri);
+                if (firstDisplay) {
+                    FadeInBitmapDisplayer.animate(imageView, 500);
+                    displayedImages.add(imageUri);
+                }
+            }
+        }
+    }
+
 }

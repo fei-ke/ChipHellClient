@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="Buttonchh_red" parent="android:Widget.Holo.Light.Button">
+	  <item name="android:background">@drawable/chh_red_btn_default_holo_light</item>
+  </style>
+
+  <style name="ImageButtonchh_red" parent="android:Widget.Holo.Light.ImageButton">
+	  <item name="android:background">@drawable/chh_red_btn_default_holo_light</item>
+  </style>
+
+  <style name="Spinnerchh_red" parent="android:Widget.Holo.Light.Spinner">
+      <item name="android:background">@drawable/chh_red_spinner_background_holo_light</item>
+      <item name="android:dropDownSelector">@drawable/chh_red_list_selector_holo_light</item>
+  </style>
+  
+  <style name="ActionBarStylechh_red" parent="android:Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/chh_red_color</item>
+        <!-- <item name="android:backgroundStacked">@drawable/ab_stacked_solid_inverse_holo</item> -->
+        <item name="android:titleTextStyle">@style/ActionBar.Title.Text.chh_red</item>
+        <!-- <item name="android:subtitleTextStyle">@style/ActionBar.Subtitle.Text</item> -->
+   </style>
+    
+   <style name="ActionBar.Title.Text.chh_red" parent="android:TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">@color/white</item>
+   </style>
+</resources>

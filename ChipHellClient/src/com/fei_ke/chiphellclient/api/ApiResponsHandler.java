@@ -1,15 +1,33 @@
 
 package com.fei_ke.chiphellclient.api;
 
+import android.os.Message;
+
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 
+/**
+ * 异步联网请求解析帮助类
+ * 
+ * @author 杨金阳
+ *         2014-6-19 下午6:35:01
+ * @param <T>
+ */
 public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     ApiCallBack<T> mApiCallBack;
+    private int PARSED_MESSAGE = 10;
 
     public ApiResponsHandler(ApiCallBack<T> apiCallBack) {
         this.mApiCallBack = apiCallBack;
+    }
+
+    @Override
+    protected void handleMessage(Message message) {
+        super.handleMessage(message);
+        if (message.what == PARSED_MESSAGE) {
+            mApiCallBack.onSuccess((T) message.obj);
+        }
     }
 
     @Override
@@ -28,11 +46,18 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     }
 
     @Override
-    // TODO 放到后台线程解析
+    public void onProgress(int bytesWritten, int totalSize) {
+        mApiCallBack.onProgress(bytesWritten, totalSize);
+    }
+
+    @Override
+    // 后台线程解析
     public void onSuccess(int statusCode, Header[] headers, String responseString) {
         System.out.println("satatusCode " + statusCode);
         T t = onSuccessThenParse(responseString);
-        mApiCallBack.onSuccess(t);
+
+        sendMessage(obtainMessage(PARSED_MESSAGE, t));
+
     }
 
     public abstract T onSuccessThenParse(String responseString);

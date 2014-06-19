@@ -41,12 +41,16 @@ public class PostListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         PostItemView postItemView = null;
         if (convertView == null) {
-            postItemView = PostItemView.getInstance(parent.getContext());
+            postItemView = PostItemView.newInstance(parent.getContext());
         } else {
             postItemView = (PostItemView) convertView;
         }
         Post post = getItem(position);
-        postItemView.bindValue(post);
+        if (position == 0) {
+            postItemView.bindFirstValue(post);
+        } else {
+            postItemView.bindValue(post);
+        }
         return postItemView;
     }
 

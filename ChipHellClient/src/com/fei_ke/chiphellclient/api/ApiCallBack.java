@@ -22,4 +22,9 @@ public abstract class ApiCallBack<T extends Object> {
 
     public void onLocalDate(T result) {
     }
+
+    public void onProgress(int bytesWritten, int totalSize) {
+
+    }
+    
 }

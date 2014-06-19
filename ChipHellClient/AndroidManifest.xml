@@ -15,7 +15,7 @@
         android:allowBackup="true"
         android:icon="@drawable/logo_white"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/chh_red" >
         <activity
             android:name="com.fei_ke.chiphellclient.ui.activity.MainActivity_"
             android:label="@string/app_name" 

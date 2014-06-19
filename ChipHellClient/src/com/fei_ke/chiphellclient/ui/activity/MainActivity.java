@@ -9,7 +9,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.fei_ke.chiphellclient.ChhAplication;
@@ -20,8 +19,8 @@ import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
+import com.fei_ke.chiphellclient.utils.ACache;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
@@ -37,6 +36,8 @@ public class MainActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_LOGIN = 0x1;
 
+    private static final String KEY_CACHE_PLATE = "key_cache_plate";
+
     @ViewById(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
@@ -51,7 +52,6 @@ public class MainActivity extends BaseActivity {
     Plate mPlate;
 
     @Override
-    @AfterViews
     protected void onAfterViews() {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
@@ -90,12 +90,27 @@ public class MainActivity extends BaseActivity {
                 };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        if (mPlate == null) {
+            ACache aCache = ACache.get(this);
+            mPlate = (Plate) aCache.getAsObject(KEY_CACHE_PLATE);
+        }
+
         if (mPlate != null) {
             replaceContent(mPlate);
         } else {
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("MainActivity.onDestroy()");
+        ACache aCache = ACache.get(this);
+        if (mPlate != null) {
+            aCache.put(KEY_CACHE_PLATE, mPlate);
+        }
     }
 
     private void replaceContent(Plate plate) {

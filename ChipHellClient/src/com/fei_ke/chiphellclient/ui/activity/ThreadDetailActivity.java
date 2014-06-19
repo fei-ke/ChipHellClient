@@ -90,6 +90,11 @@ public class ThreadDetailActivity extends BaseActivity {
                 mRefreshListView.onRefreshComplete();
             }
 
+            @Override
+            public void onProgress(int bytesWritten, int totalSize) {
+                System.out.println("进度：" + bytesWritten + "," + totalSize);
+            }
+
         });
 
     }

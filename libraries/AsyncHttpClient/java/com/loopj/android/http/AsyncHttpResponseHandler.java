@@ -242,7 +242,9 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
     }
 
     final public void sendSuccessMessage(int statusCode, Header[] headers, byte[] responseBytes) {
-        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, headers, responseBytes}));
+        //sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, headers, responseBytes}));
+        //在背景线程中调用
+        handleMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, headers, responseBytes}));
     }
 
     final public void sendFailureMessage(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {

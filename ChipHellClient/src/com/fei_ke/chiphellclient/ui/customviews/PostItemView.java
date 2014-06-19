@@ -46,7 +46,7 @@ public class PostItemView extends FrameLayout {
     @ViewById(R.id.textView_content)
     TextView textViewContent;
 
-    public static PostItemView getInstance(Context context) {
+    public static PostItemView newInstance(Context context) {
         return PostItemView_.build(context);
     }
 
@@ -60,8 +60,8 @@ public class PostItemView extends FrameLayout {
         webViewContent.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+                // view.loadUrl(url);
+                return false;
             }
         });
         webViewContent.setWebChromeClient(new WebChromeClient());
@@ -76,10 +76,18 @@ public class PostItemView extends FrameLayout {
     }
 
     public void bindValue(Post post) {
+        webViewContent.setVisibility(View.GONE);
+        textViewContent.setVisibility(View.VISIBLE);
         ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar);
         // webViewContent.loadDataWithBaseURL(/* "file:///android_asset/" */Constants.BASE_URL, post.getContent(), "text/html", "utf-8",
         // null);
         loadContent(post);
+    }
+
+    public void bindFirstValue(Post post) {
+        webViewContent.setVisibility(View.VISIBLE);
+        textViewContent.setVisibility(View.GONE);
+        webViewContent.loadDataWithBaseURL(Constants.BASE_URL, post.getContent(), "text/html", "utf-8", null);
     }
 
     // @Background
