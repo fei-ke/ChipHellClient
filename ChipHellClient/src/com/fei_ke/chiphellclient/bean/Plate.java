@@ -1,16 +1,19 @@
 
 package com.fei_ke.chiphellclient.bean;
 
+import com.fei_ke.chiphellclient.utils.UrlParamsMap;
+
 /**
  * 版块
  * 
  * @author 杨金阳
  * @2014-6-14
  */
-public class Plate extends BaseBean{
+public class Plate extends BaseBean {
     String title;
     String url;
     String xg1;// 今日帖数
+    String fid;// 版块id
 
     public String getTitle() {
         return title;
@@ -39,6 +42,13 @@ public class Plate extends BaseBean{
     @Override
     public String toString() {
         return "Plate [title=" + title + ", url=" + url + ", xg1=" + xg1 + "]";
+    }
+
+    public String getFid() {
+        if (fid == null) {
+            fid = new UrlParamsMap(url).get("fid");
+        }
+        return fid;
     }
 
 }

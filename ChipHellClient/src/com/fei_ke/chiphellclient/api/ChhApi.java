@@ -13,6 +13,10 @@ import com.fei_ke.chiphellclient.constant.Mode;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 import java.util.List;
 
 /**
@@ -114,7 +118,15 @@ public class ChhApi {
 
             @Override
             public String onSuccessThenParse(String responseString) {
-                return responseString;
+                System.out.println(responseString);
+                String message = "发送成功";
+                Document document = Jsoup.parse(responseString);
+                Element messagetext = document.getElementById("messagetext");
+                if (messagetext != null) {
+                    message = messagetext.child(0).text();
+                }
+
+                return message;
             }
         });
     }
@@ -123,7 +135,7 @@ public class ChhApi {
         if (mAsyncHttpClient == null) {
             mAsyncHttpClient = new AsyncHttpClient();
             mAsyncHttpClient.addHeader("Cookie", CookieManager.getInstance().getCookie(Constants.BASE_URL));
-            mAsyncHttpClient.addHeader("Referer", Constants.BASE_URL+"home.php?mod=space&do=profile&mobile=2");
+            mAsyncHttpClient.addHeader("Referer", Constants.BASE_URL + "home.php?mod=space&do=profile&mobile=2");
         }
         return mAsyncHttpClient;
     }

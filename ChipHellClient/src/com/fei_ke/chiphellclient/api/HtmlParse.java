@@ -12,6 +12,7 @@ import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.User;
 import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.utils.LogMessage;
+import com.fei_ke.chiphellclient.utils.UrlParamsMap;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,9 +20,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HtmlParse {
     /**
@@ -170,6 +169,7 @@ public class HtmlParse {
      * @return
      */
     public static User parseUserInfo(String responseBody) {
+        System.out.println(responseBody);
         User user = new User();
         try {
             Document document = Jsoup.parse(responseBody);
@@ -180,14 +180,9 @@ public class HtmlParse {
             user.setInfo(elementUser.getElementsByClass("user_box").html());
 
             Element btn_exit = document.getElementsByClass("btn_exit").first();
-
+            System.out.println(btn_exit.toString());
             String url = btn_exit.child(0).attr("href");
-            String[] params = url.split("&");
-            Map<String, String> map = new HashMap<String, String>();
-            for (int i = 1; i < params.length; i++) {
-                String[] param = params[i].split("=");
-                map.put(param[0], param[1]);
-            }
+            UrlParamsMap map=new UrlParamsMap(url);
             String formHash = map.get("formhash");
             ChhAplication.getInstance().setFormHash(formHash);
             LogMessage.d("formHash", formHash);

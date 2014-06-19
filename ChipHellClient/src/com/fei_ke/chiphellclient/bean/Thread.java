@@ -1,6 +1,7 @@
 
 package com.fei_ke.chiphellclient.bean;
 
+import com.fei_ke.chiphellclient.utils.UrlParamsMap;
 
 /**
  * 帖子列表item
@@ -17,6 +18,7 @@ public class Thread extends BaseBean {
     String count;
     String imgSrc;
     int titleColor;
+    String tid;// 帖子id
 
     public String getImgSrc() {
         return imgSrc;
@@ -92,6 +94,13 @@ public class Thread extends BaseBean {
     @Override
     public String toString() {
         return "Thread [title=" + title + ", url=" + url + ", by=" + by + ", timeAndCount=" + timeAndCount + "]";
+    }
+
+    public String getTid() {
+        if (tid == null) {
+            tid = new UrlParamsMap(url).get("tid");
+        }
+        return tid;
     }
 
 }

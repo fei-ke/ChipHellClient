@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/chh_red" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <com.fei_ke.chiphellclient.ui.customviews.FloatLabelLayout
+            android:id="@+id/layout_float_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <EditText
+                android:id="@+id/editText_fast_reply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="200dp"
+                android:paddingRight="30dp" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/chh_red_list_selector_holo_light"
+                android:src="@drawable/ic_face_grey" />
+        </com.fei_ke.chiphellclient.ui.customviews.FloatLabelLayout>
+
+        <ImageButton
+            android:id="@+id/button_reply_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/chh_red_list_selector_holo_light"
+            android:src="@drawable/ic_send_grey"
+            android:text="发送" />
+    </LinearLayout>
+
+</LinearLayout>

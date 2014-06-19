@@ -7,14 +7,17 @@ import android.content.Intent;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
+import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
@@ -31,18 +34,27 @@ public class ThreadDetailActivity extends BaseActivity {
     PullToRefreshListView mRefreshListView;
 
     PostListAdapter mPostListAdapter;
+
+    @Extra
+    Plate mPlate;
+
     @Extra
     Thread mThread;
+
+    @FragmentByTag("fast_reply")
+    FastReplyFragment mFastReplyFragment;
+
     int mPage = 1;
     private boolean mIsFreshing;
 
-    public static Intent getStartIntent(Context context, Thread thread) {
-        return ThreadDetailActivity_.intent(context).mThread(thread).get();
+    public static Intent getStartIntent(Context context, Plate plate, Thread thread) {
+        return ThreadDetailActivity_.intent(context).mThread(thread).mPlate(plate).get();
     }
 
     @Override
     protected void onAfterViews() {
         // mRefreshListView.setMode(Mode.DISABLED);
+        mFastReplyFragment.setPlateAndThread(mPlate, mThread);
 
         mPostListAdapter = new PostListAdapter();
         mRefreshListView.setAdapter(mPostListAdapter);
@@ -88,11 +100,6 @@ public class ThreadDetailActivity extends BaseActivity {
             public void onFinish() {
                 mIsFreshing = false;
                 mRefreshListView.onRefreshComplete();
-            }
-
-            @Override
-            public void onProgress(int bytesWritten, int totalSize) {
-                System.out.println("进度：" + bytesWritten + "," + totalSize);
             }
 
         });

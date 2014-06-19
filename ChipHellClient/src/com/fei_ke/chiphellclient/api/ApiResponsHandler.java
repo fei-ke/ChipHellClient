@@ -26,28 +26,38 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     protected void handleMessage(Message message) {
         super.handleMessage(message);
         if (message.what == PARSED_MESSAGE) {
-            mApiCallBack.onSuccess((T) message.obj);
+            if (mApiCallBack != null) {
+                mApiCallBack.onSuccess((T) message.obj);
+            }
         }
     }
 
     @Override
     public void onStart() {
-        mApiCallBack.onStart();
+        if (mApiCallBack != null) {
+            mApiCallBack.onStart();
+        }
     }
 
     @Override
     public void onFinish() {
-        mApiCallBack.onFinish();
+        if (mApiCallBack != null) {
+            mApiCallBack.onFinish();
+        }
     }
 
     @Override
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-        mApiCallBack.onFailure(throwable, responseString);
+        if (mApiCallBack != null) {
+            mApiCallBack.onFailure(throwable, responseString);
+        }
     }
 
     @Override
     public void onProgress(int bytesWritten, int totalSize) {
-        mApiCallBack.onProgress(bytesWritten, totalSize);
+        {
+            mApiCallBack.onProgress(bytesWritten, totalSize);
+        }
     }
 
     @Override

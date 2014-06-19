@@ -10,6 +10,7 @@
         android:id="@+id/listView_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/layout_fast_reply"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:clipToPadding="false"
@@ -27,5 +28,18 @@
         app:ptrDrawable="@drawable/red_ptr_rotate"
         app:ptrHeaderSubTextColor="@color/chh_red"
         app:ptrHeaderTextColor="@color/chh_red" />
+
+    <FrameLayout
+        android:id="@+id/layout_fast_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <fragment
+            android:name="com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment_"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="fast_reply" />
+    </FrameLayout>
 
 </RelativeLayout>
