@@ -40,11 +40,11 @@ public class LoginActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith(Constants.BASE_URL + "member.php")) {
                     view.loadUrl(url);
-                } else if (url.startsWith(Constants.BASE_URL + "?mobile=2")) {//首页
+                } else if (url.startsWith(Constants.BASE_URL + "?mobile=2")) {// 首页
                     String string = CookieManager.getInstance().getCookie(Constants.BASE_URL);
                     ChhAplication.getInstance().setCookie(string);
                     finish();
-                } else if (url.startsWith(Constants.BASE_URL + "member.php?mod=logging&action=logout")) {//登出
+                } else if (url.startsWith(Constants.BASE_URL + "member.php?mod=logging&action=logout")) {// 登出
                     view.loadUrl(loginUrl);
                 }
                 return true;
@@ -82,6 +82,12 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        setResult(RESULT_OK);
+        super.finish();
     }
 
 }

@@ -327,7 +327,21 @@ public class RequestParams {
      * 
      * @see #add(String, String)
      */
+    public void add(String key, int value) {
+        add(key, String.valueOf(value));
+    }
+    /**
+     * 
+     * @see #add(String, String)
+     */
     public void add(String key, long value) {
+        add(key, String.valueOf(value));
+    }
+    /**
+     * 
+     * @see #add(String, String)
+     */
+    public void add(String key, float value) {
         add(key, String.valueOf(value));
     }
     /**

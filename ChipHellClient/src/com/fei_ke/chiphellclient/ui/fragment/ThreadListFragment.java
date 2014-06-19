@@ -4,9 +4,14 @@ package com.fei_ke.chiphellclient.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.format.DateUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.fei_ke.chiphellclient.R;
@@ -17,12 +22,12 @@ import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.ThreadListAdapter;
+import com.fei_ke.chiphellclient.utils.SmileyPickerUtility;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
@@ -36,11 +41,19 @@ import java.util.List;
  * @2014-6-14
  */
 @EFragment(R.layout.fragment_thread_list)
-public class ThreadListFragment extends BaseContentFragment implements OnItemClickListener {
+public class ThreadListFragment extends BaseContentFragment implements OnClickListener, OnItemClickListener {
     @ViewById(R.id.listView_threads)
     PullToRefreshListView mListViewThreads;
     ThreadListAdapter mThreadListAdapter;
 
+    @ViewById
+    View emptyView;
+
+    @ViewById(R.id.editText_fast_reply)
+    EditText editTextFastReply;
+
+    @ViewById(R.id.layout_fast_reply)
+    View layoutFastReply;
     @FragmentArg
     Plate mPlate;
 
@@ -70,7 +83,11 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
     protected void onAfterViews() {
         mThreadListAdapter = new ThreadListAdapter();
         mListViewThreads.setAdapter(mThreadListAdapter);
+        mListViewThreads.setEmptyView(emptyView);
+        emptyView.setOnClickListener(this);
         mListViewThreads.setOnItemClickListener(this);
+        mThreadListAdapter.setOnFastReplylistener(this);
+        mListViewThreads.getRefreshableView().setOnScrollListener(onScrollListener);
         mListViewThreads.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
             @Override
@@ -96,6 +113,22 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
         });
         mListViewThreads.setRefreshing();
     }
+
+    private OnScrollListener onScrollListener = new OnScrollListener() {
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if (layoutFastReply.getVisibility() == View.VISIBLE) {
+//                layoutFastReply.setVisibility(View.GONE);
+                System.out.println("ThreadListFragment.enclosing_method()");
+            }
+        }
+    };
 
     private void getThreadList() {
         mPage = 1;
@@ -142,5 +175,22 @@ public class ThreadListFragment extends BaseContentFragment implements OnItemCli
         Thread thread = mThreadListAdapter.getItem((int) id);
         Intent intent = ThreadDetailActivity.getStartIntent(getActivity(), thread);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.textView_count:
+                Thread thread = (Thread) v.getTag();
+                layoutFastReply.setVisibility(View.VISIBLE);
+                SmileyPickerUtility.showKeyBoard(editTextFastReply);
+                editTextFastReply.setHint("回复" + thread.getTitle());
+                break;
+            case R.id.emptyView:
+                getThreadList();
+                break;
+            default:
+                break;
+        }
     }
 }

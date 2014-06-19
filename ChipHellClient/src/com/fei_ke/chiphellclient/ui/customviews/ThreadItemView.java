@@ -64,4 +64,14 @@ public class ThreadItemView extends FrameLayout {
             textViewTitle.setTextColor(Color.BLACK);
         }
     }
+
+    
+    
+    public TextView getTextViewCount() {
+        return textViewCount;
+    }
+
+    public void setOnFastReplyClickListener(OnClickListener listener) {
+        textViewCount.setOnClickListener(listener);
+    }
 }

@@ -2,6 +2,7 @@
 package com.fei_ke.chiphellclient.ui.adapter;
 
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class ThreadListAdapter extends BaseAdapter {
     private List<Thread> mThreads;
+    private OnClickListener onFastReplylistener;
 
     @Override
     public int getCount() {
@@ -45,7 +47,19 @@ public class ThreadListAdapter extends BaseAdapter {
         }
         Thread thread = getItem(position);
         threadItemView.bindValue(thread);
+        if (onFastReplylistener != null) {
+            threadItemView.getTextViewCount().setTag(thread);
+            threadItemView.setOnFastReplyClickListener(onFastReplylistener);
+        }
         return threadItemView;
+    }
+
+    public OnClickListener getOnFastReplylistener() {
+        return onFastReplylistener;
+    }
+
+    public void setOnFastReplylistener(OnClickListener onFastReplylistener) {
+        this.onFastReplylistener = onFastReplylistener;
     }
 
     public void update(List<Thread> threads) {

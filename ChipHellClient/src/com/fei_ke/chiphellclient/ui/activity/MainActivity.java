@@ -9,8 +9,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
+import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
@@ -33,6 +35,8 @@ import org.androidannotations.annotations.ViewById;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
 
+    private static final int REQUEST_CODE_LOGIN = 0x1;
+
     @ViewById(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
@@ -50,7 +54,7 @@ public class MainActivity extends BaseActivity {
     @AfterViews
     protected void onAfterViews() {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        
+
         mPlateListFragment = PlateListFragment.getInstance();
         mPlateListFragment.setOnPlateClickListener(new OnPlateClickListener() {
 
@@ -134,19 +138,11 @@ public class MainActivity extends BaseActivity {
         }
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    mPlateListFragment.onRefresh();
-                } else {
-                    if (mThreadListFragment != null) {
-                        mThreadListFragment.onRefresh();
-                    } else {
-                        mDrawerLayout.openDrawer(GravityCompat.START);
-                    }
-                }
+                refresh();
                 return true;
             case R.id.action_settings:
                 Intent intent = LoginActivity.getStartIntent(this);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_LOGIN);
                 break;
             case R.id.action_test:
                 test();
@@ -155,6 +151,18 @@ public class MainActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void refresh() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mPlateListFragment.onRefresh();
+        } else {
+            if (mThreadListFragment != null) {
+                mThreadListFragment.onRefresh();
+            } else {
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            }
+        }
     }
 
     /**
@@ -176,9 +184,17 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(resultCode, requestCode, data);
+        if (requestCode == REQUEST_CODE_LOGIN && resultCode == RESULT_OK) {
+            refresh();
+        }
+    }
+
     void test() {
         ChhApi api = new ChhApi();
-        api.reply("201", "1058176", "d78e4ada", "最后一次。 ", new ApiCallBack<String>() {
+        api.reply("201", "1058176", ChhAplication.getInstance().getFormHash(), "最后一次。 ", new ApiCallBack<String>() {
             @Override
             public void onSuccess(String result) {
                 System.out.println(result);
