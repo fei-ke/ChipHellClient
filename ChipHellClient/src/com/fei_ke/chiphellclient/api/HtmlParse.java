@@ -212,6 +212,7 @@ class HtmlParse {
             Document document = Jsoup.parse(responseBody);
             Element postform = document.getElementById("postform");
             String url = postform.attr("action");
+            
             String formhash = postform.getElementsByAttributeValue("name", "formhash").first().attr("value");
             String posttime = postform.getElementsByAttributeValue("name", "posttime").first().attr("value");
             String noticeauthor = postform.getElementsByAttributeValue("name", "noticeauthor").first().attr("value");
@@ -219,7 +220,7 @@ class HtmlParse {
             String noticeauthormsg = postform.getElementsByAttributeValue("name", "noticeauthormsg").first().attr("value");
             String reppid = postform.getElementsByAttributeValue("name", "reppid").first().attr("value");
             String reppost = postform.getElementsByAttributeValue("name", "reppost").first().attr("value");
-            String quoteBody = postform.getElementsByClass("bl_line").first().html();
+            String quoteBody = postform.getElementsByTag("blockquote").first().toString();
 
             quoteReply.setNoticeauthor(noticeauthor);
             quoteReply.setNoticeauthormsg(noticeauthormsg);

@@ -9,6 +9,7 @@ import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.ui.customviews.PostItemView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -53,15 +54,20 @@ public class PostListAdapter extends BaseAdapter {
     }
 
     public void update(List<Post> posts) {
-        if (mPosts == null) {
-            mPosts = new ArrayList<Post>();
+        if (mPosts == null || mPosts.size() == 0) {
+            mPosts = new LinkedList<Post>();
+            mPosts.addAll(posts);
         }/*
           * else {
           * mThreads.clear();
           * }
           */
-        mPosts.addAll(posts);
+        // mPosts.addAll(posts);
         notifyDataSetChanged();
+    }
+
+    public List<Post> getPosts() {
+        return mPosts;
     }
 
     public void clear() {

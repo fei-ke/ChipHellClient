@@ -71,7 +71,7 @@ public final class FloatLabelLayout extends FrameLayout {
                 R.styleable.FloatLabelLayout_floatLabelSidePadding,
                 dipsToPix(DEFAULT_PADDING_LEFT_RIGHT_DP));
         mLabel = new TextView(context);
-        mLabel.setSingleLine();
+//        mLabel.setSingleLine();
         mLabel.setEllipsize(TextUtils.TruncateAt.END);
         mLabel.setPadding(sidePadding, 0, sidePadding, 0);
         mLabel.setVisibility(INVISIBLE);

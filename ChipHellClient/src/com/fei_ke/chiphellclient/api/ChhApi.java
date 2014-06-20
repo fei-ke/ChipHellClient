@@ -142,6 +142,40 @@ public class ChhApi {
     }
 
     /**
+     * 引用回复
+     * 
+     * @param quoteReply
+     * @param apiCallBack
+     */
+    public void quotrReply(PrepareQuoteReply quoteReply, ApiCallBack<String> apiCallBack) {
+        RequestParams params = new RequestParams();
+        params.add("formhash", quoteReply.getFormhash());
+        params.add("message", quoteReply.getMessage());
+        params.add("noticeauthor", quoteReply.getNoticeauthor());
+        params.add("noticeauthormsg", quoteReply.getNoticeauthormsg());
+        params.add("noticetrimstr", quoteReply.getNoticetrimstr());
+        params.add("posttime", quoteReply.getPosttime());
+        params.add("replysubmit", quoteReply.getReplysubmit());
+        params.add("reppid", quoteReply.getReppid());
+        params.add("reppost", quoteReply.getReppost());
+        getAsyncHttpClient().post(Constants.BASE_URL+quoteReply.getUrl(), params, new ApiResponsHandler<String>(apiCallBack) {
+
+            @Override
+            public String onSuccessThenParse(String responseString) {
+                System.out.println(responseString);
+                String message = "发送成功";
+                Document document = Jsoup.parse(responseString);
+                Element messagetext = document.getElementById("messagetext");
+                if (messagetext != null) {
+                    message = messagetext.child(0).text();
+                }
+
+                return message;
+            }
+        });
+    }
+
+    /**
      * 引用回复的请求表单准备
      * 
      * @param url
@@ -162,7 +196,6 @@ public class ChhApi {
         if (mAsyncHttpClient == null) {
             mAsyncHttpClient = new AsyncHttpClient();
             mAsyncHttpClient.addHeader("Cookie", CookieManager.getInstance().getCookie(Constants.BASE_URL));
-            mAsyncHttpClient.addHeader("Referer", Constants.BASE_URL + "home.php?mod=space&do=profile&mobile=2");
         }
         return mAsyncHttpClient;
     }

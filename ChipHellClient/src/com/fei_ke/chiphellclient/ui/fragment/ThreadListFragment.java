@@ -151,6 +151,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                     mThreadListAdapter.clear();
                 }
                 mThreadListAdapter.update(result);
+                System.out.println("ThreadListFragment.getThreadList(...).new ApiCallBack() {...}.onSuccess()");
             }
 
             @Override
@@ -158,6 +159,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                 mMainActivity.onEndRefresh();
                 mIsFreshing = false;
                 mListViewThreads.onRefreshComplete();
+                System.out.println("ThreadListFragment.getThreadList(...).new ApiCallBack() {...}.onFinish()");
             }
 
         });
