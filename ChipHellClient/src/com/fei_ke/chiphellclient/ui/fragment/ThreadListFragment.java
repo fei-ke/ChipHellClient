@@ -135,6 +135,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
     }
 
     private void getThreadList(final int page) {
+        if (mIsFreshing) {
+            return;
+        }
         mIsFreshing = true;
 
         ChhApi api = new ChhApi();

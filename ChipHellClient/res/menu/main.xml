@@ -8,6 +8,7 @@
         android:showAsAction="never"
         android:title="@string/action_settings"/>
     <item
+        android:visible="false"
         android:id="@+id/action_test"
         android:orderInCategory="100"
         android:showAsAction="never"

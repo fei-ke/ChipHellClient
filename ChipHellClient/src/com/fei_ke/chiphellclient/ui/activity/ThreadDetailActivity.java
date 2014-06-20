@@ -4,6 +4,9 @@ package com.fei_ke.chiphellclient.ui.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -23,8 +26,11 @@ import com.fei_ke.chiphellclient.ui.customviews.PostMainView;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnPullEventListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.State;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -61,6 +67,9 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
     @ViewById(R.id.layout_fast_reply)
     View mlayoutFastReply;
 
+    @ViewById(R.id.sliding_layout)
+    SlidingUpPanelLayout mPanelLayout;
+
     int mPage = 1;
     private boolean mIsFreshing;
 
@@ -75,7 +84,8 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
 
         mPostListAdapter = new PostListAdapter();
         mRefreshListView.setAdapter(mPostListAdapter);
-        setTitle(mThread.getTitle());
+        setTitle(mPlate.getTitle());
+        getActionBar().setSubtitle(mThread.getTitle());
 
         // mRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
         //
@@ -120,7 +130,15 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
 
             }
         });
+        mRefreshListView.setOnPullEventListener(new OnPullEventListener<ListView>() {
 
+            @Override
+            public void onPullEvent(PullToRefreshBase<ListView> refreshView, State state, Mode direction) {
+                if (state.equals(State.PULL_TO_REFRESH) && direction.equals(Mode.PULL_FROM_START)) {
+                    mPanelLayout.collapsePanel();
+                }
+            }
+        });
         getPostList();
     }
 
@@ -130,6 +148,9 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
     }
 
     private void getPostList(final int page) {
+        if (mIsFreshing) {
+            return;
+        }
         mIsFreshing = true;
         if (mPage < 1) {
             mPage = 1;
@@ -138,11 +159,15 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
         api.getPostList(mThread, page, new ApiCallBack<List<Post>>() {
             @Override
             public void onStart() {
-                System.out.println("onStart(): " + page);
+                onStartRefresh();
             }
 
             @Override
             public void onSuccess(List<Post> result) {
+                if (result == null || result.size() == 0) {
+                    return;
+                }
+
                 if (page == 1) {
                     mMainPostView.bindValue(mThread.getTitle(), result.get(0));
                     mPostListAdapter.clear();
@@ -157,6 +182,7 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             public void onFinish() {
                 mIsFreshing = false;
                 mRefreshListView.onRefreshComplete();
+                onEndRefresh();
             }
 
         });
@@ -202,6 +228,29 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             }
         });
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                getPostList();
+                return true;
+            case R.id.action_brower:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(mThread.getUrl()));
+                startActivity(intent);
+                return true;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.thread_detail, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
 }

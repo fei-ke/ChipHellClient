@@ -11,10 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ApiCallBack;
-import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
@@ -46,7 +43,7 @@ public class MainActivity extends BaseActivity {
 
     ThreadListFragment mThreadListFragment;
 
-    private MenuItem menuItemRefresh;
+
 
     @InstanceState
     Plate mPlate;
@@ -140,7 +137,6 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        menuItemRefresh = menu.findItem(R.id.action_refresh);
         return true;
     }
 
@@ -180,24 +176,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 开始刷新
-     */
-    public void onStartRefresh() {
-        if (menuItemRefresh != null) {
-            menuItemRefresh.setActionView(R.layout.indeterminate_progress_action);
-        }
-    }
-
-    /**
-     * 刷新结束
-     */
-    public void onEndRefresh() {
-        if (menuItemRefresh != null) {
-            menuItemRefresh.setActionView(null);
-            menuItemRefresh.setIcon(R.drawable.white_ptr_rotate);
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -207,19 +185,18 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    void test() {
-        ChhApi api = new ChhApi();
-        api.reply("201", "1058176", ChhAplication.getInstance().getFormHash(), "最后一次。 ", new ApiCallBack<String>() {
-            @Override
-            public void onSuccess(String result) {
-                System.out.println(result);
-            }
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+        }
+    }
 
-            @Override
-            public void onFailure(Throwable error, String content) {
-                error.printStackTrace();
-            }
-        });
+    void test() {
 
     }
 }

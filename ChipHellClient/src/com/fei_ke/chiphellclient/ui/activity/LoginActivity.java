@@ -78,7 +78,6 @@ public class LoginActivity extends BaseActivity {
                 // }
 
                 ChhAplication.getInstance().setCookie(string);
-                System.out.println(string);
 
             }
         });

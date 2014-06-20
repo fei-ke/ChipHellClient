@@ -73,7 +73,7 @@ public class PostItemView extends FrameLayout {
                     source = Constants.BASE_URL + source;
                 }
                 System.out.println(source);
-                return getContext().getResources().getDrawable(R.drawable.logo);
+                return getContext().getResources().getDrawable(R.drawable.ic_action_collections_sort_by_size);
                 // return new UrlDrawable(source, textViewContent);
             }
         }, null));

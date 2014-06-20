@@ -52,7 +52,7 @@ public final class FloatLabelLayout extends FrameLayout {
 
     private EditText mEditText;
     private TextView mLabel;
-
+    final int sidePadding;
     public FloatLabelLayout(Context context) {
         this(context, null);
     }
@@ -67,7 +67,7 @@ public final class FloatLabelLayout extends FrameLayout {
         final TypedArray a = context
                 .obtainStyledAttributes(attrs, R.styleable.FloatLabelLayout);
 
-        final int sidePadding = a.getDimensionPixelSize(
+        sidePadding = a.getDimensionPixelSize(
                 R.styleable.FloatLabelLayout_floatLabelSidePadding,
                 dipsToPix(DEFAULT_PADDING_LEFT_RIGHT_DP));
         mLabel = new TextView(context);
@@ -75,7 +75,6 @@ public final class FloatLabelLayout extends FrameLayout {
         mLabel.setEllipsize(TextUtils.TruncateAt.END);
         mLabel.setPadding(sidePadding, 0, sidePadding, 0);
         mLabel.setVisibility(INVISIBLE);
-
         mLabel.setTextAppearance(context,
                 a.getResourceId(R.styleable.FloatLabelLayout_floatLabelTextAppearance,
                         android.R.style.TextAppearance_Small));

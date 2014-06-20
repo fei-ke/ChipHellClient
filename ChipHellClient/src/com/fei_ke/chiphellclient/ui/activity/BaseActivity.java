@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,6 +24,8 @@ import org.androidannotations.annotations.EActivity;
  */
 @EActivity
 public abstract class BaseActivity extends FragmentActivity {
+    protected MenuItem menuItemRefresh;
+
     /**
      * 切勿调用和复写此方法
      */
@@ -49,6 +52,31 @@ public abstract class BaseActivity extends FragmentActivity {
             tintManager.setStatusBarTintResource(R.color.chh_red);
         }
         initActionBar();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menuItemRefresh = menu.findItem(R.id.action_refresh);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    /**
+     * 开始刷新
+     */
+    public void onStartRefresh() {
+        if (menuItemRefresh != null) {
+            menuItemRefresh.setActionView(R.layout.indeterminate_progress_action);
+        }
+    }
+
+    /**
+     * 刷新结束
+     */
+    public void onEndRefresh() {
+        if (menuItemRefresh != null) {
+            menuItemRefresh.setActionView(null);
+            menuItemRefresh.setIcon(R.drawable.white_ptr_rotate);
+        }
     }
 
     private void initActionBar() {

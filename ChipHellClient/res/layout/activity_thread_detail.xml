@@ -32,6 +32,7 @@
         <!-- SLIDING LAYOUT -->
 
         <RelativeLayout
+            android:clipChildren="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
@@ -47,6 +48,7 @@
                 android:clipToPadding="false"
                 android:divider="@null"
                 android:dividerHeight="5dp"
+                android:fastScrollEnabled="true"
                 android:listSelector="@android:drawable/list_selector_background"
                 android:paddingBottom="5dp"
                 android:paddingLeft="3dp"
@@ -64,14 +66,16 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:drawableRight="@drawable/logo"
-                android:background="@drawable/below_shadow" />
+                android:background="@drawable/below_shadow"
+                android:drawableRight="@drawable/ic_action_collections_sort_by_size"
+                android:layout_marginTop="-9dp" />
 
             <FrameLayout
                 android:id="@+id/layout_fast_reply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true" >
+                android:layout_alignParentBottom="true"
+                android:visibility="visible" >
 
                 <fragment
                     android:name="com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment_"

@@ -26,24 +26,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxHeight="200dp"
-                android:paddingRight="30dp" />
+                android:paddingRight="40dp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
-                android:layout_marginBottom="2dp"
+                android:layout_margin="5dp"
                 android:background="@drawable/chh_red_list_selector_holo_light"
                 android:src="@drawable/ic_face_grey" />
         </com.fei_ke.chiphellclient.ui.customviews.FloatLabelLayout>
 
         <ImageButton
             android:id="@+id/button_reply_send"
-            android:layout_width="wrap_content"
+            android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_margin="5dp"
             android:background="@drawable/chh_red_list_selector_holo_light"
-            android:src="@drawable/ic_send_grey"
+            android:src="@drawable/ic_action_send_now"
             android:text="发送" />
     </LinearLayout>
 

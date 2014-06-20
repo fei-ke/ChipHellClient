@@ -20,10 +20,13 @@
         <item name="android:background">@color/chh_red_color</item>
         <!-- <item name="android:backgroundStacked">@drawable/ab_stacked_solid_inverse_holo</item> -->
         <item name="android:titleTextStyle">@style/ActionBar.Title.Text.chh_red</item>
-        <!-- <item name="android:subtitleTextStyle">@style/ActionBar.Subtitle.Text</item> -->
+        <item name="android:subtitleTextStyle">@style/ActionBar.Subtitle.Text.chh_red</item>
    </style>
     
    <style name="ActionBar.Title.Text.chh_red" parent="android:TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">@color/white</item>
+   </style>
+   <style name="ActionBar.Subtitle.Text.chh_red" parent="android:TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
         <item name="android:textColor">@color/white</item>
    </style>
 </resources>
