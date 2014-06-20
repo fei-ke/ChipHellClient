@@ -1167,7 +1167,7 @@ public class AsyncHttpClient {
                 url += paramString;
             }
         }
-
+        Log.i("server_url:", ""+url);
         return url;
     }
 

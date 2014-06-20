@@ -46,6 +46,9 @@ public class PostItemView extends FrameLayout {
     @ViewById(R.id.textView_content)
     TextView textViewContent;
 
+    @ViewById(R.id.textView_authi)
+    TextView textViewAuthi;
+
     public static PostItemView newInstance(Context context) {
         return PostItemView_.build(context);
     }
@@ -85,6 +88,8 @@ public class PostItemView extends FrameLayout {
     }
 
     public void bindFirstValue(Post post) {
+        textViewAuthi.setText(Html.fromHtml(post.getAuthi()));
+        ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar);
         webViewContent.setVisibility(View.VISIBLE);
         textViewContent.setVisibility(View.GONE);
         webViewContent.loadDataWithBaseURL(Constants.BASE_URL, post.getContent(), "text/html", "utf-8", null);
@@ -92,6 +97,7 @@ public class PostItemView extends FrameLayout {
 
     // @Background
     void loadContent(Post post) {
+        textViewAuthi.setText(Html.fromHtml(post.getAuthi()));
         textViewContent.setText(Html.fromHtml(post.getContent(), new ImageGetter() {
 
             @Override

@@ -9,7 +9,9 @@ package com.fei_ke.chiphellclient.bean;
  */
 public class Post {
     private String avatarUrl;
+    private String replyUrl;
     String content;
+    String authi;// 名字，楼层，时间 html
 
     public String getAvatarUrl() {
         return avatarUrl;
@@ -17,6 +19,14 @@ public class Post {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getReplyUrl() {
+        return replyUrl;
+    }
+
+    public void setReplyUrl(String replyUrl) {
+        this.replyUrl = replyUrl;
     }
 
     public String getContent() {
@@ -27,9 +37,19 @@ public class Post {
         this.content = content;
     }
 
+    public String getAuthi() {
+        return authi;
+    }
+
+    public void setAuthi(String authi) {
+        this.authi = authi;
+    }
+
     @Override
     public String toString() {
-        return "Post [avatarUrl=" + avatarUrl + ", content=" + content + "]";
+        return "Post [avatarUrl=" + avatarUrl + ", replyUrl=" + replyUrl + ", content=" + content + ", authi=" + authi + "]";
     }
+
+ 
 
 }

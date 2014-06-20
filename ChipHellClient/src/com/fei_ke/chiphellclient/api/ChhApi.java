@@ -6,6 +6,7 @@ import android.webkit.CookieManager;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
+import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.User;
 import com.fei_ke.chiphellclient.constant.Constants;
@@ -107,6 +108,15 @@ public class ChhApi {
         });
     }
 
+    /**
+     * 回复主贴
+     * 
+     * @param fid
+     * @param tid
+     * @param formhash
+     * @param message
+     * @param apiCallBack
+     */
     public void reply(String fid, String tid, String formhash, String message, ApiCallBack<String> apiCallBack) {
         String url = Constants.BASE_URL + "forum.php?mod=post&action=reply&replysubmit=yes&mobile=yes";
         RequestParams param = new RequestParams();
@@ -127,6 +137,23 @@ public class ChhApi {
                 }
 
                 return message;
+            }
+        });
+    }
+
+    /**
+     * 引用回复的请求表单准备
+     * 
+     * @param url
+     * @param apiCallBack
+     */
+    public void prepareQuoteReply(String url, ApiCallBack<PrepareQuoteReply> apiCallBack) {
+        getAsyncHttpClient().get(url, new ApiResponsHandler<PrepareQuoteReply>(apiCallBack) {
+
+            @Override
+            public PrepareQuoteReply onSuccessThenParse(String responseString) {
+                PrepareQuoteReply prepareQuoteReply = HtmlParse.parsePrepareQuoteReply(responseString);
+                return prepareQuoteReply;
             }
         });
     }

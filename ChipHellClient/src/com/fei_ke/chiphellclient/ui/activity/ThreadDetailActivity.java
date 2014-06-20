@@ -1,14 +1,20 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ProgressBar;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.Post;
+import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
@@ -29,7 +35,7 @@ import java.util.List;
  * @2014-6-15
  */
 @EActivity(R.layout.activity_thread_detail)
-public class ThreadDetailActivity extends BaseActivity {
+public class ThreadDetailActivity extends BaseActivity implements OnItemLongClickListener {
     @ViewById(R.id.listView_post)
     PullToRefreshListView mRefreshListView;
 
@@ -70,6 +76,8 @@ public class ThreadDetailActivity extends BaseActivity {
             }
         });
 
+        mRefreshListView.getRefreshableView().setOnItemLongClickListener(this);
+
         getThreadList();
     }
 
@@ -104,6 +112,36 @@ public class ThreadDetailActivity extends BaseActivity {
 
         });
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Post post = mPostListAdapter.getItem(position);
+        ChhApi api = new ChhApi();
+        api.prepareQuoteReply(post.getReplyUrl(), new ApiCallBack<PrepareQuoteReply>() {
+            ProgressDialog dialog;
+
+            @Override
+            public void onStart() {
+                dialog = new ProgressDialog(ThreadDetailActivity.this);
+                dialog.setMessage("正在准备");
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+
+            @Override
+            public void onSuccess(PrepareQuoteReply result) {
+                System.out.println(result);
+            }
+
+            @Override
+            public void onFinish() {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        return true;
     }
 
 }

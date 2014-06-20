@@ -8,6 +8,7 @@ import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
+import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.User;
 import com.fei_ke.chiphellclient.constant.Constants;
@@ -22,7 +23,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HtmlParse {
+class HtmlParse {
     /**
      * 解析板块列表
      * 
@@ -136,8 +137,6 @@ public class HtmlParse {
      * @return
      */
     public static List<Post> parsePostList(String content) {
-        long s = System.currentTimeMillis();
-
         List<Post> posts = new ArrayList<Post>();
         Document document = Jsoup.parse(content);
         document.setBaseUri(Constants.BASE_URL);
@@ -152,13 +151,21 @@ public class HtmlParse {
                 Element message = plc.getElementsByClass("message").first();
                 post.setContent(message.html().trim());
 
+                try {// 主贴没有replyUrl
+                    String replyUrl = plc.getElementsByClass("replybtn").first().child(0).absUrl("href");
+                    post.setReplyUrl(replyUrl);
+                } catch (Exception e) {
+                }
+
+                String authi = plc.getElementsByClass("authi").first().html();
+                post.setAuthi(authi);
+
                 posts.add(post);
                 System.out.println(post);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("解析时间: " + (System.currentTimeMillis() - s));
         return posts;
     }
 
@@ -182,7 +189,7 @@ public class HtmlParse {
             Element btn_exit = document.getElementsByClass("btn_exit").first();
             System.out.println(btn_exit.toString());
             String url = btn_exit.child(0).attr("href");
-            UrlParamsMap map=new UrlParamsMap(url);
+            UrlParamsMap map = new UrlParamsMap(url);
             String formHash = map.get("formhash");
             ChhAplication.getInstance().setFormHash(formHash);
             LogMessage.d("formHash", formHash);
@@ -190,5 +197,43 @@ public class HtmlParse {
             e.printStackTrace();
         }
         return user;
+    }
+
+    /**
+     * 解析引用回复的准备数据
+     * 
+     * @param responseBody
+     * @return
+     */
+    public static PrepareQuoteReply parsePrepareQuoteReply(String responseBody) {
+        PrepareQuoteReply quoteReply = new PrepareQuoteReply();
+        try {
+
+            Document document = Jsoup.parse(responseBody);
+            Element postform = document.getElementById("postform");
+            String url = postform.attr("action");
+            String formhash = postform.getElementsByAttributeValue("name", "formhash").first().attr("value");
+            String posttime = postform.getElementsByAttributeValue("name", "posttime").first().attr("value");
+            String noticeauthor = postform.getElementsByAttributeValue("name", "noticeauthor").first().attr("value");
+            String noticetrimstr = postform.getElementsByAttributeValue("name", "noticetrimstr").first().attr("value");
+            String noticeauthormsg = postform.getElementsByAttributeValue("name", "noticeauthormsg").first().attr("value");
+            String reppid = postform.getElementsByAttributeValue("name", "reppid").first().attr("value");
+            String reppost = postform.getElementsByAttributeValue("name", "reppost").first().attr("value");
+            String quoteBody = postform.getElementsByClass("bl_line").first().html();
+
+            quoteReply.setNoticeauthor(noticeauthor);
+            quoteReply.setNoticeauthormsg(noticeauthormsg);
+            quoteReply.setNoticetrimstr(noticetrimstr);
+            quoteReply.setPosttime(posttime);
+            quoteReply.setQuoteBody(quoteBody);
+            quoteReply.setReppid(reppid);
+            quoteReply.setUrl(url);
+            quoteReply.setFormhash(formhash);
+            quoteReply.setReppost(reppost);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return quoteReply;
     }
 }
