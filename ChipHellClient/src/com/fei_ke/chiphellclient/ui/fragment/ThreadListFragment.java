@@ -156,9 +156,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
             @Override
             public void onFinish() {
-                mMainActivity.onEndRefresh();
                 mIsFreshing = false;
                 mListViewThreads.onRefreshComplete();
+                mMainActivity.onEndRefresh();
                 System.out.println("ThreadListFragment.getThreadList(...).new ApiCallBack() {...}.onFinish()");
             }
 

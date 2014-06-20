@@ -5,10 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
@@ -18,10 +19,10 @@ import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
+import com.fei_ke.chiphellclient.ui.customviews.PostMainView;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -53,6 +54,12 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
 
     @FragmentByTag("fast_reply")
     FastReplyFragment mFastReplyFragment;
+
+    @ViewById(R.id.main_post)
+    PostMainView mMainPostView;
+
+    @ViewById(R.id.layout_fast_reply)
+    View mlayoutFastReply;
 
     int mPage = 1;
     private boolean mIsFreshing;
@@ -98,7 +105,21 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
                 }
             }
         });
+
         mRefreshListView.getRefreshableView().setOnItemLongClickListener(this);
+        mRefreshListView.setOnScrollListener(new OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
 
         getPostList();
     }
@@ -110,7 +131,9 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
 
     private void getPostList(final int page) {
         mIsFreshing = true;
-
+        if (mPage < 1) {
+            mPage = 1;
+        }
         ChhApi api = new ChhApi();
         api.getPostList(mThread, page, new ApiCallBack<List<Post>>() {
             @Override
@@ -121,33 +144,13 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             @Override
             public void onSuccess(List<Post> result) {
                 if (page == 1) {
+                    mMainPostView.bindValue(mThread.getTitle(), result.get(0));
                     mPostListAdapter.clear();
-                    mPostListAdapter.update(result);
-                    return;
                 }
-                boolean hasNewData = false;
-
-                List<Post> posts = mPostListAdapter.getPosts();
-                // i是老的，j是新的
-                for (int i = 0, j = 0; j < result.size(); i++) {
-                    Post newPost = result.get(j);
-                    if (i < posts.size()) {
-                        Post oldPost = posts.get(i);
-                        if (oldPost.getAuthi().equals(newPost.getAuthi())) {
-                            posts.remove(i);
-                            posts.add(i, newPost);
-                            j++;
-                        }
-                    } else {
-                        hasNewData = true;
-                        posts.add(newPost);
-                        j++;
-                    }
-                    if (!hasNewData) {
-                        mPage--;
-                    }
+                boolean hasNewData = mPostListAdapter.update(result);
+                if (!hasNewData) {
+                    mPage -= 2;
                 }
-                mPostListAdapter.update(result);
             }
 
             @Override
@@ -162,6 +165,11 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        // 第一条为主贴，无法引用
+        if (id == 0) {
+            mFastReplyFragment.setPlateAndThread(mPlate, mThread);
+            return true;
+        }
         Post post = mPostListAdapter.getItem((int) id);
         ChhApi api = new ChhApi();
         api.prepareQuoteReply(post.getReplyUrl(), new ApiCallBack<PrepareQuoteReply>() {

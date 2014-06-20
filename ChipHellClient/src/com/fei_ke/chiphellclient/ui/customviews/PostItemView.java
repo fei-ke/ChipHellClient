@@ -8,12 +8,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Html.ImageGetter;
+import android.util.AttributeSet;
 import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebSettings.LayoutAlgorithm;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +21,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
@@ -40,9 +35,6 @@ public class PostItemView extends FrameLayout {
     @ViewById(R.id.imageView_avatar)
     ImageView imageViewAvatar;
 
-    @ViewById(R.id.webView_content)
-    WebView webViewContent;
-
     @ViewById(R.id.textView_content)
     TextView textViewContent;
 
@@ -53,51 +45,26 @@ public class PostItemView extends FrameLayout {
         return PostItemView_.build(context);
     }
 
+    public PostItemView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    public PostItemView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
     public PostItemView(Context context) {
         super(context);
     }
 
-    @AfterViews
-    void init() {
-        webViewContent = (WebView) findViewById(R.id.webView_content);
-        webViewContent.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                // view.loadUrl(url);
-                return false;
-            }
-        });
-        webViewContent.setWebChromeClient(new WebChromeClient());
-
-        WebSettings settings = webViewContent.getSettings();
-        settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(false);
-        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-        webViewContent.setVerticalScrollBarEnabled(true);
-        webViewContent.setHorizontalScrollBarEnabled(false);
-        settings.setJavaScriptEnabled(true);
-    }
-
-    public void bindValue(Post post) {
-        webViewContent.setVisibility(View.GONE);
+    public void bindValue(Post post, boolean isFirst) {
         textViewContent.setVisibility(View.VISIBLE);
         ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar);
-        // webViewContent.loadDataWithBaseURL(/* "file:///android_asset/" */Constants.BASE_URL, post.getContent(), "text/html", "utf-8",
-        // null);
-        loadContent(post);
-    }
-
-    public void bindFirstValue(Post post) {
         textViewAuthi.setText(Html.fromHtml(post.getAuthi()));
-        ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar);
-        webViewContent.setVisibility(View.VISIBLE);
-        textViewContent.setVisibility(View.GONE);
-        webViewContent.loadDataWithBaseURL(Constants.BASE_URL, post.getContent(), "text/html", "utf-8", null);
-    }
-
-    // @Background
-    void loadContent(Post post) {
-        textViewAuthi.setText(Html.fromHtml(post.getAuthi()));
+        if (isFirst) {
+            textViewContent.setText("");
+            return;
+        }
         textViewContent.setText(Html.fromHtml(post.getContent(), new ImageGetter() {
 
             @Override

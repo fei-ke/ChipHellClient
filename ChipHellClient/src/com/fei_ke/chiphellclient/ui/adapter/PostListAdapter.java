@@ -1,6 +1,7 @@
 
 package com.fei_ke.chiphellclient.ui.adapter;
 
+import android.R.integer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -45,25 +46,40 @@ public class PostListAdapter extends BaseAdapter {
             postItemView = (PostItemView) convertView;
         }
         Post post = getItem(position);
-        if (position == 0) {
-            postItemView.bindFirstValue(post);
-        } else {
-            postItemView.bindValue(post);
-        }
+        postItemView.bindValue(post, position == 0);
         return postItemView;
     }
 
-    public void update(List<Post> posts) {
+    /**
+     * @param posts
+     * @return 是否有新数据加载
+     */
+    public boolean update(List<Post> newPosts) {
         if (mPosts == null || mPosts.size() == 0) {
             mPosts = new LinkedList<Post>();
-            mPosts.addAll(posts);
-        }/*
-          * else {
-          * mThreads.clear();
-          * }
-          */
-        // mPosts.addAll(posts);
+            mPosts.addAll(newPosts);
+            notifyDataSetChanged();
+            return true;
+        }
+        int oldSize = getCount();
+        // i是老的，j是新的
+        for (int i = 0, j = 0; j < newPosts.size(); i++) {
+            Post newPost = newPosts.get(j);
+            if (i < mPosts.size()) {
+                Post oldPost = mPosts.get(i);
+                if (oldPost.getAuthi().equals(newPost.getAuthi())) {
+                    mPosts.remove(i);
+                    mPosts.add(i, newPost);
+                    j++;
+                }
+            } else {
+                mPosts.add(newPost);
+                j++;
+            }
+
+        }
         notifyDataSetChanged();
+        return oldSize != getCount();
     }
 
     public List<Post> getPosts() {

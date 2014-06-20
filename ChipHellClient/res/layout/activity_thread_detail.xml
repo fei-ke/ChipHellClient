@@ -6,40 +6,80 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true" >
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/listView_post"
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layout_fast_reply"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:dividerHeight="5dp"
-        android:listSelector="@android:drawable/list_selector_background"
-        android:paddingBottom="5dp"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:paddingTop="5dp"
-        android:scrollbarSize="2dip"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbarThumbVertical="@color/chh_red_with_alpha"
-        android:smoothScrollbar="true"
-        app:ptrDrawable="@drawable/red_ptr_rotate"
-        app:ptrHeaderSubTextColor="@color/chh_red"
-        app:ptrHeaderTextColor="@color/chh_red" />
+        android:gravity="bottom"
+        sothree:dragView="@+id/name"
+        sothree:panelHeight="?android:attr/actionBarSize"
+        sothree:paralaxOffset="100dp"
+        sothree:shadowHeight="4dp" >
 
-    <FrameLayout
-        android:id="@+id/layout_fast_reply"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        <!-- MAIN CONTENT -->
 
-        <fragment
-            android:name="com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment_"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:tag="fast_reply" />
-    </FrameLayout>
+            android:layout_height="match_parent" >
+
+            <com.fei_ke.chiphellclient.ui.customviews.PostMainView_
+                android:id="@+id/main_post"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <!-- SLIDING LAYOUT -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="false"
+            android:orientation="vertical" >
+
+            <com.handmark.pulltorefresh.library.PullToRefreshListView
+                android:id="@+id/listView_post"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:clipToPadding="false"
+                android:divider="@null"
+                android:dividerHeight="5dp"
+                android:listSelector="@android:drawable/list_selector_background"
+                android:paddingBottom="5dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="5dp"
+                android:scrollbarSize="2dip"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbarThumbVertical="@color/chh_red_with_alpha"
+                android:smoothScrollbar="true"
+                app:ptrDrawable="@drawable/red_ptr_rotate"
+                app:ptrHeaderSubTextColor="@color/chh_red"
+                app:ptrHeaderTextColor="@color/chh_red" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:drawableRight="@drawable/logo"
+                android:background="@drawable/below_shadow" />
+
+            <FrameLayout
+                android:id="@+id/layout_fast_reply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" >
+
+                <fragment
+                    android:name="com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment_"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="fast_reply" />
+            </FrameLayout>
+        </RelativeLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </RelativeLayout>
