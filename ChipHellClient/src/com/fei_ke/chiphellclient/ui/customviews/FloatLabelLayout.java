@@ -72,6 +72,7 @@ public final class FloatLabelLayout extends FrameLayout {
                 dipsToPix(DEFAULT_PADDING_LEFT_RIGHT_DP));
         mLabel = new TextView(context);
 //        mLabel.setSingleLine();
+        mLabel.setMaxLines(3);
         mLabel.setEllipsize(TextUtils.TruncateAt.END);
         mLabel.setPadding(sidePadding, 0, sidePadding, 0);
         mLabel.setVisibility(INVISIBLE);
@@ -176,6 +177,11 @@ public final class FloatLabelLayout extends FrameLayout {
                 .translationY(0f)
                 .setDuration(ANIMATION_DURATION)
                 .setListener(null).start();
+    }
+
+    @Override
+    public boolean isInEditMode() {
+        return false;
     }
 
     /**

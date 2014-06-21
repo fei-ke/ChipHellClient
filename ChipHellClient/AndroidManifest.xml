@@ -19,7 +19,7 @@
         <activity
             android:name="com.fei_ke.chiphellclient.ui.activity.MainActivity_"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +29,8 @@
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.LoginActivity_" />
         <activity
             android:name="com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity_"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name="com.fei_ke.chiphellclient.ui.activity.AlbumActivity_" />
     </application>
 
 </manifest>

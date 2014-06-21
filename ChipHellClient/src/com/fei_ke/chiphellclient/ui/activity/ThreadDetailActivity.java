@@ -1,6 +1,7 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,13 @@ import android.net.Uri;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebSettings.LayoutAlgorithm;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
@@ -21,8 +29,8 @@ import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
+import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
-import com.fei_ke.chiphellclient.ui.customviews.PostMainView;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -61,8 +69,10 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
     @FragmentByTag("fast_reply")
     FastReplyFragment mFastReplyFragment;
 
-    @ViewById(R.id.main_post)
-    PostMainView mMainPostView;
+    // @ViewById(R.id.main_post)
+    // PostMainView mMainPostView;
+    @ViewById(R.id.webView_content)
+    WebView webViewContent;
 
     @ViewById(R.id.layout_fast_reply)
     View mlayoutFastReply;
@@ -117,19 +127,7 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
         });
 
         mRefreshListView.getRefreshableView().setOnItemLongClickListener(this);
-        mRefreshListView.setOnScrollListener(new OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
+        mRefreshListView.setOnScrollListener(onScrollListener);
         mRefreshListView.setOnPullEventListener(new OnPullEventListener<ListView>() {
 
             @Override
@@ -139,8 +137,97 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
                 }
             }
         });
+
+        initWebView();
+
         getPostList();
     }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void initWebView() {
+        webViewContent.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // 回复
+                return handleUrl(url);
+            }
+        });
+        webViewContent.setWebChromeClient(new WebChromeClient());
+
+        WebSettings settings = webViewContent.getSettings();
+
+        settings.setBuiltInZoomControls(true);
+        settings.setDisplayZoomControls(false);
+        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        webViewContent.setVerticalScrollBarEnabled(true);
+        webViewContent.setHorizontalScrollBarEnabled(false);
+        settings.setJavaScriptEnabled(true);
+    }
+
+    private boolean handleUrl(String url) {
+        // 回复链接，比如回复可见时
+        if (url.startsWith(Constants.BASE_URL + "forum.php?mod=post&action=reply")) {
+            mPanelLayout.expandPanel();
+            return true;
+        }
+        if (url.indexOf("from=album") != -1) {// 点击图片
+            Intent intent = AlbumActivity.getStartIntent(ThreadDetailActivity.this, url);
+            startActivity(intent);
+            return true;
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+        return true;
+    }
+
+    public void loadMainContent(Post post) {
+        String content = post.getContent();
+        if (post.getImgList() != null) {
+            content += post.getImgList();
+        }
+        webViewContent.loadDataWithBaseURL(Constants.BASE_URL, content, "text/html", "utf-8", null);
+    }
+
+    private OnScrollListener onScrollListener = new OnScrollListener() {
+        int lastVisibleItem;
+        boolean scrollFlag;
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+
+                scrollFlag = true;
+
+            } else {
+
+                scrollFlag = false;
+
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if (scrollFlag) {
+                if (firstVisibleItem > lastVisibleItem) {// 向下
+                    if (mlayoutFastReply.getVisibility() == View.VISIBLE) {
+                        mFastReplyFragment.hide();
+                        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.hide_view_anim);
+                        mlayoutFastReply.startAnimation(animation);
+                        mlayoutFastReply.setVisibility(View.GONE);
+                    }
+                } else if (firstVisibleItem < lastVisibleItem) {
+                    if (mlayoutFastReply.getVisibility() != View.VISIBLE) {
+                        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_view_anim);
+                        mlayoutFastReply.startAnimation(animation);
+                        mlayoutFastReply.setVisibility(View.VISIBLE);
+                    }
+                }
+
+            }
+            lastVisibleItem = firstVisibleItem;
+        }
+    };
 
     private void getPostList() {
         mPage = 1;
@@ -169,7 +256,7 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
                 }
 
                 if (page == 1) {
-                    mMainPostView.bindValue(mThread.getTitle(), result.get(0));
+                    loadMainContent(result.get(0));
                     mPostListAdapter.clear();
                 }
                 boolean hasNewData = mPostListAdapter.update(result);
@@ -211,7 +298,6 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
 
             @Override
             public void onSuccess(PrepareQuoteReply result) {
-                System.out.println(result);
                 mFastReplyFragment.setPrepareQuoteReply(result);
             }
 

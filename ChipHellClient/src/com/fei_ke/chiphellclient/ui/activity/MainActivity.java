@@ -43,8 +43,6 @@ public class MainActivity extends BaseActivity {
 
     ThreadListFragment mThreadListFragment;
 
-
-
     @InstanceState
     Plate mPlate;
 
@@ -101,9 +99,8 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        System.out.println("MainActivity.onDestroy()");
+    protected void onStop() {
+        super.onStop();
         ACache aCache = ACache.get(this);
         if (mPlate != null) {
             aCache.put(KEY_CACHE_PLATE, mPlate);
@@ -175,7 +172,6 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

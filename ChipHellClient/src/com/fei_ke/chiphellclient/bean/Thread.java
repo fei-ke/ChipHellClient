@@ -62,7 +62,6 @@ public class Thread extends BaseBean {
             String[] s = timeAndCount.trim().split(" ");
             date = s[1];
             count = s[s.length - 1];
-            System.out.println(date + " " + count);
         }
     }
 

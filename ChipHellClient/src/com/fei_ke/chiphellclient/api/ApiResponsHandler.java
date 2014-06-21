@@ -63,7 +63,6 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     @Override
     // 后台线程解析
     public void onSuccess(int statusCode, Header[] headers, String responseString) {
-        System.out.println("satatusCode " + statusCode);
         T t = onSuccessThenParse(responseString);
 
         sendMessage(obtainMessage(PARSED_MESSAGE, t));

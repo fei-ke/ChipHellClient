@@ -23,19 +23,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <com.fei_ke.chiphellclient.ui.customviews.PostMainView_
-                android:id="@+id/main_post"
+            <!-- <com.fei_ke.chiphellclient.ui.customviews.PostMainView_ -->
+            <!-- android:id="@+id/main_post" -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="match_parent" /> -->
+
+            <WebView
+                android:id="@+id/webView_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <!-- SLIDING LAYOUT -->
 
         <RelativeLayout
-            android:clipChildren="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
+            android:clipChildren="false"
             android:focusable="false"
             android:orientation="vertical" >
 
@@ -66,9 +71,9 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
+                android:layout_marginTop="-9dp"
                 android:background="@drawable/below_shadow"
-                android:drawableRight="@drawable/ic_action_collections_sort_by_size"
-                android:layout_marginTop="-9dp" />
+                android:drawableRight="@drawable/ic_action_collections_sort_by_size" />
 
             <FrameLayout
                 android:id="@+id/layout_fast_reply"

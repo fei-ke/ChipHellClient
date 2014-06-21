@@ -22,7 +22,6 @@
         android:clipToPadding="false"
         android:divider="@null"
         android:dividerHeight="5dp"
-        android:fastScrollEnabled="true"
         android:paddingBottom="5dp"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"

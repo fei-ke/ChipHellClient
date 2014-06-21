@@ -53,7 +53,6 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                System.out.println("LoginActivity.onAfterViews().new WebViewClient() {...}.onPageStarted()");
             }
 
             @Override

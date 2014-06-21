@@ -25,6 +25,7 @@ import org.androidannotations.annotations.EActivity;
 @EActivity
 public abstract class BaseActivity extends FragmentActivity {
     protected MenuItem menuItemRefresh;
+    boolean mIsRefreshing = true;;
 
     /**
      * 切勿调用和复写此方法
@@ -57,6 +58,9 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menuItemRefresh = menu.findItem(R.id.action_refresh);
+        if (menuItemRefresh != null && mIsRefreshing) {
+            menuItemRefresh.setActionView(R.layout.indeterminate_progress_action);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -64,6 +68,8 @@ public abstract class BaseActivity extends FragmentActivity {
      * 开始刷新
      */
     public void onStartRefresh() {
+        mIsRefreshing = true;
+
         if (menuItemRefresh != null) {
             menuItemRefresh.setActionView(R.layout.indeterminate_progress_action);
         }
@@ -73,6 +79,8 @@ public abstract class BaseActivity extends FragmentActivity {
      * 刷新结束
      */
     public void onEndRefresh() {
+        mIsRefreshing = false;
+
         if (menuItemRefresh != null) {
             menuItemRefresh.setActionView(null);
             menuItemRefresh.setIcon(R.drawable.white_ptr_rotate);

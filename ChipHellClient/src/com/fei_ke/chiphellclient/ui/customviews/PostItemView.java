@@ -10,19 +10,30 @@ import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.constant.Constants;
+import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.ls.LSInput;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 帖子内的一个item
@@ -65,35 +76,37 @@ public class PostItemView extends FrameLayout {
             textViewContent.setText("");
             return;
         }
-        textViewContent.setText(Html.fromHtml(post.getContent(), new ImageGetter() {
+        String content = post.getContent();
+        if (post.getImgList() != null) {
+            content += post.getImgList();
+        }
+        textViewContent.setText(Html.fromHtml(content, new ImageGetter() {
 
             @Override
             public Drawable getDrawable(String source) {
                 if (!source.startsWith("http:")) {
                     source = Constants.BASE_URL + source;
                 }
-                System.out.println(source);
-                return getContext().getResources().getDrawable(R.drawable.ic_action_collections_sort_by_size);
-                // return new UrlDrawable(source, textViewContent);
+                LogMessage.d("PostItemView", source);
+                LogMessage.d("PostItemView", PostItemView.this.hashCode());
+                return new UrlDrawable(source, textViewContent);
             }
         }, null));
     }
 
     public static class UrlDrawable extends BitmapDrawable {
         protected Drawable drawable;
-        View container;
 
         @Override
         public void draw(Canvas canvas) {
-            // override the draw to facilitate refresh function later
             if (drawable != null) {
                 drawable.draw(canvas);
             }
         }
 
-        public UrlDrawable(String url, View container) {
-            this.container = container;
-            setBounds(0, 0, 30, 30);
+        @SuppressWarnings("deprecation")
+        public UrlDrawable(final String url, final View container) {
+            setBounds(0, 0, 100, 100);
             ImageLoader.getInstance().loadImage(url, new ImageLoadingListener() {
 
                 @Override
@@ -105,14 +118,15 @@ public class PostItemView extends FrameLayout {
                 }
 
                 @Override
-                public void onLoadingComplete(String arg0, View arg1, Bitmap bitmap) {
-                    BitmapDrawable drawable = new BitmapDrawable(bitmap);
-                    setBounds(0, 0, 0 + bitmap.getWidth(), 0
-                            + bitmap.getHeight());
+                public void onLoadingComplete(String url, View arg1, Bitmap bitmap) {
+                    Drawable drawable = new BitmapDrawable(container.getResources(), bitmap);
+                    int width = bitmap.getWidth() * 2;
+                    int height = bitmap.getHeight() * 2;
+                    drawable.setBounds(0, 0, width, height);
                     UrlDrawable.this.drawable = drawable;
+                    setBounds(0, 0, width, height);
 
-                    // redraw the image by invalidating the container
-                    UrlDrawable.this.container.invalidate();
+                    container.invalidate();
                 }
 
                 @Override

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.fei_ke.chiphellclient.ChhAplication;
+import com.fei_ke.chiphellclient.bean.AlbumWrap;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
@@ -137,6 +138,8 @@ class HtmlParse {
      * @return
      */
     public static List<Post> parsePostList(String content) {
+        long s = System.currentTimeMillis();
+
         List<Post> posts = new ArrayList<Post>();
         Document document = Jsoup.parse(content);
         document.setBaseUri(Constants.BASE_URL);
@@ -158,13 +161,23 @@ class HtmlParse {
                 }
 
                 String authi = plc.getElementsByClass("authi").first().html();
+                Elements img_list = plc.getElementsByClass("img_list");
+                if (img_list != null && !img_list.isEmpty()) {
+                    String imgList = img_list.first().html();
+                    post.setImgList(imgList);
+                } else {// 单张图片附件时
+                    Elements img_one = plc.getElementsByClass("img_one");
+                    if (img_one != null && !img_one.isEmpty()) {
+                        String imgOne = img_one.first().html();
+                        post.setImgList(imgOne);
+                    }
+                }
                 post.setAuthi(authi);
 
                 posts.add(post);
-                System.out.println(post);
             } catch (Exception e) {
-                e.printStackTrace();
             }
+            LogMessage.d("parsePostList", "解析时间:" + (System.currentTimeMillis() - s));
         }
         return posts;
     }
@@ -176,10 +189,10 @@ class HtmlParse {
      * @return
      */
     public static User parseUserInfo(String responseBody) {
-        System.out.println(responseBody);
         User user = new User();
         try {
             Document document = Jsoup.parse(responseBody);
+            document.setBaseUri(Constants.BASE_URL);
             Element elementUser = document.getElementsByClass("userinfo").first();
             Element elementAvatar = elementUser.getElementsByTag("img").first();
             user.setAvatarUrl(elementAvatar.attr("src"));
@@ -187,11 +200,12 @@ class HtmlParse {
             user.setInfo(elementUser.getElementsByClass("user_box").html());
 
             Element btn_exit = document.getElementsByClass("btn_exit").first();
-            System.out.println(btn_exit.toString());
+
             String url = btn_exit.child(0).attr("href");
             UrlParamsMap map = new UrlParamsMap(url);
             String formHash = map.get("formhash");
             ChhAplication.getInstance().setFormHash(formHash);
+
             LogMessage.d("formHash", formHash);
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,9 +224,11 @@ class HtmlParse {
         try {
 
             Document document = Jsoup.parse(responseBody);
+            document.setBaseUri(Constants.BASE_URL);
+
             Element postform = document.getElementById("postform");
-            String url = postform.attr("action");
-            
+            String url = postform.absUrl("action");
+
             String formhash = postform.getElementsByAttributeValue("name", "formhash").first().attr("value");
             String posttime = postform.getElementsByAttributeValue("name", "posttime").first().attr("value");
             String noticeauthor = postform.getElementsByAttributeValue("name", "noticeauthor").first().attr("value");
@@ -236,5 +252,31 @@ class HtmlParse {
         }
 
         return quoteReply;
+    }
+
+    /**
+     * 解析相册
+     * 
+     * @param responseBody
+     * @return
+     */
+    public static AlbumWrap parseAubum(String responseBody) {
+        AlbumWrap albumWrap = new AlbumWrap();
+        List<String> albums = new ArrayList<String>();
+
+        Document document = Jsoup.parse(responseBody);
+        document.setBaseUri(Constants.BASE_URL);
+        Elements elements = document.getElementsByClass("postalbum_i");
+        int i = 1;
+        for (Element album : elements) {
+            String url = album.absUrl("orig");
+            albums.add(url);
+        }
+        albumWrap.setUrls(albums);
+
+        String strCurpic = document.getElementById("curpic").text();
+        int curpic = Integer.valueOf(strCurpic) - 1;
+        albumWrap.setCurPosition(curpic);
+        return albumWrap;
     }
 }

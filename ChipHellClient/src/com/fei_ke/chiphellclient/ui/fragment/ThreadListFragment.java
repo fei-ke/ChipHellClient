@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -111,23 +115,32 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         });
         mListViewThreads.setRefreshing();
 
+        mListViewThreads.setOnScrollListener(onScrollListener);
     }
 
-    // private OnScrollListener onScrollListener = new OnScrollListener() {
-    //
-    // @Override
-    // public void onScrollStateChanged(AbsListView view, int scrollState) {
-    //
-    // }
-    //
-    // @Override
-    // public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-    // if (layoutFastReply.getVisibility() == View.VISIBLE) {
-    // // layoutFastReply.setVisibility(View.GONE);
-    // System.out.println("ThreadListFragment.enclosing_method()");
-    // }
-    // }
-    // };
+    private OnScrollListener onScrollListener = new OnScrollListener() {
+        int lastVisibleItem;
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if (firstVisibleItem > lastVisibleItem) {// 向下
+                if (layoutFastReply.getVisibility() == View.VISIBLE) {
+                    mFastReplyFragment.hide();
+                    Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_view_anim);
+                    layoutFastReply.startAnimation(animation);
+                    layoutFastReply.setVisibility(View.GONE);
+                }
+            } else {
+            }
+            lastVisibleItem = firstVisibleItem;
+
+        }
+    };
 
     private void getThreadList() {
         mPage = 1;
@@ -145,7 +158,6 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
-                System.out.println("onStart(): " + page);
             }
 
             @Override
@@ -154,7 +166,6 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                     mThreadListAdapter.clear();
                 }
                 mThreadListAdapter.update(result);
-                System.out.println("ThreadListFragment.getThreadList(...).new ApiCallBack() {...}.onSuccess()");
             }
 
             @Override
@@ -162,7 +173,6 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                 mIsFreshing = false;
                 mListViewThreads.onRefreshComplete();
                 mMainActivity.onEndRefresh();
-                System.out.println("ThreadListFragment.getThreadList(...).new ApiCallBack() {...}.onFinish()");
             }
 
         });

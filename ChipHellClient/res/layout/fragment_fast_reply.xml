@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -10,15 +11,26 @@
         android:layout_height="2dp"
         android:background="@color/chh_red" />
 
+    <TextView
+        android:id="@+id/textView_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        tools:text="回复：扫反恐两番龙的开森警" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <com.fei_ke.chiphellclient.ui.customviews.FloatLabelLayout
+        <FrameLayout
             android:id="@+id/layout_float_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1" >
 
             <EditText
@@ -29,23 +41,31 @@
                 android:paddingRight="40dp" />
 
             <ImageButton
+                android:id="@+id/button_smile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:layout_margin="5dp"
                 android:background="@drawable/chh_red_list_selector_holo_light"
                 android:src="@drawable/ic_face_grey" />
-        </com.fei_ke.chiphellclient.ui.customviews.FloatLabelLayout>
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/button_reply_send"
-            android:layout_width="48dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_margin="5dp"
             android:background="@drawable/chh_red_list_selector_holo_light"
+            android:padding="6dp"
             android:src="@drawable/ic_action_send_now"
             android:text="发送" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/layout_smile"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:visibility="gone" >
+    </FrameLayout>
 
 </LinearLayout>

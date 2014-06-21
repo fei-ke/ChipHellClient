@@ -10,8 +10,9 @@ package com.fei_ke.chiphellclient.bean;
 public class Post {
     private String avatarUrl;
     private String replyUrl;
-    String content;
-    String authi;// 名字，楼层，时间 html
+    private String content;
+    private String authi;// 名字，楼层，时间 html
+    private String imgList;// 图片附件列表
 
     public String getAvatarUrl() {
         return avatarUrl;
@@ -45,11 +46,17 @@ public class Post {
         this.authi = authi;
     }
 
+    public String getImgList() {
+        return imgList;
+    }
+
+    public void setImgList(String imgList) {
+        this.imgList = imgList;
+    }
+
     @Override
     public String toString() {
         return "Post [avatarUrl=" + avatarUrl + ", replyUrl=" + replyUrl + ", content=" + content + ", authi=" + authi + "]";
     }
-
- 
 
 }

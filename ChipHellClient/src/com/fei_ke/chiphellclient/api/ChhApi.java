@@ -1,8 +1,10 @@
 
 package com.fei_ke.chiphellclient.api;
 
+import android.util.Log;
 import android.webkit.CookieManager;
 
+import com.fei_ke.chiphellclient.bean.AlbumWrap;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
@@ -11,6 +13,7 @@ import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.User;
 import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.constant.Mode;
+import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 
@@ -24,6 +27,7 @@ import java.util.List;
  * CHH论坛接口
  */
 public class ChhApi {
+    protected static final String TAG = "ChhApi";
     private AsyncHttpClient mAsyncHttpClient;
     private Mode mMode;
 
@@ -100,7 +104,7 @@ public class ChhApi {
 
             @Override
             public List<Post> onSuccessThenParse(String responseString) {
-                System.out.println(responseString);
+                LogMessage.i(TAG + "#getPostList", responseString);
                 List<Post> posts = HtmlParse.parsePostList(responseString);
                 return posts;
             }
@@ -128,7 +132,7 @@ public class ChhApi {
 
             @Override
             public String onSuccessThenParse(String responseString) {
-                System.out.println(responseString);
+                LogMessage.i(TAG + "#reply", responseString);
                 String message = "发送成功";
                 Document document = Jsoup.parse(responseString);
                 Element messagetext = document.getElementById("messagetext");
@@ -158,11 +162,11 @@ public class ChhApi {
         params.add("replysubmit", quoteReply.getReplysubmit());
         params.add("reppid", quoteReply.getReppid());
         params.add("reppost", quoteReply.getReppost());
-        getAsyncHttpClient().post(Constants.BASE_URL+quoteReply.getUrl(), params, new ApiResponsHandler<String>(apiCallBack) {
+        getAsyncHttpClient().post(quoteReply.getUrl(), params, new ApiResponsHandler<String>(apiCallBack) {
 
             @Override
             public String onSuccessThenParse(String responseString) {
-                System.out.println(responseString);
+                LogMessage.i(TAG + "#quotrReply", responseString);
                 String message = "发送成功";
                 Document document = Jsoup.parse(responseString);
                 Element messagetext = document.getElementById("messagetext");
@@ -190,6 +194,19 @@ public class ChhApi {
                 return prepareQuoteReply;
             }
         });
+    }
+
+    public void getAlbum(String url, ApiCallBack<AlbumWrap> apiCallBack) {
+        getAsyncHttpClient().get(url, new ApiResponsHandler<AlbumWrap>(apiCallBack) {
+
+            @Override
+            public AlbumWrap onSuccessThenParse(String responseString) {
+                LogMessage.e(TAG + "#getAlbum", responseString);
+
+                return HtmlParse.parseAubum(responseString);
+            }
+        });
+
     }
 
     private AsyncHttpClient getAsyncHttpClient() {
