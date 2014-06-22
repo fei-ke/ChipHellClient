@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
@@ -45,6 +47,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.annotations.ViewById;
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -183,10 +186,23 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             startActivity(intent);
             return true;
         }
+        if (url.startsWith(Constants.BASE_URL + "member.php?mod=logging&action=login")) {
+            Intent intent = LoginActivity.getStartIntent(this);
+            startActivityForResult(intent, MainActivity.REQUEST_CODE_LOGIN);
+            return true;
+        }
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         startActivity(intent);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(resultCode, requestCode, data);
+        if (requestCode == MainActivity.REQUEST_CODE_LOGIN && resultCode == RESULT_OK) {
+            getPostList();
+        }
     }
 
     public void loadMainContent(Post post) {
@@ -302,6 +318,12 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
         }
 
         Post post = mPostListAdapter.getItem((int) id);
+
+        String url = post.getReplyUrl();
+        if (TextUtils.isEmpty(url)) {
+            Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
+            return true;
+        }
         ChhApi api = new ChhApi();
         api.prepareQuoteReply(post.getReplyUrl(), new ApiCallBack<PrepareQuoteReply>() {
             ProgressDialog dialog;

@@ -40,5 +40,6 @@
     <string name="jsoup_url">https://github.com/jhy/jsoup</string>
     <string name="SystemBarTint">SystemBarTint</string>
     <string name="SystemBarTint_url">https://github.com/jgilfelt/SystemBarTint</string>
+    <string name="not_login">你好像没有登录啊</string>
 
 </resources>
