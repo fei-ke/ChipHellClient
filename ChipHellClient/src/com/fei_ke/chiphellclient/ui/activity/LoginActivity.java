@@ -1,6 +1,7 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,8 +31,11 @@ public class LoginActivity extends BaseActivity {
         return LoginActivity_.intent(context).get();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onAfterViews() {
+        setTitle("登录");
+
         mWebView.getSettings().setJavaScriptEnabled(true);
         final String loginUrl = Constants.BASE_URL + "member.php?mod=logging&action=login&mobile=2";
         mWebView.loadUrl(loginUrl);

@@ -16,7 +16,7 @@ import java.util.List;
  * @author 杨金阳
  * @2014-6-22
  */
-public class AlbumAdapter extends FragmentStatePagerAdapter{
+public class AlbumAdapter extends FragmentStatePagerAdapter {
     List<String> mDatas;
 
     public AlbumAdapter(FragmentManager fm) {

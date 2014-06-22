@@ -2,16 +2,11 @@
 package com.fei_ke.chiphellclient.ui.fragment;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +20,7 @@ import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
+import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.constant.SmileTable;
@@ -37,6 +33,7 @@ import org.androidannotations.annotations.ViewById;
 import pl.droidsonroids.gif.GifDrawable;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,6 +68,8 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
     PrepareQuoteReply mQuoteReply;
 
     SmileFragment mSmileFragment;
+
+    private OnReplySuccess onReplySuccess;
 
     public static FastReplyFragment getInstance() {
         return FastReplyFragment_.builder().build();
@@ -126,11 +125,11 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
     private void setFace(SpannableStringBuilder spb, String smileName, int length) {
         String path = SmileTable.get(smileName);
         try {
-            int height = (int) editTextFastReply.getTextSize()*2;
-             GifDrawable drawable = new GifDrawable(ChhAplication.getInstance().getAssets(), path);
-//             Drawable drawable = Drawable.createFromStream(getResources().getAssets().open(path), smileName);
-             drawable.setBounds(0   , 0, height, height);
-             ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+            int height = (int) editTextFastReply.getTextSize() * 2;
+            GifDrawable drawable = new GifDrawable(ChhAplication.getInstance().getAssets(), path);
+            // Drawable drawable = Drawable.createFromStream(getResources().getAssets().open(path), smileName);
+            drawable.setBounds(0, 0, height, height);
+            ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
             SpannableString spanStr = new SpannableString(smileName);
             spanStr.setSpan(imageSpan, 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spb.append(spanStr);
@@ -174,12 +173,16 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
 
                 }
             case R.id.button_smile:
-                int height = SmileyPickerUtility.getKeyboardHeight(getActivity());
-                Toast.makeText(getActivity(), "" + height, 0).show();
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layoutSmile.getLayoutParams();
-                params.height = height;
-                layoutSmile.setVisibility(View.VISIBLE);
-                SmileyPickerUtility.hideSoftInput(editTextFastReply);
+                if (layoutSmile.getVisibility() == View.VISIBLE) {
+                    SmileyPickerUtility.showKeyBoard(editTextFastReply);
+                    layoutSmile.setVisibility(View.GONE);
+                } else {
+                    int height = SmileyPickerUtility.getKeyboardHeight(getActivity());
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layoutSmile.getLayoutParams();
+                    params.height = height;
+                    layoutSmile.setVisibility(View.VISIBLE);
+                    SmileyPickerUtility.hideSoftInput(editTextFastReply);
+                }
                 break;
             default:
                 break;
@@ -189,91 +192,84 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
     private void quoteReply() {
         String message = editTextFastReply.getText().toString();
         if (TextUtils.isEmpty(message)) {
-            Toast.makeText(getActivity(), "不能为空", 0).show();
+            Toast.makeText(getActivity(), "不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
         mQuoteReply.setMessage(message);
 
         ChhApi api = new ChhApi();
-        api.quotrReply(mQuoteReply, new ApiCallBack<String>() {
-            ProgressDialog dialog = new ProgressDialog(getActivity());
-
-            @Override
-            public void onSuccess(String result) {
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), result + "", 0).show();
-                }
-            }
-
-            @Override
-            public void onStart() {
-                dialog.setMessage("发送中……");
-                dialog.show();
-            }
-
-            @Override
-            public void onFailure(Throwable error, String content) {
-                error.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), "发送失败", 0).show();
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                if (dialog.isShowing()) {
-                    dialog.cancel();
-                    editTextFastReply.setText("");
-                }
-            }
-        });
+        api.quotrReply(mQuoteReply, new ReplyApiCallBack());
     }
 
     void reply() {
         String message = editTextFastReply.getText().toString();
         if (TextUtils.isEmpty(message)) {
-            Toast.makeText(getActivity(), "不能为空", 0).show();
+            Toast.makeText(getActivity(), "不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
         ChhApi api = new ChhApi();
-        api.reply(mPlate.getFid(), mThread.getTid(), ChhAplication.getInstance().getFormHash(), message, new ApiCallBack<String>() {
-            ProgressDialog dialog = new ProgressDialog(getActivity());
+        api.reply(mPlate.getFid(), mThread.getTid(), ChhAplication.getInstance().getFormHash(), message, new ReplyApiCallBack());
+    }
 
-            @Override
-            public void onSuccess(String result) {
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), result + "", 0).show();
-                    SmileyPickerUtility.hideSoftInput(editTextFastReply);
-                }
-            }
-
-            @Override
-            public void onStart() {
-                dialog.setMessage("发送中……");
-                dialog.show();
-            }
-
-            @Override
-            public void onFailure(Throwable error, String content) {
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), "发送失败", 0).show();
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                if (dialog.isShowing()) {
-                    dialog.cancel();
-                    editTextFastReply.setText("");
-                }
-            }
-        });
+    public void show() {
+        SmileyPickerUtility.showKeyBoard(editTextFastReply);
     }
 
     public void hide() {
+        SmileyPickerUtility.hideSoftInput(editTextFastReply);
         if (layoutSmile.getVisibility() == View.VISIBLE) {
             layoutSmile.setVisibility(View.GONE);
         }
-        SmileyPickerUtility.hideSoftInput(editTextFastReply);
+    }
+
+    public OnReplySuccess getOnReplySuccess() {
+        return onReplySuccess;
+    }
+
+    public void setOnReplySuccess(OnReplySuccess onReplySuccess) {
+        this.onReplySuccess = onReplySuccess;
+    }
+
+    private class ReplyApiCallBack extends ApiCallBack<List<Post>> {
+        ProgressDialog dialog;
+
+        @Override
+        public void onSuccess(List<Post> result) {
+            if (getActivity() != null && result != null) {
+                Toast.makeText(getActivity(), "回复成功", Toast.LENGTH_SHORT).show();
+                SmileyPickerUtility.hideSoftInput(editTextFastReply);
+                hide();
+                if (onReplySuccess != null) {
+                    onReplySuccess.onSuccess(result);
+                }
+            }
+        }
+
+        @Override
+        public void onStart() {
+            dialog = new ProgressDialog(getActivity());
+            dialog.setMessage("发送中……");
+            dialog.show();
+        }
+
+        @Override
+        public void onFailure(Throwable error, String content) {
+            error.printStackTrace();
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), content, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFinish() {
+            if (dialog.isShowing()) {
+                dialog.cancel();
+                editTextFastReply.setText("");
+            }
+        }
+    }
+
+    public static interface OnReplySuccess {
+        void onSuccess(List<Post> posts);
     }
 }

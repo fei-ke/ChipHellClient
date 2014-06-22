@@ -1167,7 +1167,9 @@ public class AsyncHttpClient {
                 url += paramString;
             }
         }
-        Log.i("server_url:", ""+url);
+        if(BuildConfig.DEBUG){
+            Log.i("server_url:", ""+url);
+        }
         return url;
     }
 

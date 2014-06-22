@@ -1,7 +1,6 @@
 
 package com.fei_ke.chiphellclient.ui.adapter;
 
-import android.R.integer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,7 +8,6 @@ import android.widget.BaseAdapter;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.ui.customviews.PostItemView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

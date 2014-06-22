@@ -1,16 +1,19 @@
+
 package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
+
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 /**
  * 版块列表分组
- *
+ * 
  * @author 杨金阳
  * @2014-6-15
  */

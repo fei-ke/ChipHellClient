@@ -22,8 +22,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.InputFilter.LengthFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -53,6 +51,7 @@ public final class FloatLabelLayout extends FrameLayout {
     private EditText mEditText;
     private TextView mLabel;
     final int sidePadding;
+
     public FloatLabelLayout(Context context) {
         this(context, null);
     }
@@ -71,7 +70,7 @@ public final class FloatLabelLayout extends FrameLayout {
                 R.styleable.FloatLabelLayout_floatLabelSidePadding,
                 dipsToPix(DEFAULT_PADDING_LEFT_RIGHT_DP));
         mLabel = new TextView(context);
-//        mLabel.setSingleLine();
+        // mLabel.setSingleLine();
         mLabel.setMaxLines(3);
         mLabel.setEllipsize(TextUtils.TruncateAt.END);
         mLabel.setPadding(sidePadding, 0, sidePadding, 0);

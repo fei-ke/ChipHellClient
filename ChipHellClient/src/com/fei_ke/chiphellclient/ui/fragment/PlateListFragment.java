@@ -2,7 +2,9 @@
 package com.fei_ke.chiphellclient.ui.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -15,6 +17,7 @@ import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.User;
+import com.fei_ke.chiphellclient.ui.activity.LoginActivity;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PlateListAdapter;
 import com.fei_ke.chiphellclient.ui.customviews.UserView;
@@ -68,9 +71,16 @@ public class PlateListFragment extends BaseContentFragment {
     @Override
     protected void onAfterViews() {
 
-        mUserView = UserView.getInstance(getActivity());
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(DensityUtil.dip2px(getActivity(), 240),
-                AbsListView.LayoutParams.WRAP_CONTENT);
+        mUserView = UserView.newInstance(getActivity());
+        mUserView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = LoginActivity.getStartIntent(mMainActivity);
+                getActivity().startActivityForResult(intent, MainActivity.REQUEST_CODE_LOGIN);
+            }
+        });
+        
         mExpandableListView.addHeaderView(mUserView);
 
         mPlateListAdapter = new PlateListAdapter(mPlateGroups);

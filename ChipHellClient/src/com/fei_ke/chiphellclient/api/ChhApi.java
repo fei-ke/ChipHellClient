@@ -1,7 +1,6 @@
 
 package com.fei_ke.chiphellclient.api;
 
-import android.util.Log;
 import android.webkit.CookieManager;
 
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
@@ -121,26 +120,28 @@ public class ChhApi {
      * @param message
      * @param apiCallBack
      */
-    public void reply(String fid, String tid, String formhash, String message, ApiCallBack<String> apiCallBack) {
-        String url = Constants.BASE_URL + "forum.php?mod=post&action=reply&replysubmit=yes&mobile=yes";
+    public void reply(String fid, String tid, String formhash, String message, ApiCallBack<List<Post>> apiCallBack) {
+        String url = Constants.BASE_URL + "forum.php?mod=post&action=reply&replysubmit=yes&mobile=2";
         RequestParams param = new RequestParams();
         param.add("message", message);
         param.add("fid", fid);
         param.add("tid", tid);
         param.add("formhash", formhash);
-        getAsyncHttpClient().post(url, param, new ApiResponsHandler<String>(apiCallBack) {
+        getAsyncHttpClient().post(url, param, new ApiResponsHandler<List<Post>>(apiCallBack) {
 
             @Override
-            public String onSuccessThenParse(String responseString) {
+            public List<Post> onSuccessThenParse(String responseString) {
                 LogMessage.i(TAG + "#reply", responseString);
                 String message = "发送成功";
                 Document document = Jsoup.parse(responseString);
                 Element messagetext = document.getElementById("messagetext");
                 if (messagetext != null) {
                     message = messagetext.child(0).text();
+                    sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
+                } else {
+                    return HtmlParse.parsePostList(responseString);
                 }
-
-                return message;
+                return null;
             }
         });
     }
@@ -151,7 +152,7 @@ public class ChhApi {
      * @param quoteReply
      * @param apiCallBack
      */
-    public void quotrReply(PrepareQuoteReply quoteReply, ApiCallBack<String> apiCallBack) {
+    public void quotrReply(PrepareQuoteReply quoteReply, ApiCallBack<List<Post>> apiCallBack) {
         RequestParams params = new RequestParams();
         params.add("formhash", quoteReply.getFormhash());
         params.add("message", quoteReply.getMessage());
@@ -162,19 +163,21 @@ public class ChhApi {
         params.add("replysubmit", quoteReply.getReplysubmit());
         params.add("reppid", quoteReply.getReppid());
         params.add("reppost", quoteReply.getReppost());
-        getAsyncHttpClient().post(quoteReply.getUrl(), params, new ApiResponsHandler<String>(apiCallBack) {
+        getAsyncHttpClient().post(quoteReply.getUrl(), params, new ApiResponsHandler<List<Post>>(apiCallBack) {
 
             @Override
-            public String onSuccessThenParse(String responseString) {
+            public List<Post> onSuccessThenParse(String responseString) {
                 LogMessage.i(TAG + "#quotrReply", responseString);
                 String message = "发送成功";
                 Document document = Jsoup.parse(responseString);
                 Element messagetext = document.getElementById("messagetext");
                 if (messagetext != null) {
                     message = messagetext.child(0).text();
+                    sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
+                } else {
+                    return HtmlParse.parsePostList(responseString);
                 }
-
-                return message;
+                return null;
             }
         });
     }

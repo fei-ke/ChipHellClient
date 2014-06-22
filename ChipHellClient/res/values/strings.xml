@@ -8,5 +8,37 @@
     <string name="browser">浏览器打开</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="about">关于</string>
+    <string name="open_source_notices">开源协议</string>
+    <string name="about_version">版本: %s</string>
+    <string name="action_version_update">检查更新</string>
+    <string name="notices">声明：该论坛客户端为个人业余爱好作品,客户端所有资源均来源于网络，版权属于原作者！
+  	      本人仅作学习参考，并承诺绝不用于任何商业目的。本应用所展示的内容、以及用户发表的言论属其个人行为，与本人立场无关。
+               如果我无意中侵犯了您的权益，敬请告之，本人将在第一时间作处理，谢谢！我的邮箱：admin@fei-ke.com</string>
+
+    <!-- 开源协议 -->
+    <string name="apache_license_2_0">Apache License, Version 2.0</string>
+    <string name="gnu_gpl">GNU General Public Licence </string>
+    <string name="mit_license">MIT License </string>
+    <string name="PhotoView">PhotoView</string>
+    <string name="PhotoView_url">https://github.com/chrisbanes/PhotoView</string>
+    <string name="Android_PullToRefresh">Android-PullToRefresh</string>
+    <string name="Android_PullToRefresh_url">https://github.com/chrisbanes/Android-PullToRefresh</string>
+    <string name="Android_Universal_Image_Loader">Android-Universal-Image-Loader</string>
+    <string name="Android_Universal_Image_Loader_url">https://github.com/nostra13/Android-Universal-Image-Loader</string>
+    <string name="android_async_http">android-async-http</string>
+    <string name="android_async_http_url">https://github.com/loopj/android-async-http</string>
+    <string name="AndroidSlidingUpPanel">AndroidSlidingUpPanel</string>
+    <string name="AndroidSlidingUpPanel_url">https://github.com/umano/AndroidSlidingUpPanel</string>
+    <string name="FloatingGroupExpandableListView">FloatingGroupExpandableListView</string>
+    <string name="FloatingGroupExpandableListView_url">https://github.com/diegocarloslima/FloatingGroupExpandableListView</string>
+    <string name="android_gif_drawable">android-gif-drawable</string>
+    <string name="android_gif_drawable_url">https://github.com/koral--/android-gif-drawable</string>
+    <string name="androidannotations">androidannotations</string>
+    <string name="androidannotations_url">https://github.com/excilys/androidannotations</string>
+    <string name="jsoup">jsoup</string>
+    <string name="jsoup_url">https://github.com/jhy/jsoup</string>
+    <string name="SystemBarTint">SystemBarTint</string>
+    <string name="SystemBarTint_url">https://github.com/jgilfelt/SystemBarTint</string>
 
 </resources>

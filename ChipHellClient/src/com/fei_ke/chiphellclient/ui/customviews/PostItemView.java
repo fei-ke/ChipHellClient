@@ -10,11 +10,8 @@ import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
@@ -27,13 +24,6 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
-import org.w3c.dom.ls.LSInput;
-
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * 帖子内的一个item

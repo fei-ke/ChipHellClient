@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fei_ke.chiphellclient"
-    android:versionCode="1"
+    android:versionCode="3"
     android:versionName="1.0" >
 
     <uses-sdk
@@ -9,6 +9,9 @@
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 自动更新,缓存需要 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name="com.fei_ke.chiphellclient.ChhAplication"
@@ -19,7 +22,7 @@
         <activity
             android:name="com.fei_ke.chiphellclient.ui.activity.MainActivity_"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,6 +34,26 @@
             android:name="com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity_"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.AlbumActivity_" />
+        <activity android:name="com.fei_ke.chiphellclient.ui.activity.AboutActivity_" />
+        <activity android:name="com.fei_ke.chiphellclient.ui.activity.SoftwareNoticesActivity" />
+
+        <!-- 友盟相关 -->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="539dc70d56240ba62712fe72" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="ChipHellForum" />
     </application>
 
 </manifest>

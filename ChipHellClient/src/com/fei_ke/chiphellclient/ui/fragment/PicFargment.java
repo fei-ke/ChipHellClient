@@ -3,11 +3,8 @@ package com.fei_ke.chiphellclient.ui.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -19,6 +16,7 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.ViewById;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -34,7 +32,7 @@ import java.io.IOException;
  * @author 杨金阳
  * @2014-1-26
  */
-@EFragment
+@EFragment(R.layout.fragment_pic)
 public class PicFargment extends BaseFragment {
     private static final String TAG = "PicFargment";
 
@@ -49,7 +47,12 @@ public class PicFargment extends BaseFragment {
     PhotoViewAttacher mPhotoViewAttacher;
     @FragmentArg
     protected String mUrl;
-    private ImageView mImageView;
+
+    @ViewById(R.id.imageView_pic)
+    GifImageView mImageView;
+
+    @ViewById(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     public static PicFargment getInstance(String url) {
         return PicFargment_.builder().mUrl(url).build();
@@ -60,16 +63,8 @@ public class PicFargment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mImageView = new GifImageView(getActivity());
-        onAfterViews();
-        return mImageView;
-    }
-
-    @Override
     protected void onAfterViews() {
         mPhotoViewAttacher = new PhotoViewAttacher(mImageView);
-        final ProgressBar progressBar = new ProgressBar(getActivity());
         ImageLoader.getInstance().displayImage(mUrl, mImageView, imageOptions, new ImageLoadingListener() {
 
             @Override
@@ -94,7 +89,7 @@ public class PicFargment extends BaseFragment {
                     }
                 }
                 mPhotoViewAttacher.update();
-                progressBar.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -103,9 +98,8 @@ public class PicFargment extends BaseFragment {
             }
         });
 
-        
         mPhotoViewAttacher.setOnPhotoTapListener(new OnPhotoTapListener() {
-            
+
             @Override
             public void onPhotoTap(View arg0, float arg1, float arg2) {
                 toggleHideyBar();
@@ -168,5 +162,10 @@ public class PicFargment extends BaseFragment {
 
         getActivity().getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
         // END_INCLUDE (set_ui_flags)
+        if(getActivity().getActionBar().isShowing()){
+            getActivity().getActionBar().hide();
+        }else{
+            getActivity().getActionBar().show();
+        }
     }
 }

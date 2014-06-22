@@ -2,6 +2,8 @@
 package com.fei_ke.chiphellclient.ui.activity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -43,16 +45,8 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
-            setTranslucentStatus(true);
-            SystemBarTintManager tintManager = new SystemBarTintManager(this);
-            tintManager.setStatusBarTintEnabled(true);
-            tintManager.setNavigationBarTintEnabled(true);
-            tintManager.setNavigationBarAlpha(0);
-            // tintManager.setNavigationBarTintResource(R.color.chh_red);
-            tintManager.setStatusBarTintResource(R.color.chh_red);
-        }
-        initActionBar();
+
+        initActionBar(this);
     }
 
     @Override
@@ -87,8 +81,20 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
-    private void initActionBar() {
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+    public static void initActionBar(Activity activity) {
+        activity.getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
+            setTranslucentStatus(activity, true);
+            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
+            tintManager.setStatusBarTintEnabled(true);
+            tintManager.setNavigationBarTintEnabled(true);
+            tintManager.setNavigationBarAlpha(0);
+            if (activity instanceof AlbumActivity) {
+                tintManager.setStatusBarTintColor(0);
+            } else {
+                tintManager.setStatusBarTintResource(R.color.chh_red);
+            }
+        }
     }
 
     @Override
@@ -105,8 +111,8 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
+    private static void setTranslucentStatus(Activity activity, boolean on) {
+        Window win = activity.getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
         final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
         if (on) {

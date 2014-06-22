@@ -26,5 +26,5 @@ public abstract class ApiCallBack<T extends Object> {
     public void onProgress(int bytesWritten, int totalSize) {
 
     }
-    
+
 }

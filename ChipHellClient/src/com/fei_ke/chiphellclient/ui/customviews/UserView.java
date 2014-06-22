@@ -32,7 +32,7 @@ public class UserView extends FrameLayout {
     @ViewById(R.id.textView_info)
     TextView textViewInfo;
 
-    public static UserView getInstance(Context context) {
+    public static UserView newInstance(Context context) {
         return UserView_.build(context);
     }
 

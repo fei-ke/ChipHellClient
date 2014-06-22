@@ -22,6 +22,7 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
         this.mApiCallBack = apiCallBack;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void handleMessage(Message message) {
         super.handleMessage(message);

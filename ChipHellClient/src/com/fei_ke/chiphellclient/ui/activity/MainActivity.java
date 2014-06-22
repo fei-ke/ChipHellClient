@@ -17,6 +17,7 @@ import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
 import com.fei_ke.chiphellclient.utils.ACache;
+import com.umeng.update.UmengUpdateAgent;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
@@ -31,7 +32,7 @@ import org.androidannotations.annotations.ViewById;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
 
-    private static final int REQUEST_CODE_LOGIN = 0x1;
+    public static final int REQUEST_CODE_LOGIN = 0x1;
 
     private static final String KEY_CACHE_PLATE = "key_cache_plate";
 
@@ -154,6 +155,15 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.action_test:
                 test();
+                break;
+            case R.id.action_open_source_notices:
+                startActivity(new Intent(this, SoftwareNoticesActivity.class));
+                break;
+            case R.id.action_about:
+                startActivity(AboutActivity.getStartIntent(this));
+                break;
+            case R.id.action_version_update:
+                UmengUpdateAgent.forceUpdate(this);
                 break;
             default:
                 break;

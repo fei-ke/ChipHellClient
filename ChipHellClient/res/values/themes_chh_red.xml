@@ -5,8 +5,9 @@
 
   <style name="chh_red" parent="@style/_chh_red"/>
 
-  <style name="_chh_red" parent="android:Theme.Holo.Light.DarkActionBar">
-   	
+  <style name="_chh_red" parent="android:Theme.Holo.Light">
+   	<item name="android:homeAsUpIndicator">@drawable/home_up_indicator</item>
+   	 
    	<item name="android:actionBarStyle">@style/ActionBarStylechh_red</item>
    
     <item name="android:editTextBackground">@drawable/chh_red_edit_text_holo_light</item>

@@ -3,10 +3,13 @@ package com.fei_ke.chiphellclient.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
@@ -43,6 +46,9 @@ public class AlbumActivity extends BaseActivity {
 
     AlbumAdapter mAdapter;
 
+    @ViewById(R.id.progressBar)
+    ProgressBar mProgressBar;
+
     public static Intent getStartIntent(Context context, String url) {
         return AlbumActivity_.intent(context).mUrl(url).get();
     }
@@ -55,10 +61,9 @@ public class AlbumActivity extends BaseActivity {
         tintManager.setNavigationBarTintEnabled(true);
         tintManager.setNavigationBarAlpha(0);
         tintManager.setStatusBarAlpha(0);
-        tintManager.setStatusBarTintResource(R.drawable.empty);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(0));
+        getActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
     }
-    
+
     @Override
     protected void onAfterViews() {
         mAdapter = new AlbumAdapter(getSupportFragmentManager());
@@ -81,7 +86,6 @@ public class AlbumActivity extends BaseActivity {
 
             }
         });
-
 
         ChhApi api = new ChhApi();
         api.getAlbum(mUrl, new ApiCallBack<AlbumWrap>() {
@@ -108,6 +112,7 @@ public class AlbumActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
+                mProgressBar.setVisibility(View.GONE);
                 onEndRefresh();
             }
         });

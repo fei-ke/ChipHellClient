@@ -15,6 +15,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.umeng.update.UmengUpdateAgent;
 
 public class ChhAplication extends Application {
     private String cookie;
@@ -38,6 +39,13 @@ public class ChhAplication extends Application {
         brandGlowEffect(this, getResources().getColor(R.color.chh_red));
 
         setTheme(R.style.AppBaseTheme);
+
+        umeng();
+    }
+
+    private void umeng() {
+        UmengUpdateAgent.setUpdateOnlyWifi(false);
+        UmengUpdateAgent.update(this);
     }
 
     public String getCookie() {

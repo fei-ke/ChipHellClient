@@ -15,6 +15,27 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+   public *;
+}
+
+-dontwarn org.apache.commons.httpclient.**
+-dontwarn org.androidannotations.api.rest.**
+
+-keepclassmembers class * {
+   public <init>(org.json.JSONObject);
+}
+
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+-keep public class com.umeng.fb.ui.ThreadView {
+}
+-keep public class com.fei_ke.chiphellclient.R$*{
+public static final int *;
+}
+-keep public class org.jsoup.** {
+public *;
+}

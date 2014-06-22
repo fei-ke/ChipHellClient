@@ -128,14 +128,8 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (firstVisibleItem > lastVisibleItem) {// 向下
-                if (layoutFastReply.getVisibility() == View.VISIBLE) {
-                    mFastReplyFragment.hide();
-                    Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_view_anim);
-                    layoutFastReply.startAnimation(animation);
-                    layoutFastReply.setVisibility(View.GONE);
-                }
-            } else {
+            if (firstVisibleItem > lastVisibleItem) {// 向上滑动中
+                hideFastReplyPanel();
             }
             lastVisibleItem = firstVisibleItem;
 
@@ -208,4 +202,13 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         }
     }
 
+    private void hideFastReplyPanel() {
+        if (layoutFastReply.getVisibility() == View.VISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.hide_view_anim);
+            layoutFastReply.startAnimation(animation);
+            layoutFastReply.setVisibility(View.GONE);
+            mFastReplyFragment.hide();
+
+        }
+    }
 }

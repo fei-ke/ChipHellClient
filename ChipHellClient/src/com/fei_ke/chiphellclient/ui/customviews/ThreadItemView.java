@@ -64,7 +64,7 @@ public class ThreadItemView extends FrameLayout {
             imageViewIcon.setVisibility(GONE);
         } else {
             imageViewIcon.setVisibility(VISIBLE);
-            ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon,new AnimateFirstDisplayListener());
+            ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon, new AnimateFirstDisplayListener());
         }
         if (thread.getTitleColor() != 0) {
             textViewTitle.setTextColor(thread.getTitleColor());
@@ -73,8 +73,6 @@ public class ThreadItemView extends FrameLayout {
         }
     }
 
-    
-    
     public TextView getTextViewCount() {
         return textViewCount;
     }

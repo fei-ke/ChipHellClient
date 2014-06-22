@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 class HtmlParse {
+    private static final String TAG = "HtmlParse";
+
     /**
      * 解析板块列表
      * 
@@ -208,7 +210,7 @@ class HtmlParse {
 
             LogMessage.d("formHash", formHash);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogMessage.w(TAG + "#parseUserInfo", e);
         }
         return user;
     }
@@ -267,7 +269,6 @@ class HtmlParse {
         Document document = Jsoup.parse(responseBody);
         document.setBaseUri(Constants.BASE_URL);
         Elements elements = document.getElementsByClass("postalbum_i");
-        int i = 1;
         for (Element album : elements) {
             String url = album.absUrl("orig");
             albums.add(url);

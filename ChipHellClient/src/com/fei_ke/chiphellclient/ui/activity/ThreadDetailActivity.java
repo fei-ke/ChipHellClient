@@ -32,6 +32,7 @@ import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
+import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment.OnReplySuccess;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnPullEventListener;
@@ -138,6 +139,13 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             }
         });
 
+        mFastReplyFragment.setOnReplySuccess(new OnReplySuccess() {
+
+            @Override
+            public void onSuccess(List<Post> posts) {
+                mPostListAdapter.update(posts);
+            }
+        });
         initWebView();
 
         getPostList();
@@ -210,24 +218,33 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             if (scrollFlag) {
                 if (firstVisibleItem > lastVisibleItem) {// 向下
-                    if (mlayoutFastReply.getVisibility() == View.VISIBLE) {
-                        mFastReplyFragment.hide();
-                        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.hide_view_anim);
-                        mlayoutFastReply.startAnimation(animation);
-                        mlayoutFastReply.setVisibility(View.GONE);
-                    }
+                    hideReplyPanel();
                 } else if (firstVisibleItem < lastVisibleItem) {
-                    if (mlayoutFastReply.getVisibility() != View.VISIBLE) {
-                        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_view_anim);
-                        mlayoutFastReply.startAnimation(animation);
-                        mlayoutFastReply.setVisibility(View.VISIBLE);
-                    }
+                    showReplyPanel();
                 }
 
             }
             lastVisibleItem = firstVisibleItem;
         }
     };
+
+    void showReplyPanel() {
+        if (mlayoutFastReply.getVisibility() != View.VISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_view_anim);
+            mlayoutFastReply.startAnimation(animation);
+            mlayoutFastReply.setVisibility(View.VISIBLE);
+            // mFastReplyFragment.show();
+        }
+    }
+
+    void hideReplyPanel() {
+        if (mlayoutFastReply.getVisibility() == View.VISIBLE) {
+            mFastReplyFragment.hide();
+            Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.hide_view_anim);
+            mlayoutFastReply.startAnimation(animation);
+            mlayoutFastReply.setVisibility(View.GONE);
+        }
+    }
 
     private void getPostList() {
         mPage = 1;
@@ -283,6 +300,7 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             mFastReplyFragment.setPlateAndThread(mPlate, mThread);
             return true;
         }
+
         Post post = mPostListAdapter.getItem((int) id);
         ChhApi api = new ChhApi();
         api.prepareQuoteReply(post.getReplyUrl(), new ApiCallBack<PrepareQuoteReply>() {
@@ -291,7 +309,7 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             @Override
             public void onStart() {
                 dialog = new ProgressDialog(ThreadDetailActivity.this);
-                dialog.setMessage("正在准备");
+                dialog.setMessage("正在准备……");
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
             }
@@ -299,6 +317,9 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             @Override
             public void onSuccess(PrepareQuoteReply result) {
                 mFastReplyFragment.setPrepareQuoteReply(result);
+                if (dialog.isShowing()) {
+                    showReplyPanel();
+                }
             }
 
             @Override
