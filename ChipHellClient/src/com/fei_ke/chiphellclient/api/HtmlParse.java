@@ -88,8 +88,8 @@ class HtmlParse {
             try {
                 Thread thread = new Thread();
                 Elements xg1 = bmc.getElementsByClass("xg1");
-                String timeAndCount = xg1.first().text();
-
+                String timeAndCount = xg1.first().ownText();
+                System.out.println(timeAndCount);
                 Elements as = bmc.getElementsByTag("a");
                 Element a1 = as.first();
                 String url = a1.absUrl("href");

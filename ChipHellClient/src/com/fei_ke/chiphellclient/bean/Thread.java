@@ -59,9 +59,15 @@ public class Thread extends BaseBean {
 
     private void calcDateAndCount() {
         if (date == null || count == null) {
-            String[] s = timeAndCount.trim().split(" ");
-            date = s[1];
-            count = s[s.length - 1];
+            timeAndCount = timeAndCount.trim();
+            try {
+                String[] s = timeAndCount.split("回");
+                date = s[0];
+                count = s[1];
+            } catch (Exception e) {
+                date = timeAndCount;
+                count = "0";
+            }
         }
     }
 

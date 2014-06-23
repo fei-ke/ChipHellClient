@@ -35,12 +35,14 @@
 
     <TextView
         android:id="@+id/textView_count"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="@drawable/chh_red_list_selector_holo_light"
+        android:background="@drawable/comment_bg_selector"
         android:clickable="true"
         android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="start"
         android:textColor="@color/darker_gray"
         tools:text="55" />
 
