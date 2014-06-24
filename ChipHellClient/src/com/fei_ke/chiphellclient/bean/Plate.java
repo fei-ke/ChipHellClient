@@ -32,7 +32,7 @@ public class Plate extends BaseBean {
     }
 
     public String getXg1() {
-        return xg1;
+        return xg1 == null ? "(0)" : xg1;
     }
 
     public void setXg1(String xg1) {
@@ -41,7 +41,7 @@ public class Plate extends BaseBean {
 
     @Override
     public String toString() {
-        return "Plate [title=" + title + ", url=" + url + ", xg1=" + xg1 + "]";
+        return title;
     }
 
     public String getFid() {

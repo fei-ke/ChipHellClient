@@ -88,6 +88,7 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
     protected static final int PROGRESS_MESSAGE = 4;
     protected static final int RETRY_MESSAGE = 5;
     protected static final int CANCEL_MESSAGE = 6;
+    protected static final int CACHE_MESSAGE = 7;
 
     protected static final int BUFFER_SIZE = 4096;
 
@@ -215,6 +216,12 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
     public abstract void onSuccess(int statusCode, Header[] headers, byte[] responseBody);
 
     /**
+     * 缓存被找到时,后台线程调用
+     * @param cacheBody
+     */
+    public abstract void onCache( byte[] cacheBody);
+    
+    /**
      * Fired when a request fails to complete, override to handle in your own code
      *
      * @param statusCode   return HTTP status code
@@ -267,6 +274,12 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
         sendMessage(obtainMessage(CANCEL_MESSAGE, null));
     }
 
+    @Override
+    public void sendCacheMessage(byte[] cache) {
+      //在背景线程中调用
+        handleMessage(obtainMessage(CACHE_MESSAGE, new Object[]{cache}));
+    }    
+    
     // Methods which emulate android's Handler and Message methods
     protected void handleMessage(Message message) {
         Object[] response;
@@ -315,6 +328,10 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
                 break;
             case CANCEL_MESSAGE:
                 onCancel();
+                break;
+            case CACHE_MESSAGE:
+                response = (Object[]) message.obj;
+                onCache((byte[])response[0]);
                 break;
         }
     }
@@ -366,11 +383,11 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
     }
 
     @Override
-    public void sendResponseMessage(HttpResponse response) throws IOException {
+    public byte[] sendResponseMessage(HttpResponse response) throws IOException {
         // do not process if request has been cancelled
+        byte[] responseBody = null;
         if (!Thread.currentThread().isInterrupted()) {
             StatusLine status = response.getStatusLine();
-            byte[] responseBody;
             responseBody = getResponseData(response.getEntity());
             // additional cancellation check as getResponseData() can take non-zero time to process
             if (!Thread.currentThread().isInterrupted()) {
@@ -381,6 +398,7 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
                 }
             }
         }
+        return responseBody;
     }
 
     /**

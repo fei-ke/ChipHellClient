@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void replaceContent(Plate plate) {
+    public void replaceContent(Plate plate) {
         mThreadListFragment = ThreadListFragment.getInstance(plate);
 
         getSupportFragmentManager().beginTransaction()

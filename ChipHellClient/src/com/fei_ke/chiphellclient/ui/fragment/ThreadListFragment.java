@@ -1,6 +1,8 @@
 
 package com.fei_ke.chiphellclient.ui.fragment;
 
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.format.DateUtils;
@@ -12,13 +14,16 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.Thread;
+import com.fei_ke.chiphellclient.bean.ThreadListWrap;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.ThreadListAdapter;
@@ -148,18 +153,19 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         mIsFreshing = true;
 
         ChhApi api = new ChhApi();
-        api.getThreadList(mPlate, page, new ApiCallBack<List<Thread>>() {
+        api.getThreadList(mPlate, page, new ApiCallBack<ThreadListWrap>() {
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
             }
 
             @Override
-            public void onSuccess(List<Thread> result) {
+            public void onSuccess(ThreadListWrap result) {
                 if (page == 1) {
                     mThreadListAdapter.clear();
+                    creadSubPlate(result.getPlates());
                 }
-                mThreadListAdapter.update(result);
+                mThreadListAdapter.update(result.getThreads());
             }
 
             @Override
@@ -171,6 +177,28 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
         });
 
+    }
+
+    // 创建子版块列表
+    protected void creadSubPlate(final List<Plate> plates) {
+        if (plates == null || plates.size() == 0) {
+            return;
+        }
+        ActionBar actionBar = getActivity().getActionBar();
+        System.out.println("ThreadListFragment.creadSubPlate()");
+        if (actionBar != null) {
+            System.out.println("ThreadListFragment.creadSubPlate()2222222");
+            SpinnerAdapter adapter = new ArrayAdapter<Plate>(getActivity(), android.R.layout.simple_list_item_1, plates);
+            actionBar.setListNavigationCallbacks(adapter, new OnNavigationListener() {
+
+                @Override
+                public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                    mMainActivity.replaceContent(plates.get(itemPosition));
+                    return true;
+                }
+            });
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        }
     }
 
     @Override
@@ -208,7 +236,6 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             layoutFastReply.startAnimation(animation);
             layoutFastReply.setVisibility(View.GONE);
             mFastReplyFragment.hide();
-
         }
     }
 }

@@ -14,18 +14,21 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-*/
+ */
 
 package com.loopj.android.http;
 
+import android.R.integer;
 import android.util.Log;
 
+import org.afinal.simplecache.ACache;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -43,11 +46,22 @@ public class AsyncHttpRequest implements Runnable {
     private boolean cancelIsNotified = false;
     private boolean isFinished = false;
 
-    public AsyncHttpRequest(AbstractHttpClient client, HttpContext context, HttpUriRequest request, ResponseHandlerInterface responseHandler) {
+    //缓存相关
+    private boolean isCacheAble;
+    private int cacheTime=0;//保存时间，单位秒,默认0永久保存
+    private File cacheDir;//缓存目录
+
+    public AsyncHttpRequest(AbstractHttpClient client, HttpContext context, HttpUriRequest request,
+            ResponseHandlerInterface responseHandler, boolean isCacheAble,File cacheDir,int cacheTime) {
         this.client = client;
         this.context = context;
         this.request = request;
         this.responseHandler = responseHandler;
+        
+        this.isCacheAble=isCacheAble;
+        this.cacheDir=cacheDir;
+        this.cacheTime=cacheTime;
+        
     }
 
     @Override
@@ -94,11 +108,35 @@ public class AsyncHttpRequest implements Runnable {
             // subclass of IOException so processed in the caller
             throw new MalformedURLException("No valid URI scheme was provided");
         }
+        // 读取缓存
+        if(isCacheAble) {
+            ACache aCache=ACache.get(cacheDir);
+            String key=request.getURI().toString();
+            if(BuildConfig.DEBUG){
+                Log.i("读缓存 key:", ""+key);
+            }
+            byte[] cache = aCache.getAsBinary(key);
+            if(cache!=null) {
+                responseHandler.sendCacheMessage(cache);
+            }
+        }
 
         HttpResponse response = client.execute(request, context);
-
+        // 写缓存
         if (!isCancelled() && responseHandler != null) {
-            responseHandler.sendResponseMessage(response);
+            byte[] cache = responseHandler.sendResponseMessage(response);
+            if (isCacheAble) {
+                ACache aCache = ACache.get(cacheDir);
+                String key = request.getURI().toString();
+                if (BuildConfig.DEBUG) {
+                    Log.i("写缓存 key:", "" + key);
+                }
+                if (cacheTime == 0) {
+                    aCache.put(key, cache);
+                } else {
+                    aCache.put(key, cache, cacheTime);
+                }
+            }
         }
     }
 

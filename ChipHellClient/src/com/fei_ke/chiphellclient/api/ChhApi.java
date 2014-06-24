@@ -1,6 +1,7 @@
 
 package com.fei_ke.chiphellclient.api;
 
+import android.content.Context;
 import android.webkit.CookieManager;
 
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
@@ -9,6 +10,7 @@ import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
+import com.fei_ke.chiphellclient.bean.ThreadListWrap;
 import com.fei_ke.chiphellclient.bean.User;
 import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.constant.Mode;
@@ -45,7 +47,7 @@ public class ChhApi {
         getAsyncHttpClient().get(Constants.BASE_URL + "forum.php?mobile=yes", new ApiResponsHandler<List<PlateGroup>>(apiCallBack) {
 
             @Override
-            public List<PlateGroup> onSuccessThenParse(String responseString) {
+            public List<PlateGroup> parseResponse(String responseString) {
                 List<PlateGroup> groups = HtmlParse.parsePlateGroupList(responseString);
                 return groups;
             }
@@ -61,7 +63,7 @@ public class ChhApi {
         getAsyncHttpClient().get(Constants.BASE_URL + "home.php?mod=space&mobile=2", new ApiResponsHandler<User>(apiCallBack) {
 
             @Override
-            public User onSuccessThenParse(String responseString) {
+            public User parseResponse(String responseString) {
                 User user = HtmlParse.parseUserInfo(responseString);
                 return user;
             }
@@ -76,14 +78,14 @@ public class ChhApi {
      * @param page 页码
      * @param apiCallBack
      */
-    public void getThreadList(Plate plate, int page, ApiCallBack<List<Thread>> apiCallBack) {
+    public void getThreadList(Plate plate, int page, ApiCallBack<ThreadListWrap> apiCallBack) {
         RequestParams param = new RequestParams("page", page);
-        getAsyncHttpClient().get(plate.getUrl(), param, new ApiResponsHandler<List<Thread>>(apiCallBack) {
+        getAsyncHttpClient().get(plate.getUrl(), param, new ApiResponsHandler<ThreadListWrap>(apiCallBack) {
 
             @Override
-            public List<Thread> onSuccessThenParse(String responseString) {
-                List<Thread> threads = HtmlParse.parseThreadList(responseString);
-                return threads;
+            public ThreadListWrap parseResponse(String responseString) {
+                ThreadListWrap threadListWrap = HtmlParse.parseThreadList(responseString);
+                return threadListWrap;
             }
 
         });
@@ -96,13 +98,13 @@ public class ChhApi {
      * @param page 页码
      * @param apiCallBack
      */
-    public void getPostList(Thread thread, int page, ApiCallBack<List<Post>> apiCallBack) {
+    public void getPostList(Context context, Thread thread, int page, ApiCallBack<List<Post>> apiCallBack) {
         RequestParams param = new RequestParams("page", page);
         param.add("mobile", 2);// 回帖列表使用触屏版来解析
-        getAsyncHttpClient().get(thread.getUrl(), param, new ApiResponsHandler<List<Post>>(apiCallBack) {
+        getAsyncHttpClient().get(context, thread.getUrl(), param, true, new ApiResponsHandler<List<Post>>(apiCallBack) {
 
             @Override
-            public List<Post> onSuccessThenParse(String responseString) {
+            public List<Post> parseResponse(String responseString) {
                 LogMessage.i(TAG + "#getPostList", responseString);
                 List<Post> posts = HtmlParse.parsePostList(responseString);
                 return posts;
@@ -130,7 +132,7 @@ public class ChhApi {
         getAsyncHttpClient().post(url, param, new ApiResponsHandler<List<Post>>(apiCallBack) {
 
             @Override
-            public List<Post> onSuccessThenParse(String responseString) {
+            public List<Post> parseResponse(String responseString) {
                 LogMessage.i(TAG + "#reply", responseString);
                 String message = "发送成功";
                 Document document = Jsoup.parse(responseString);
@@ -166,7 +168,7 @@ public class ChhApi {
         getAsyncHttpClient().post(quoteReply.getUrl(), params, new ApiResponsHandler<List<Post>>(apiCallBack) {
 
             @Override
-            public List<Post> onSuccessThenParse(String responseString) {
+            public List<Post> parseResponse(String responseString) {
                 LogMessage.i(TAG + "#quotrReply", responseString);
                 String message = "发送成功";
                 Document document = Jsoup.parse(responseString);
@@ -192,7 +194,7 @@ public class ChhApi {
         getAsyncHttpClient().get(url, new ApiResponsHandler<PrepareQuoteReply>(apiCallBack) {
 
             @Override
-            public PrepareQuoteReply onSuccessThenParse(String responseString) {
+            public PrepareQuoteReply parseResponse(String responseString) {
                 PrepareQuoteReply prepareQuoteReply = HtmlParse.parsePrepareQuoteReply(responseString);
                 return prepareQuoteReply;
             }
@@ -203,7 +205,7 @@ public class ChhApi {
         getAsyncHttpClient().get(url, new ApiResponsHandler<AlbumWrap>(apiCallBack) {
 
             @Override
-            public AlbumWrap onSuccessThenParse(String responseString) {
+            public AlbumWrap parseResponse(String responseString) {
                 LogMessage.e(TAG + "#getAlbum", responseString);
 
                 return HtmlParse.parseAubum(responseString);

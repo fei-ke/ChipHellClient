@@ -3,7 +3,7 @@
           package="com.loopj.android.http"
           android:versionName="1.4.5-SNAPSHOT"
           android:versionCode="145">
-
+	<uses-sdk android:minSdkVersion="8"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application/>

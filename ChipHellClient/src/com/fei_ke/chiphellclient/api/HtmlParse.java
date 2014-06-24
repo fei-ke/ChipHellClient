@@ -11,6 +11,7 @@ import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
+import com.fei_ke.chiphellclient.bean.ThreadListWrap;
 import com.fei_ke.chiphellclient.bean.User;
 import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.utils.LogMessage;
@@ -79,8 +80,11 @@ class HtmlParse {
      * 
      * @param Content
      */
-    public static List<Thread> parseThreadList(String content) {
+    public static ThreadListWrap parseThreadList(String content) {
+        ThreadListWrap threadWrap = new ThreadListWrap();
         List<Thread> threads = new ArrayList<Thread>();
+        List<Plate> plates = null;
+
         Document document = Jsoup.parse(content);
         document.setBaseUri(Constants.BASE_URL);
         Elements elementsGroup = document.getElementsByClass("bm_c");
@@ -125,12 +129,25 @@ class HtmlParse {
                 thread.setTimeAndCount(timeAndCount);
 
                 threads.add(thread);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {// 当有子版块时
+                if (plates == null) {
+                    plates = new ArrayList<Plate>();
+                }
+                Element child = bmc.child(0);
+                Plate plate = new Plate();
+                String title = child.ownText();
+                String url = child.absUrl("href");
+                plate.setTitle(title);
+                plate.setUrl(url);
+                plates.add(plate);
+
+                LogMessage.v(TAG, plate);
             }
 
         }
-        return threads;
+        threadWrap.setThreads(threads);
+        threadWrap.setPlates(plates);
+        return threadWrap;
     }
 
     /**

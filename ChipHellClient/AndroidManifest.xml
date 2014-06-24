@@ -32,7 +32,18 @@
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.LoginActivity_" />
         <activity
             android:name="com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity_"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="www.chiphell.com"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.AlbumActivity_" />
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.AboutActivity_" />
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.SoftwareNoticesActivity" />

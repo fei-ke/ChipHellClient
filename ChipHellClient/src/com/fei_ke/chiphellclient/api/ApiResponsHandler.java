@@ -17,6 +17,7 @@ import org.apache.http.Header;
 public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     ApiCallBack<T> mApiCallBack;
     private int PARSED_MESSAGE = 10;
+    private int PARSE_CACHE_MESSAGE = 11;
 
     public ApiResponsHandler(ApiCallBack<T> apiCallBack) {
         this.mApiCallBack = apiCallBack;
@@ -30,6 +31,8 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
             if (mApiCallBack != null) {
                 mApiCallBack.onSuccess((T) message.obj);
             }
+        } else if (message.what == PARSE_CACHE_MESSAGE) {
+            mApiCallBack.onCache((T) message.obj);
         }
     }
 
@@ -64,11 +67,17 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     @Override
     // 后台线程解析
     public void onSuccess(int statusCode, Header[] headers, String responseString) {
-        T t = onSuccessThenParse(responseString);
+        T t = parseResponse(responseString);
 
         sendMessage(obtainMessage(PARSED_MESSAGE, t));
 
     }
 
-    public abstract T onSuccessThenParse(String responseString);
+    @Override
+    public void onCache(String cacheString) {
+        T t = parseResponse(cacheString);
+        sendMessage(obtainMessage(PARSE_CACHE_MESSAGE, t));
+    }
+
+    public abstract T parseResponse(String responseString);
 }

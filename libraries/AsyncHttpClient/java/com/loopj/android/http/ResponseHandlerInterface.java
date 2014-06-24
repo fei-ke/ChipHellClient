@@ -34,8 +34,9 @@ public interface ResponseHandlerInterface {
      *
      * @param response HttpResponse object with data
      * @throws java.io.IOException if retrieving data from response fails
+     * @return 返回需要缓存的数据
      */
-    void sendResponseMessage(HttpResponse response) throws IOException;
+    byte[] sendResponseMessage(HttpResponse response) throws IOException;
 
     /**
      * Notifies callback, that request started execution
@@ -127,4 +128,9 @@ public interface ResponseHandlerInterface {
      * @return boolean if the ResponseHandler is running in synchronous mode
      */
     boolean getUseSynchronousMode();
+    /**
+     * 当缓存被找到时
+     * @param cache
+     */
+    void sendCacheMessage(byte[] cache);
 }

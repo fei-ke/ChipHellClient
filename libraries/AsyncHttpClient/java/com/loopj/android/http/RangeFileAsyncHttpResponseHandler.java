@@ -50,7 +50,7 @@ public abstract class RangeFileAsyncHttpResponseHandler extends FileAsyncHttpRes
     }
 
     @Override
-    public void sendResponseMessage(HttpResponse response) throws IOException {
+    public byte[] sendResponseMessage(HttpResponse response) throws IOException {
         if (!Thread.currentThread().isInterrupted()) {
             StatusLine status = response.getStatusLine();
             if (status.getStatusCode() == HttpStatus.SC_REQUESTED_RANGE_NOT_SATISFIABLE) {
@@ -72,6 +72,7 @@ public abstract class RangeFileAsyncHttpResponseHandler extends FileAsyncHttpRes
                 }
             }
         }
+        return null;
     }
 
     @Override

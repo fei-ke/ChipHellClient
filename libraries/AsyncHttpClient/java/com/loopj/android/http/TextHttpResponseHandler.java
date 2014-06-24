@@ -103,7 +103,19 @@ public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
     public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
         onFailure(statusCode, headers, getResponseString(responseBytes, getCharset()), throwable);
     }
-
+    /**
+     * 当缓存被找到时
+     * @param cacheString
+     */
+    public void onCache(String cacheString) {
+        //子类重写
+    }
+    
+    @Override
+    public void onCache(byte[] cacheBody) {
+        onCache(getResponseString(cacheBody, getCharset()));
+    }
+    
     /**
      * Attempts to encode response bytes as string of set encoding
      *

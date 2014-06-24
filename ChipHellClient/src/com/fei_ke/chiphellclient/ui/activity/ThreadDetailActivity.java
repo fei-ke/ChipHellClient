@@ -47,7 +47,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.FragmentByTag;
 import org.androidannotations.annotations.ViewById;
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -94,6 +93,10 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
     @Override
     protected void onAfterViews() {
         // mRefreshListView.setMode(Mode.DISABLED);
+        if (mThread == null) {
+            handExportUrl();
+        }
+
         mFastReplyFragment.setPlateAndThread(mPlate, mThread);
 
         mPostListAdapter = new PostListAdapter();
@@ -152,6 +155,14 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
         initWebView();
 
         getPostList();
+    }
+
+    private void handExportUrl() {
+        String url = getIntent().getDataString();
+        this.mThread = new Thread();
+        mThread.setUrl(url);
+        mPlate = new Plate();
+        mPlate.setTitle("返回");
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -276,10 +287,22 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             mPage = 1;
         }
         ChhApi api = new ChhApi();
-        api.getPostList(mThread, page, new ApiCallBack<List<Post>>() {
+        api.getPostList(this.getApplicationContext(), mThread, page, new ApiCallBack<List<Post>>() {
             @Override
             public void onStart() {
                 onStartRefresh();
+            }
+
+            @Override
+            public void onCache(List<Post> result) {
+                if (result == null || result.size() == 0) {
+                    return;
+                }
+
+                if (page == 1) {
+                    loadMainContent(result.get(0));
+                    mPostListAdapter.clear();
+                }
             }
 
             @Override
@@ -294,7 +317,7 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
                 }
                 boolean hasNewData = mPostListAdapter.update(result);
                 if (!hasNewData) {
-                    mPage -= 2;
+                    mPage -= 1;
                 }
             }
 

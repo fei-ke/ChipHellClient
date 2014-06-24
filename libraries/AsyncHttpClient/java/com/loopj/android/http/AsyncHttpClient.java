@@ -69,6 +69,7 @@ import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -797,6 +798,35 @@ public class AsyncHttpClient {
     public RequestHandle get(Context context, String url, RequestParams params, ResponseHandlerInterface responseHandler) {
         return sendRequest(httpClient, httpContext, new HttpGet(getUrlWithQueryString(isUrlEncodingEnabled, url, params)), null, responseHandler, context);
     }
+    
+    public RequestHandle get(Context context, String url, RequestParams params,boolean isCacheAble ,File cacheDir,int cacheTime , ResponseHandlerInterface responseHandler) {
+        return sendRequest(httpClient, httpContext, new HttpGet(getUrlWithQueryString(isUrlEncodingEnabled, url, params)), null, responseHandler, context,isCacheAble,cacheDir,cacheTime);
+    }
+    
+    public RequestHandle get(Context context, String url, RequestParams params,boolean isCacheAble ,File cacheDir,ResponseHandlerInterface responseHandler) {
+        return get(context, url, params, isCacheAble, cacheDir, 0, responseHandler);
+    }
+    
+    public RequestHandle get(Context context, String url,boolean isCacheAble ,File cacheDir,ResponseHandlerInterface responseHandler) {
+        return  get(context, url, null, isCacheAble, cacheDir, responseHandler);
+    }
+
+    public RequestHandle get(Context context, String url, RequestParams params, boolean isCacheAble,
+            ResponseHandlerInterface responseHandler) {
+        File cacheDir = null;
+        if (isCacheAble) {
+            cacheDir = context.getExternalCacheDir();
+        }
+        if (cacheDir == null) {
+            cacheDir = context.getCacheDir();
+        }
+        return get(context, url, params, isCacheAble,cacheDir, responseHandler);
+    }
+
+    public RequestHandle get(Context context, String url, boolean isCacheAble,
+            ResponseHandlerInterface responseHandler) {
+        return get(context, url, null, isCacheAble, responseHandler);
+    }
 
     /**
      * Perform a HTTP GET request and track the Android Context which initiated the request with
@@ -1066,10 +1096,16 @@ public class AsyncHttpClient {
      *                        HttpPost, HttpGet, HttpPut, etc.
      * @return AsyncHttpRequest ready to be dispatched
      */
-    protected AsyncHttpRequest newAsyncHttpRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, ResponseHandlerInterface responseHandler, Context context) {
-        return new AsyncHttpRequest(client, httpContext, uriRequest, responseHandler);
+    protected AsyncHttpRequest newAsyncHttpRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest,
+            String contentType, ResponseHandlerInterface responseHandler, Context context, boolean isCacheAble, File cacheDir, int cacheTime) {
+        return new AsyncHttpRequest(client, httpContext, uriRequest, responseHandler, isCacheAble, cacheDir, cacheTime);
     }
-
+    
+    protected RequestHandle sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType,
+            ResponseHandlerInterface responseHandler, Context context) {
+        return sendRequest(client, httpContext, uriRequest, contentType, responseHandler, context, false, null, 0);
+    }
+    
     /**
      * Puts a new request in queue as a new thread in pool to be executed
      *
@@ -1082,7 +1118,8 @@ public class AsyncHttpClient {
      *                        HttpPost, HttpGet, HttpPut, etc.
      * @return RequestHandle of future request process
      */
-    protected RequestHandle sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, ResponseHandlerInterface responseHandler, Context context) {
+   protected RequestHandle sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType,
+            ResponseHandlerInterface responseHandler, Context context , boolean isCacheAble, File cacheDir, int cacheTime) {
         if (uriRequest == null) {
             throw new IllegalArgumentException("HttpUriRequest must not be null");
         }
@@ -1102,7 +1139,7 @@ public class AsyncHttpClient {
         responseHandler.setRequestHeaders(uriRequest.getAllHeaders());
         responseHandler.setRequestURI(uriRequest.getURI());
 
-        AsyncHttpRequest request = newAsyncHttpRequest(client, httpContext, uriRequest, contentType, responseHandler, context);
+        AsyncHttpRequest request = newAsyncHttpRequest(client, httpContext, uriRequest, contentType, responseHandler, context , isCacheAble , cacheDir , cacheTime);
         threadPool.submit(request);
         RequestHandle requestHandle = new RequestHandle(request);
 

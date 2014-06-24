@@ -97,8 +97,8 @@ public abstract class BinaryHttpResponseHandler extends AsyncHttpResponseHandler
     @Override
     public abstract void onFailure(int statusCode, Header[] headers, byte[] binaryData, Throwable error);
 
-    @Override
-    public final void sendResponseMessage(HttpResponse response) throws IOException {
+    @Override//不作缓存处理
+    public final  byte[]  sendResponseMessage(HttpResponse response) throws IOException {
         StatusLine status = response.getStatusLine();
         Header[] contentTypeHeaders = response.getHeaders(AsyncHttpClient.HEADER_CONTENT_TYPE);
         if (contentTypeHeaders.length != 1) {
@@ -112,7 +112,7 @@ public abstract class BinaryHttpResponseHandler extends AsyncHttpResponseHandler
                     "None, or more than one, Content-Type Header found!"
                 )
             );
-            return;
+            return null;
         }
         Header contentTypeHeader = contentTypeHeaders[0];
         boolean foundAllowedContentType = false;
@@ -136,8 +136,9 @@ public abstract class BinaryHttpResponseHandler extends AsyncHttpResponseHandler
                     "Content-Type not allowed!"
                 )
             );
-            return;
+            return null;
         }
         super.sendResponseMessage(response);
+        return null;
     }
 }

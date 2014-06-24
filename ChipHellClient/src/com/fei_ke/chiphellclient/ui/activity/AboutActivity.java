@@ -61,13 +61,15 @@ public class AboutActivity extends BaseActivity {
 
             @Override
             public void onClick(View widget) {
-                Plate plate = new Plate();
-                plate.setTitle("自由水世界");
-                plate.setUrl("http://www.chiphell.com/forum.php?mod=forumdisplay&fid=201&mobile=2");
-                Thread thread = new Thread();
-                thread.setTitle("ChipHell非官方客户端发布页");
-                thread.setUrl("http://www.chiphell.com/forum.php?mod=viewthread&tid=1058176&extra=page%3D1&mobile=2");
-                Intent intent = ThreadDetailActivity.getStartIntent(AboutActivity.this, plate, thread);
+//                Plate plate = new Plate();
+//                plate.setTitle("自由水世界");
+//                plate.setUrl("http://www.chiphell.com/forum.php?mod=forumdisplay&fid=201&mobile=2");
+//                Thread thread = new Thread();
+//                thread.setTitle("ChipHell非官方客户端发布页");
+//                thread.setUrl("http://www.chiphell.com/forum.php?mod=viewthread&tid=1058176&extra=page%3D1&mobile=2");
+//                Intent intent = ThreadDetailActivity.getStartIntent(AboutActivity.this, plate, thread);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://www.chiphell.com/forum.php?mod=viewthread&tid=1058176&extra=page%3D1&mobile=2"));
                 startActivity(intent);
             }
         };
@@ -81,7 +83,7 @@ public class AboutActivity extends BaseActivity {
             public void onClick(View widget) {
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://weibo.com/jinyang656/"));
+                intent.setData(Uri.parse("http://weibo.com/jinyang656"));
                 startActivity(intent);
             }
         };
