@@ -43,15 +43,16 @@ public class ChhApi {
     /**
      * 获取版块列表
      */
-    public void getPlateGroups(ApiCallBack<List<PlateGroup>> apiCallBack) {
-        getAsyncHttpClient().get(Constants.BASE_URL + "forum.php?mobile=yes", new ApiResponsHandler<List<PlateGroup>>(apiCallBack) {
+    public void getPlateGroups(Context context, ApiCallBack<List<PlateGroup>> apiCallBack) {
+        getAsyncHttpClient().get(context, Constants.BASE_URL + "forum.php?mobile=yes", true,
+                new ApiResponsHandler<List<PlateGroup>>(apiCallBack) {
 
-            @Override
-            public List<PlateGroup> parseResponse(String responseString) {
-                List<PlateGroup> groups = HtmlParse.parsePlateGroupList(responseString);
-                return groups;
-            }
-        });
+                    @Override
+                    public List<PlateGroup> parseResponse(String responseString) {
+                        List<PlateGroup> groups = HtmlParse.parsePlateGroupList(responseString);
+                        return groups;
+                    }
+                });
     }
 
     /**
@@ -78,9 +79,9 @@ public class ChhApi {
      * @param page 页码
      * @param apiCallBack
      */
-    public void getThreadList(Plate plate, int page, ApiCallBack<ThreadListWrap> apiCallBack) {
+    public void getThreadList(Context context, Plate plate, int page, ApiCallBack<ThreadListWrap> apiCallBack) {
         RequestParams param = new RequestParams("page", page);
-        getAsyncHttpClient().get(plate.getUrl(), param, new ApiResponsHandler<ThreadListWrap>(apiCallBack) {
+        getAsyncHttpClient().get(context, plate.getUrl(), param, page == 1, new ApiResponsHandler<ThreadListWrap>(apiCallBack) {
 
             @Override
             public ThreadListWrap parseResponse(String responseString) {

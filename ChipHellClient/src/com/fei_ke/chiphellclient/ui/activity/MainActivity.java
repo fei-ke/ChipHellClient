@@ -16,9 +16,9 @@ import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
-import com.fei_ke.chiphellclient.utils.ACache;
 import com.umeng.update.UmengUpdateAgent;
 
+import org.afinal.simplecache.ACache;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
@@ -56,7 +56,6 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPlateClick(Plate plate) {
-                mPlate = plate;
                 replaceContent(plate);
             }
         });
@@ -85,14 +84,15 @@ public class MainActivity extends BaseActivity {
                     }
                 };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        if (mPlate == null) {
+        Plate plate = mPlate;
+        mPlate = null;
+        if (plate == null) {
             ACache aCache = ACache.get(this);
-            mPlate = (Plate) aCache.getAsObject(KEY_CACHE_PLATE);
+            plate = (Plate) aCache.getAsObject(KEY_CACHE_PLATE);
         }
 
-        if (mPlate != null) {
-            replaceContent(mPlate);
+        if (plate != null) {
+            replaceContent(plate);
         } else {
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
@@ -109,13 +109,27 @@ public class MainActivity extends BaseActivity {
     }
 
     public void replaceContent(Plate plate) {
-        mThreadListFragment = ThreadListFragment.getInstance(plate);
+        if (mPlate == plate) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+        mPlate = plate;
+        mThreadListFragment = getThreadListFragment(plate);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, mThreadListFragment)
+                .replace(R.id.content_frame, mThreadListFragment, plate.getFid())
+                .addToBackStack(mPlate.getFid())
                 .commit();
         mDrawerLayout.closeDrawers();
         setTitle(plate.getTitle());
+    }
+
+    private ThreadListFragment getThreadListFragment(Plate plate) {
+        ThreadListFragment fragment = (ThreadListFragment) getSupportFragmentManager().findFragmentByTag(plate.getFid());
+        if (fragment == null) {
+            fragment = ThreadListFragment.getInstance(plate);
+        }
+        return fragment;
     }
 
     @Override

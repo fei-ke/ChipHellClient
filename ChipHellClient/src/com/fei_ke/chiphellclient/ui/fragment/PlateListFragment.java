@@ -80,7 +80,7 @@ public class PlateListFragment extends BaseContentFragment {
                 getActivity().startActivityForResult(intent, MainActivity.REQUEST_CODE_LOGIN);
             }
         });
-        
+
         mExpandableListView.addHeaderView(mUserView);
 
         mPlateListAdapter = new PlateListAdapter(mPlateGroups);
@@ -119,7 +119,12 @@ public class PlateListFragment extends BaseContentFragment {
             }
         });
 
-        api.getPlateGroups(new ApiCallBack<List<PlateGroup>>() {
+        api.getPlateGroups(getActivity(), new ApiCallBack<List<PlateGroup>>() {
+            @Override
+            public void onCache(List<PlateGroup> result) {
+                onSuccess(result);
+            }
+
             @Override
             public void onSuccess(List<PlateGroup> result) {
                 mPlateListAdapter.updateDatas(result);

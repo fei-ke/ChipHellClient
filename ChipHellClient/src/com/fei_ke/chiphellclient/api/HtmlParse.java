@@ -17,11 +17,19 @@ import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.UrlParamsMap;
 
+import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +101,6 @@ class HtmlParse {
                 Thread thread = new Thread();
                 Elements xg1 = bmc.getElementsByClass("xg1");
                 String timeAndCount = xg1.first().ownText();
-                System.out.println(timeAndCount);
                 Elements as = bmc.getElementsByTag("a");
                 Element a1 = as.first();
                 String url = a1.absUrl("href");
@@ -139,6 +146,7 @@ class HtmlParse {
                 String url = child.absUrl("href");
                 plate.setTitle(title);
                 plate.setUrl(url);
+                plate.setSubPlate(true);
                 plates.add(plate);
 
                 LogMessage.v(TAG, plate);
@@ -170,8 +178,19 @@ class HtmlParse {
                 Element avatar = plc.getElementsByClass("avatar").first();
                 post.setAvatarUrl(avatar.child(0).absUrl("src"));
 
+                String authi = plc.getElementsByClass("authi").first().html();
                 Element message = plc.getElementsByClass("message").first();
                 post.setContent(message.html().trim());
+                // // 解析头像
+                // // Element avatar = plc.getElementsByClass("avatar").first();
+                // Element avatar = plc.child(0);
+                // post.setAvatarUrl(avatar.child(0).absUrl("src"));
+                //
+                // // Element message = plc.getElementsByClass("message").first();
+                // Element display = plc.child(1);
+                // String authi = display.child(0).html();
+                // Element message = display.child(1);
+                // post.setContent(message.html().trim());
 
                 try {// 主贴没有replyUrl
                     String replyUrl = plc.getElementsByClass("replybtn").first().child(0).absUrl("href");
@@ -179,7 +198,6 @@ class HtmlParse {
                 } catch (Exception e) {
                 }
 
-                String authi = plc.getElementsByClass("authi").first().html();
                 Elements img_list = plc.getElementsByClass("img_list");
                 if (img_list != null && !img_list.isEmpty()) {
                     String imgList = img_list.first().html();
@@ -199,6 +217,87 @@ class HtmlParse {
             LogMessage.d("parsePostList", "解析时间:" + (System.currentTimeMillis() - s));
         }
         return posts;
+    }
+
+    public static List<Post> parsePostListWithTagSoup(String content) {
+        Parser parser = new Parser();
+        parser.setContentHandler(new ContentHandler() {
+
+            @Override
+            public void startPrefixMapping(String prefix, String uri) throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void startDocument() throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void skippedEntity(String name) throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void setDocumentLocator(Locator locator) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void processingInstruction(String target, String data) throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void endPrefixMapping(String prefix) throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void endElement(String uri, String localName, String qName) throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void endDocument() throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void characters(char[] ch, int start, int length) throws SAXException {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        try {
+            parser.parse(new InputSource(new StringReader(content)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     /**

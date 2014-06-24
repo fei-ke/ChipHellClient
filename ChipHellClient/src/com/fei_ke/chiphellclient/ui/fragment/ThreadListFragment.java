@@ -153,10 +153,15 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         mIsFreshing = true;
 
         ChhApi api = new ChhApi();
-        api.getThreadList(mPlate, page, new ApiCallBack<ThreadListWrap>() {
+        api.getThreadList(getActivity(), mPlate, page, new ApiCallBack<ThreadListWrap>() {
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
+            }
+
+            @Override
+            public void onCache(ThreadListWrap result) {
+                onSuccess(result);
             }
 
             @Override
@@ -181,24 +186,28 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
     // 创建子版块列表
     protected void creadSubPlate(final List<Plate> plates) {
-        if (plates == null || plates.size() == 0) {
+        if (mPlate.isSubPlate()) {// 对子版块不进行设置
             return;
         }
         ActionBar actionBar = getActivity().getActionBar();
-        System.out.println("ThreadListFragment.creadSubPlate()");
-        if (actionBar != null) {
-            System.out.println("ThreadListFragment.creadSubPlate()2222222");
-            SpinnerAdapter adapter = new ArrayAdapter<Plate>(getActivity(), android.R.layout.simple_list_item_1, plates);
-            actionBar.setListNavigationCallbacks(adapter, new OnNavigationListener() {
-
-                @Override
-                public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                    mMainActivity.replaceContent(plates.get(itemPosition));
-                    return true;
-                }
-            });
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        if (actionBar == null || plates == null || plates.size() == 0) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+            return;
         }
+        plates.add(0, mPlate);
+
+        actionBar.setDisplayShowTitleEnabled(false);
+        SpinnerAdapter adapter = new ArrayAdapter<Plate>(getActivity(), R.layout.main_spinner_item, plates);
+        actionBar.setListNavigationCallbacks(adapter, new OnNavigationListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                mMainActivity.replaceContent(plates.get(itemPosition));
+                return true;
+            }
+        });
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     }
 
     @Override

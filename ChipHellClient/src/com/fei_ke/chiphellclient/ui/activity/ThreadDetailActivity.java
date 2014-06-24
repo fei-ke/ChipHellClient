@@ -303,6 +303,7 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
                     loadMainContent(result.get(0));
                     mPostListAdapter.clear();
                 }
+                mPostListAdapter.update(result);
             }
 
             @Override
@@ -317,7 +318,8 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
                 }
                 boolean hasNewData = mPostListAdapter.update(result);
                 if (!hasNewData) {
-                    mPage -= 1;
+                    // mPage -= 1;
+                    // TODO页码处理
                 }
             }
 

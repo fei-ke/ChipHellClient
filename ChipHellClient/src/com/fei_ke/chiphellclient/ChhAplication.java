@@ -38,8 +38,6 @@ public class ChhAplication extends Application {
 
         brandGlowEffect(this, getResources().getColor(R.color.chh_red));
 
-        setTheme(R.style.AppBaseTheme);
-
         umeng();
     }
 

@@ -100,11 +100,10 @@ public class PlateListAdapter extends BaseExpandableListAdapter {
      * @param groups
      */
     public void updateDatas(List<PlateGroup> groups) {
-        if (mPlateGroups != null) {
-            this.mPlateGroups.clear();
-        } else {
+        if (mPlateGroups == null) {
             this.mPlateGroups = new ArrayList<PlateGroup>();
         }
+        this.mPlateGroups.clear();
         this.mPlateGroups.addAll(groups);
         this.notifyDataSetChanged();
     }

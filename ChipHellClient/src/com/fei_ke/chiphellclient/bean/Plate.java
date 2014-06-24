@@ -14,6 +14,7 @@ public class Plate extends BaseBean {
     String url;
     String xg1;// 今日帖数
     String fid;// 版块id
+    boolean isSubPlate;// 是否是子版块
 
     public String getTitle() {
         return title;
@@ -42,6 +43,14 @@ public class Plate extends BaseBean {
     @Override
     public String toString() {
         return title;
+    }
+
+    public boolean isSubPlate() {
+        return isSubPlate;
+    }
+
+    public void setSubPlate(boolean isSubPlate) {
+        this.isSubPlate = isSubPlate;
     }
 
     public String getFid() {
