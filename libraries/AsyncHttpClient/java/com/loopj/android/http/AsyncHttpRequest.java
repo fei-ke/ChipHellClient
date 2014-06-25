@@ -18,7 +18,6 @@
 
 package com.loopj.android.http;
 
-import android.R.integer;
 import android.util.Log;
 
 import org.afinal.simplecache.ACache;
@@ -125,7 +124,7 @@ public class AsyncHttpRequest implements Runnable {
         // 写缓存
         if (!isCancelled() && responseHandler != null) {
             byte[] cache = responseHandler.sendResponseMessage(response);
-            if (isCacheAble) {
+            if (isCacheAble && cache != null) {
                 ACache aCache = ACache.get(cacheDir);
                 String key = request.getURI().toString();
                 if (BuildConfig.DEBUG) {

@@ -59,9 +59,7 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
 
     @Override
     public void onProgress(int bytesWritten, int totalSize) {
-        {
-            mApiCallBack.onProgress(bytesWritten, totalSize);
-        }
+        mApiCallBack.onProgress(bytesWritten, totalSize);
     }
 
     @Override

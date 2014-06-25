@@ -395,10 +395,11 @@ public abstract class AsyncHttpResponseHandler implements ResponseHandlerInterfa
                     sendFailureMessage(status.getStatusCode(), response.getAllHeaders(), responseBody, new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()));
                 } else {
                     sendSuccessMessage(status.getStatusCode(), response.getAllHeaders(), responseBody);
+                    return responseBody;
                 }
             }
         }
-        return responseBody;
+        return null;
     }
 
     /**
