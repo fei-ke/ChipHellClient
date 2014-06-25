@@ -53,8 +53,10 @@ public class PostListAdapter extends BaseAdapter {
      * @return 是否有新数据加载
      */
     public boolean update(List<Post> newPosts) {
-        if (mPosts == null || mPosts.size() == 0) {
+        if (mPosts == null) {
             mPosts = new LinkedList<Post>();
+        }
+        if (mPosts.size() == 0) {
             mPosts.addAll(newPosts);
             notifyDataSetChanged();
             return true;
