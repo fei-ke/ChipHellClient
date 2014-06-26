@@ -207,7 +207,7 @@ public class ChhApi {
 
             @Override
             public AlbumWrap parseResponse(String responseString) {
-                LogMessage.e(TAG + "#getAlbum", responseString);
+                LogMessage.i(TAG + "#getAlbum", responseString);
 
                 return HtmlParse.parseAubum(responseString);
             }

@@ -105,7 +105,7 @@ public class AlbumActivity extends BaseActivity {
 
             @Override
             public void onSuccess(AlbumWrap result) {
-                LogMessage.d("AlbumActivity#onAfterViews#getAlbum#onSuccess", result);
+                LogMessage.i("AlbumActivity#onAfterViews#getAlbum#onSuccess", result);
                 mAdapter.update(result.getUrls());
 
                 mViewPager.setCurrentItem(result.getCurPosition(), false);

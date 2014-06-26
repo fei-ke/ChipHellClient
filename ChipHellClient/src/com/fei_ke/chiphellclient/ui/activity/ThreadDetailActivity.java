@@ -231,13 +231,9 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-
                 scrollFlag = true;
-
             } else {
-
                 scrollFlag = false;
-
             }
         }
 

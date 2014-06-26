@@ -149,7 +149,7 @@ class HtmlParse {
                 plate.setSubPlate(true);
                 plates.add(plate);
 
-                LogMessage.v(TAG, plate);
+                LogMessage.i(TAG, plate);
             }
 
         }
@@ -214,7 +214,7 @@ class HtmlParse {
                 posts.add(post);
             } catch (Exception e) {
             }
-            LogMessage.d("parsePostList", "解析时间:" + (System.currentTimeMillis() - s));
+            LogMessage.i("parsePostList", "解析时间:" + (System.currentTimeMillis() - s));
         }
         return posts;
     }
@@ -222,7 +222,7 @@ class HtmlParse {
     public static List<Post> parsePostListWithTagSoup(String content) {
         Parser parser = new Parser();
         parser.setContentHandler(new ContentHandler() {
-
+            
             @Override
             public void startPrefixMapping(String prefix, String uri) throws SAXException {
                 // TODO Auto-generated method stub
@@ -232,7 +232,6 @@ class HtmlParse {
             @Override
             public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
                 // TODO Auto-generated method stub
-
             }
 
             @Override
@@ -324,7 +323,7 @@ class HtmlParse {
             String formHash = map.get("formhash");
             ChhAplication.getInstance().setFormHash(formHash);
 
-            LogMessage.d("formHash", formHash);
+            LogMessage.i("formHash", formHash);
         } catch (Exception e) {
             LogMessage.w(TAG + "#parseUserInfo", e);
         }

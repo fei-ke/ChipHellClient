@@ -20,6 +20,7 @@ import com.umeng.update.UmengUpdateAgent;
 
 import org.afinal.simplecache.ACache;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
 
@@ -40,6 +41,7 @@ public class MainActivity extends BaseActivity {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
 
+    @FragmentById(R.id.fragment_plate_list)
     PlateListFragment mPlateListFragment;
 
     ThreadListFragment mThreadListFragment;
@@ -51,7 +53,7 @@ public class MainActivity extends BaseActivity {
     protected void onAfterViews() {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        mPlateListFragment = PlateListFragment.getInstance();
+        // mPlateListFragment = PlateListFragment.getInstance();
         mPlateListFragment.setOnPlateClickListener(new OnPlateClickListener() {
 
             @Override
@@ -60,9 +62,9 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.left_frame, mPlateListFragment)
-                .commit();
+        // getSupportFragmentManager().beginTransaction()
+        // .replace(R.id.left_frame, mPlateListFragment)
+        // .commit();
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);

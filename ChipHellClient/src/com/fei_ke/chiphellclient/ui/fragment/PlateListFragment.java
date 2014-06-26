@@ -114,7 +114,7 @@ public class PlateListFragment extends BaseContentFragment {
         api.getUserInfo(new ApiCallBack<User>() {
             @Override
             public void onSuccess(User result) {
-                LogMessage.d(TAG, result);
+                LogMessage.i(TAG, result);
                 mUserView.bindValue(result);
             }
         });

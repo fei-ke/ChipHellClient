@@ -23,7 +23,14 @@
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@android:color/white" />
+            android:background="@android:color/white" >
+
+            <fragment
+                android:id="@+id/fragment_plate_list"
+                android:name="com.fei_ke.chiphellclient.ui.fragment.PlateListFragment_"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
     </android.support.v4.widget.DrawerLayout>
 
 </FrameLayout>

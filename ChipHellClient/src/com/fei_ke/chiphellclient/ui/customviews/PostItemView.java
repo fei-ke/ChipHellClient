@@ -77,53 +77,10 @@ public class PostItemView extends FrameLayout {
                 if (!source.startsWith("http:")) {
                     source = Constants.BASE_URL + source;
                 }
-                LogMessage.d("PostItemView", source);
-                LogMessage.d("PostItemView", PostItemView.this.hashCode());
+                LogMessage.i("PostItemView", source);
                 return new UrlDrawable(source, textViewContent);
             }
         }, null));
     }
 
-    public static class UrlDrawable extends BitmapDrawable {
-        protected Drawable drawable;
-
-        @Override
-        public void draw(Canvas canvas) {
-            if (drawable != null) {
-                drawable.draw(canvas);
-            }
-        }
-
-        @SuppressWarnings("deprecation")
-        public UrlDrawable(final String url, final View container) {
-            setBounds(0, 0, 100, 100);
-            ImageLoader.getInstance().loadImage(url, new ImageLoadingListener() {
-
-                @Override
-                public void onLoadingStarted(String arg0, View arg1) {
-                }
-
-                @Override
-                public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-                }
-
-                @Override
-                public void onLoadingComplete(String url, View arg1, Bitmap bitmap) {
-                    Drawable drawable = new BitmapDrawable(container.getResources(), bitmap);
-                    int width = bitmap.getWidth() * 2;
-                    int height = bitmap.getHeight() * 2;
-                    drawable.setBounds(0, 0, width, height);
-                    UrlDrawable.this.drawable = drawable;
-                    setBounds(0, 0, width, height);
-
-                    container.invalidate();
-                }
-
-                @Override
-                public void onLoadingCancelled(String arg0, View arg1) {
-
-                }
-            });
-        }
-    }
 }
