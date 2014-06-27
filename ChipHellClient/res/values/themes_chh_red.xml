@@ -7,7 +7,7 @@
 
   <style name="_chh_red" parent="android:Theme.Holo.Light.DarkActionBar">
    	<item name="android:homeAsUpIndicator">@drawable/home_up_indicator</item>
-   	 
+   	<item name="android:windowIsTranslucent">true</item>
    	<item name="android:actionBarStyle">@style/ActionBarStylechh_red</item>
     <item name="android:editTextBackground">@drawable/chh_red_edit_text_holo_light</item>
     <item name="android:textColorHighlight">#99a90000</item>

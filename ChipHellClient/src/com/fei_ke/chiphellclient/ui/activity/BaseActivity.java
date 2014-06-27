@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -14,6 +13,8 @@ import android.view.WindowManager;
 import com.fei_ke.chiphellclient.R;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
+
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -25,7 +26,7 @@ import org.androidannotations.annotations.EActivity;
  * @2014-6-14
  */
 @EActivity
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends SwipeBackActivity {
     protected MenuItem menuItemRefresh;
     boolean mIsRefreshing = true;
 
@@ -45,8 +46,8 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-
         initActionBar(this);
+
     }
 
     @Override

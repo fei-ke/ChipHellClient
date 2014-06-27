@@ -2,13 +2,14 @@
 package com.fei_ke.chiphellclient.ui.activity;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 import com.fei_ke.chiphellclient.R;
 import com.umeng.analytics.MobclickAgent;
 
-public class SoftwareNoticesActivity extends PreferenceActivity {
+import me.imid.swipebacklayout.lib.app.SwipeBackPreferenceActivity;
+
+public class SoftwareNoticesActivity extends SwipeBackPreferenceActivity{
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

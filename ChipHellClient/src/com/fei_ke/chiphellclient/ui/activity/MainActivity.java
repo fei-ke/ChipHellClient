@@ -1,7 +1,6 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -53,6 +52,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onAfterViews() {
+        //不允许滑动返回
+        getSwipeBackLayout().setEnableGesture(false);
+        
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // mPlateListFragment = PlateListFragment.getInstance();
