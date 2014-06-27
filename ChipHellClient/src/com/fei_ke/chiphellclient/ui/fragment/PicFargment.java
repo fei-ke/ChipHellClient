@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.fei_ke.chiphellclient.R;
@@ -162,9 +161,9 @@ public class PicFargment extends BaseFragment {
 
         getActivity().getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
         // END_INCLUDE (set_ui_flags)
-        if(getActivity().getActionBar().isShowing()){
+        if (getActivity().getActionBar().isShowing()) {
             getActivity().getActionBar().hide();
-        }else{
+        } else {
             getActivity().getActionBar().show();
         }
     }

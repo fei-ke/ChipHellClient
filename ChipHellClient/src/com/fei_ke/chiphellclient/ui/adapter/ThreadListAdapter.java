@@ -6,11 +6,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.customviews.ThreadItemView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

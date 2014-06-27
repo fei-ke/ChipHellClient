@@ -9,16 +9,12 @@ import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.SpannedString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.bean.Plate;
-import com.fei_ke.chiphellclient.bean.Thread;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -61,13 +57,13 @@ public class AboutActivity extends BaseActivity {
 
             @Override
             public void onClick(View widget) {
-//                Plate plate = new Plate();
-//                plate.setTitle("自由水世界");
-//                plate.setUrl("http://www.chiphell.com/forum.php?mod=forumdisplay&fid=201&mobile=2");
-//                Thread thread = new Thread();
-//                thread.setTitle("ChipHell非官方客户端发布页");
-//                thread.setUrl("http://www.chiphell.com/forum.php?mod=viewthread&tid=1058176&extra=page%3D1&mobile=2");
-//                Intent intent = ThreadDetailActivity.getStartIntent(AboutActivity.this, plate, thread);
+                // Plate plate = new Plate();
+                // plate.setTitle("自由水世界");
+                // plate.setUrl("http://www.chiphell.com/forum.php?mod=forumdisplay&fid=201&mobile=2");
+                // Thread thread = new Thread();
+                // thread.setTitle("ChipHell非官方客户端发布页");
+                // thread.setUrl("http://www.chiphell.com/forum.php?mod=viewthread&tid=1058176&extra=page%3D1&mobile=2");
+                // Intent intent = ThreadDetailActivity.getStartIntent(AboutActivity.this, plate, thread);
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("http://www.chiphell.com/forum.php?mod=viewthread&tid=1058176&extra=page%3D1&mobile=2"));
                 startActivity(intent);

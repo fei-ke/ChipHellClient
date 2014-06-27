@@ -59,7 +59,7 @@ public class AlbumActivity extends BaseActivity {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         Window window = getWindow();
-//        window.addFlags(Window.FEATURE_ACTION_BAR_OVERLAY);
+        // window.addFlags(Window.FEATURE_ACTION_BAR_OVERLAY);
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);

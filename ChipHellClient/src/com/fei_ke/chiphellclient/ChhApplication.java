@@ -5,10 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -17,9 +15,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.umeng.update.UmengUpdateAgent;
 
-public class ChhAplication extends Application {
-    private String cookie;
-    private static ChhAplication instance;
+public class ChhApplication extends Application {
+    private static ChhApplication instance;
     private String formHash;
 
     @Override
@@ -27,8 +24,6 @@ public class ChhAplication extends Application {
         super.onCreate();
 
         CookieSyncManager.createInstance(this);
-        String string = CookieManager.getInstance().getCookie(Constants.BASE_URL);
-        setCookie(string);
 
         instance = this;
 
@@ -44,14 +39,6 @@ public class ChhAplication extends Application {
     private void umeng() {
         UmengUpdateAgent.setUpdateOnlyWifi(false);
         UmengUpdateAgent.update(this);
-    }
-
-    public String getCookie() {
-        return cookie;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
     }
 
     public String getFormHash() {
@@ -83,7 +70,7 @@ public class ChhAplication extends Application {
         ImageLoader.getInstance().init(config);
     }
 
-    public static ChhAplication getInstance() {
+    public static ChhApplication getInstance() {
         return instance;
     }
 

@@ -2,9 +2,6 @@
 package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Html.ImageGetter;
@@ -19,8 +16,6 @@ import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;

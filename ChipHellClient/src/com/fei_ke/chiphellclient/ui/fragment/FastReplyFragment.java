@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fei_ke.chiphellclient.ChhAplication;
+import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
@@ -126,7 +126,7 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
         String path = SmileTable.get(smileName);
         try {
             int height = (int) editTextFastReply.getTextSize() * 2;
-            GifDrawable drawable = new GifDrawable(ChhAplication.getInstance().getAssets(), path);
+            GifDrawable drawable = new GifDrawable(ChhApplication.getInstance().getAssets(), path);
             // Drawable drawable = Drawable.createFromStream(getResources().getAssets().open(path), smileName);
             drawable.setBounds(0, 0, height, height);
             ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
@@ -208,7 +208,7 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
             return;
         }
         ChhApi api = new ChhApi();
-        api.reply(mPlate.getFid(), mThread.getTid(), ChhAplication.getInstance().getFormHash(), message, new ReplyApiCallBack());
+        api.reply(mPlate.getFid(), mThread.getTid(), ChhApplication.getInstance().getFormHash(), message, new ReplyApiCallBack());
     }
 
     public void show() {

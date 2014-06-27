@@ -4,7 +4,7 @@ package com.fei_ke.chiphellclient.api;
 import android.graphics.Color;
 import android.text.TextUtils;
 
-import com.fei_ke.chiphellclient.ChhAplication;
+import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
@@ -39,7 +39,7 @@ class HtmlParse {
     /**
      * 解析板块列表
      * 
-     * @param conten
+     * @param content
      * @return
      */
     public static List<PlateGroup> parsePlateGroupList(String content) {
@@ -222,7 +222,7 @@ class HtmlParse {
     public static List<Post> parsePostListWithTagSoup(String content) {
         Parser parser = new Parser();
         parser.setContentHandler(new ContentHandler() {
-            
+
             @Override
             public void startPrefixMapping(String prefix, String uri) throws SAXException {
                 // TODO Auto-generated method stub
@@ -321,7 +321,7 @@ class HtmlParse {
             String url = btn_exit.child(0).attr("href");
             UrlParamsMap map = new UrlParamsMap(url);
             String formHash = map.get("formhash");
-            ChhAplication.getInstance().setFormHash(formHash);
+            ChhApplication.getInstance().setFormHash(formHash);
 
             LogMessage.i("formHash", formHash);
         } catch (Exception e) {

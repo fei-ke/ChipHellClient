@@ -8,7 +8,7 @@ import org.androidannotations.annotations.EFragment;
 
 /**
  * Fragment基类
- * 
+ *
  * @author 杨金阳
  * @2014-6-14
  */
@@ -18,7 +18,7 @@ public abstract class BaseFragment extends Fragment {
      * 切勿调用和复写此方法
      */
     @AfterViews
-    protected void onPrivateAfterViews() {
+    final protected void onPrivateAfterViews() {
         onAfterViews();
     }
 

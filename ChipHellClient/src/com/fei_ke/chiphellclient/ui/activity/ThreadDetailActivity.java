@@ -35,6 +35,7 @@ import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment.OnReplySuccess;
+import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnPullEventListener;
@@ -320,6 +321,11 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             }
 
             @Override
+            public void onFailure(Throwable error, String content) {
+                ToastUtil.show(ThreadDetailActivity.this, "oops 刷新失败了");
+            }
+
+            @Override
             public void onFinish() {
                 mIsFreshing = false;
                 mRefreshListView.onRefreshComplete();
@@ -366,16 +372,18 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             }
 
             @Override
+            public void onFailure(Throwable error, String content) {
+                error.printStackTrace();
+                ToastUtil.show(ThreadDetailActivity.this, "oops 获取失败了");
+            }
+
+            @Override
             public void onFinish() {
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
             }
 
-            @Override
-            public void onFailure(Throwable error, String content) {
-                error.printStackTrace();
-            }
         });
         return true;
     }

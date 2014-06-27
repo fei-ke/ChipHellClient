@@ -3,7 +3,6 @@ package com.fei_ke.chiphellclient.ui.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -14,26 +13,27 @@ import android.view.WindowManager;
 
 import com.fei_ke.chiphellclient.R;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 
 /**
  * Activity基类
- * 
+ *
  * @author 杨金阳
  * @2014-6-14
  */
 @EActivity
 public abstract class BaseActivity extends FragmentActivity {
     protected MenuItem menuItemRefresh;
-    boolean mIsRefreshing = true;;
+    boolean mIsRefreshing = true;
 
     /**
      * 切勿调用和复写此方法
      */
     @AfterViews
-    protected void onPrivateAfterViews() {
+    final protected void onPrivateAfterViews() {
         onAfterViews();
     }
 
@@ -47,6 +47,18 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onCreate(arg0);
 
         initActionBar(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

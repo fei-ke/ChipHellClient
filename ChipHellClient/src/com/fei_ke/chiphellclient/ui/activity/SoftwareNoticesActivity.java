@@ -6,8 +6,10 @@ import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 import com.fei_ke.chiphellclient.R;
+import com.umeng.analytics.MobclickAgent;
 
 public class SoftwareNoticesActivity extends PreferenceActivity {
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,6 +17,18 @@ public class SoftwareNoticesActivity extends PreferenceActivity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.open_source_notices);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

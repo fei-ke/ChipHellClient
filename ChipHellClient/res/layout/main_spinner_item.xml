@@ -9,6 +9,6 @@
     android:paddingStart="10dip"
     android:paddingEnd="10dip"
     android:textColor="@color/white"
-    android:background="@drawable/chh_red_list_selector_holo_light"
+    android:background="@drawable/spinner_selector"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
 />

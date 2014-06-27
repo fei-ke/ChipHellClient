@@ -57,7 +57,7 @@ public class ChhApi {
 
     /**
      * 获取用户信息
-     * 
+     *
      * @param apiCallBack
      */
     public void getUserInfo(ApiCallBack<User> apiCallBack) {
@@ -74,7 +74,7 @@ public class ChhApi {
 
     /**
      * 获取帖子列表
-     * 
+     *
      * @param plate 版块
      * @param page 页码
      * @param apiCallBack
@@ -94,7 +94,7 @@ public class ChhApi {
 
     /**
      * 获取回复列表
-     * 
+     *
      * @param thread 帖子
      * @param page 页码
      * @param apiCallBack
@@ -116,7 +116,7 @@ public class ChhApi {
 
     /**
      * 回复主贴
-     * 
+     *
      * @param fid
      * @param tid
      * @param formhash
@@ -151,7 +151,7 @@ public class ChhApi {
 
     /**
      * 引用回复
-     * 
+     *
      * @param quoteReply
      * @param apiCallBack
      */
@@ -187,7 +187,7 @@ public class ChhApi {
 
     /**
      * 引用回复的请求表单准备
-     * 
+     *
      * @param url
      * @param apiCallBack
      */
@@ -218,6 +218,7 @@ public class ChhApi {
     private AsyncHttpClient getAsyncHttpClient() {
         if (mAsyncHttpClient == null) {
             mAsyncHttpClient = new AsyncHttpClient();
+            mAsyncHttpClient.setTimeout(30 * 1000);
             mAsyncHttpClient.addHeader("Cookie", CookieManager.getInstance().getCookie(Constants.BASE_URL));
         }
         return mAsyncHttpClient;

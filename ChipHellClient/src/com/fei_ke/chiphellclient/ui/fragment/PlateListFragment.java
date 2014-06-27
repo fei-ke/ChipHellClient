@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
@@ -21,8 +20,8 @@ import com.fei_ke.chiphellclient.ui.activity.LoginActivity;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PlateListAdapter;
 import com.fei_ke.chiphellclient.ui.customviews.UserView;
-import com.fei_ke.chiphellclient.utils.DensityUtil;
 import com.fei_ke.chiphellclient.utils.LogMessage;
+import com.fei_ke.chiphellclient.utils.ToastUtil;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -32,7 +31,7 @@ import java.util.List;
 
 /**
  * 版块列表
- * 
+ *
  * @author 杨金阳
  * @2014-6-14
  */
@@ -131,6 +130,11 @@ public class PlateListFragment extends BaseContentFragment {
                 for (int i = 0; i < mPlateListAdapter.getGroupCount(); i++) {
                     mExpandableListView.expandGroup(i);
                 }
+            }
+
+            @Override
+            public void onFailure(Throwable error, String content) {
+                ToastUtil.show(getActivity(), "oops 刷新失败了");
             }
 
             @Override

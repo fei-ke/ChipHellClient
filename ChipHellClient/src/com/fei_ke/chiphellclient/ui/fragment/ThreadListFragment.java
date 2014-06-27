@@ -27,6 +27,7 @@ import com.fei_ke.chiphellclient.bean.ThreadListWrap;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.ThreadListAdapter;
+import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -36,6 +37,9 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
+import u.aly.p;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,6 +67,8 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
     int mPage = 1;
 
+    // 存储子版块列表
+    List<Plate> platesHold;
     private MainActivity mMainActivity;
     private boolean mIsFreshing;
 
@@ -85,10 +91,14 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
     @Override
     protected void onAfterViews() {
-        mFastReplyFragment = FastReplyFragment.getInstance();
-        getChildFragmentManager().beginTransaction().replace(R.id.layout_fast_reply, mFastReplyFragment).commit();
+        if (mFastReplyFragment == null) {
+            mFastReplyFragment = FastReplyFragment.getInstance();
+            getChildFragmentManager().beginTransaction().replace(R.id.layout_fast_reply, mFastReplyFragment).commit();
+        }
 
-        mThreadListAdapter = new ThreadListAdapter();
+        if (mThreadListAdapter == null) {
+            mThreadListAdapter = new ThreadListAdapter();
+        }
         mListViewThreads.setAdapter(mThreadListAdapter);
         mListViewThreads.setEmptyView(emptyView);
         emptyView.setOnClickListener(this);
@@ -118,9 +128,16 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                 }
             }
         });
-        mListViewThreads.setRefreshing();
 
         mListViewThreads.setOnScrollListener(onScrollListener);
+
+        // 设置标题或子版块列表
+        handSubPlate(platesHold);
+
+        // 没有数据进行数据刷新
+        if (mThreadListAdapter.getCount() == 0) {
+            mListViewThreads.setRefreshing();
+        }
     }
 
     private OnScrollListener onScrollListener = new OnScrollListener() {
@@ -168,9 +185,18 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             public void onSuccess(ThreadListWrap result) {
                 if (page == 1) {
                     mThreadListAdapter.clear();
-                    creadSubPlate(result.getPlates());
+                    List<Plate> plates = result.getPlates();
+                    if (!mPlate.isSubPlate() && plates != null) {// 对子版块不进行设置
+                        plates.add(0, mPlate);
+                        handSubPlate(plates);
+                    }
                 }
                 mThreadListAdapter.update(result.getThreads());
+            }
+
+            @Override
+            public void onFailure(Throwable error, String content) {
+                ToastUtil.show(getActivity(), "oops 刷新失败了");
             }
 
             @Override
@@ -185,8 +211,8 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
     }
 
     // 创建子版块列表
-    protected void creadSubPlate(final List<Plate> plates) {
-        if (mPlate.isSubPlate()) {// 对子版块不进行设置
+    protected void handSubPlate(final List<Plate> plates) {
+        if (mPlate.isSubPlate() && plates == null) {
             return;
         }
         ActionBar actionBar = getActivity().getActionBar();
@@ -195,7 +221,8 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             actionBar.setDisplayShowTitleEnabled(true);
             return;
         }
-        plates.add(0, mPlate);
+        // 保存子版块记录
+        platesHold = plates;
 
         actionBar.setDisplayShowTitleEnabled(false);
         SpinnerAdapter adapter = new ArrayAdapter<Plate>(getActivity(), R.layout.main_spinner_item, plates);

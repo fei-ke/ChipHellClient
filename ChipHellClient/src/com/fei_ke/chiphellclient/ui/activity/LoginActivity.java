@@ -9,7 +9,6 @@ import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.fei_ke.chiphellclient.ChhAplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.constant.Constants;
 
@@ -45,8 +44,6 @@ public class LoginActivity extends BaseActivity {
                 if (url.startsWith(Constants.BASE_URL + "member.php")) {
                     view.loadUrl(url);
                 } else if (url.startsWith(Constants.BASE_URL + "?mobile=2")) {// 首页
-                    String string = CookieManager.getInstance().getCookie(Constants.BASE_URL);
-                    ChhAplication.getInstance().setCookie(string);
                     finish();
                 } else if (url.startsWith(Constants.BASE_URL + "member.php?mod=logging&action=logout")) {// 登出
                     view.loadUrl(loginUrl);
@@ -79,8 +76,6 @@ public class LoginActivity extends BaseActivity {
                 // cookieForRequest.setPath("/");
                 // cookieStore.addCookie(cookieForRequest);
                 // }
-
-                ChhAplication.getInstance().setCookie(string);
 
             }
         });

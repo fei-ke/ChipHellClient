@@ -1,10 +1,12 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -121,6 +123,7 @@ public class MainActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, mThreadListFragment, plate.getFid())
                 .addToBackStack(mPlate.getFid())
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
         mDrawerLayout.closeDrawers();
         setTitle(plate.getTitle());
