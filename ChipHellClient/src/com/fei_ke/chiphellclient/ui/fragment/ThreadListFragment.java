@@ -37,15 +37,12 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
-import u.aly.p;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 帖子列表
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-14
  */
 @EFragment(R.layout.fragment_thread_list)
@@ -247,6 +244,12 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         Thread thread = mThreadListAdapter.getItem((int) id);
         Intent intent = ThreadDetailActivity.getStartIntent(getActivity(), mPlate, thread);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mThreadListAdapter.notifyDataSetChanged();
     }
 
     @Override

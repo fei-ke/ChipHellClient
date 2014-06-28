@@ -6,7 +6,7 @@ import com.fei_ke.chiphellclient.utils.UrlParamsMap;
 /**
  * 版块
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-14
  */
 public class Plate extends BaseBean {

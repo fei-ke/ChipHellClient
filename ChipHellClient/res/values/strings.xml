@@ -16,6 +16,12 @@
   	      本人仅作学习参考，并承诺绝不用于任何商业目的。本应用所展示的内容、以及用户发表的言论属其个人行为，与本人立场无关。
                如果我无意中侵犯了您的权益，敬请告之，本人将在第一时间作处理，谢谢！我的邮箱：admin@fei-ke.com</string>
 
+    <!-- settings -->
+    <string name="swipe_edge">滑动返回边缘</string>
+    <string name="swipe_edge_left">左边</string>
+    <string name="swipe_edge_right">右边</string>
+    <string name="swipe_edge_bottom">底边</string>
+
     <!-- 开源协议 -->
     <string name="apache_license_2_0">Apache License, Version 2.0</string>
     <string name="gnu_gpl">GNU General Public Licence </string>
@@ -40,6 +46,8 @@
     <string name="jsoup_url">https://github.com/jhy/jsoup</string>
     <string name="SystemBarTint">SystemBarTint</string>
     <string name="SystemBarTint_url">https://github.com/jgilfelt/SystemBarTint</string>
+    <string name="SwipeBackLayout">SwipeBackLayout</string>
+    <string name="SwipeBackLayout_url">https://github.com/Issacw0ng/SwipeBackLayout</string>
     <string name="not_login">你好像没有登录啊</string>
 
 </resources>

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Thread;
+import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -26,7 +27,7 @@ import java.util.List;
 /**
  * 帖子列表的一个item
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-16
  */
 @EViewGroup(R.layout.layout_thread_item)
@@ -46,12 +47,18 @@ public class ThreadItemView extends FrameLayout {
     @ViewById(R.id.imageView_icon)
     ImageView imageViewIcon;
 
+    @ViewById(R.id.textView_status)
+    View viewStatus;
+
+    ThreadStatusUtil statusUtil;
+
     public static ThreadItemView getInstance(Context context) {
         return ThreadItemView_.build(context);
     }
 
     public ThreadItemView(Context context) {
         super(context);
+        statusUtil = new ThreadStatusUtil(getContext());
     }
 
     public void bindValue(Thread thread) {
@@ -66,10 +73,17 @@ public class ThreadItemView extends FrameLayout {
             imageViewIcon.setVisibility(VISIBLE);
             ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon, new AnimateFirstDisplayListener());
         }
+
         if (thread.getTitleColor() != 0) {
             textViewTitle.setTextColor(thread.getTitleColor());
         } else {
             textViewTitle.setTextColor(Color.BLACK);
+        }
+
+        if (statusUtil.isRead(thread.getTid())) {
+            viewStatus.setVisibility(View.VISIBLE);
+        } else {
+            viewStatus.setVisibility(View.GONE);
         }
     }
 

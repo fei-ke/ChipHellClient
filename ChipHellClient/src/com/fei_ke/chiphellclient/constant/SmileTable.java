@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * 表情对照表
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-21
  */
 public class SmileTable {

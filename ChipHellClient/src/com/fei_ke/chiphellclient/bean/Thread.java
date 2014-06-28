@@ -6,7 +6,7 @@ import com.fei_ke.chiphellclient.utils.UrlParamsMap;
 /**
  * 帖子列表item
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-15
  */
 public class Thread extends BaseBean {

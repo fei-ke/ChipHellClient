@@ -35,6 +35,7 @@ import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment.OnReplySuccess;
+import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -54,7 +55,7 @@ import java.util.List;
 /**
  * 帖子内容
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-15
  */
 @EActivity(R.layout.activity_thread_detail)
@@ -193,16 +194,19 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             mPanelLayout.expandPanel();
             return true;
         }
-        if (url.indexOf("from=album") != -1) {// 点击图片
+        // 点击图片
+        if (url.indexOf("from=album") != -1) {
             Intent intent = AlbumActivity.getStartIntent(ThreadDetailActivity.this, url);
             startActivity(intent);
             return true;
         }
+        // 登录
         if (url.startsWith(Constants.BASE_URL + "member.php?mod=logging&action=login")) {
             Intent intent = LoginActivity.getStartIntent(this);
             startActivityForResult(intent, MainActivity.REQUEST_CODE_LOGIN);
             return true;
         }
+        // 其他链接
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         startActivity(intent);
@@ -312,6 +316,9 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
                 if (page == 1) {
                     loadMainContent(result.get(0));
                     mPostListAdapter.clear();
+
+                    // 将该帖子设为已读
+                    new ThreadStatusUtil(getApplicationContext()).setRead(mThread.getTid());
                 }
                 boolean hasNewData = mPostListAdapter.update(result);
                 if (!hasNewData) {

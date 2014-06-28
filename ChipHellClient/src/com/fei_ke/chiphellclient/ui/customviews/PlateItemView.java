@@ -14,7 +14,7 @@ import org.androidannotations.annotations.ViewById;
 /**
  * 版块item
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-15
  */
 @EViewGroup(R.layout.layout_plate_item)

@@ -28,7 +28,7 @@ import java.io.IOException;
 /**
  * 图片
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-1-26
  */
 @EFragment(R.layout.fragment_pic)

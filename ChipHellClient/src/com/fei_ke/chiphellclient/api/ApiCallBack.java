@@ -4,7 +4,7 @@ package com.fei_ke.chiphellclient.api;
 /**
  * 接口回调
  * 
- * @author 杨金阳
+ * @author fei-ke
  *         2014-6-10 上午9:33:24
  */
 public abstract class ApiCallBack<T extends Object> {

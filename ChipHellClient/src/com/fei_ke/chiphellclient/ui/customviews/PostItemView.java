@@ -23,7 +23,7 @@ import org.androidannotations.annotations.ViewById;
 /**
  * 帖子内的一个item
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-16
  */
 @EViewGroup(R.layout.layout_post_item)

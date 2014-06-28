@@ -40,19 +40,30 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/comment_bg_selector"
         android:clickable="true"
+        android:ellipsize="start"
         android:gravity="center"
         android:singleLine="true"
-        android:ellipsize="start"
         android:textColor="@color/darker_gray"
         tools:text="55" />
+
+    <TextView
+        android:id="@+id/textView_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@color/lighter_gray"
+        android:text="已读"
+        android:textColor="@color/darker_gray"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/textView_by"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/textView_date"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@+id/textView_status"
         android:textColor="@color/darker_gray"
         tools:text="作者" />
 

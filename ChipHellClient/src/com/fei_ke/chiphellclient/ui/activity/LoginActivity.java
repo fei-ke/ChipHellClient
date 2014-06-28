@@ -18,7 +18,7 @@ import org.androidannotations.annotations.ViewById;
 /**
  * 登录页面
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-15
  */
 @EActivity(R.layout.activity_login)

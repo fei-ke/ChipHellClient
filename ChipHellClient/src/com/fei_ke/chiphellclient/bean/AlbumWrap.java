@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 相册
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-22
  */
 public class AlbumWrap extends BaseBean {

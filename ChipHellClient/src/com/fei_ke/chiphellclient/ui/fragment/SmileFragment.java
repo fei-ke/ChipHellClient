@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 /**
  * 表情
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-21
  */
 @EFragment(R.layout.fragment_smile)

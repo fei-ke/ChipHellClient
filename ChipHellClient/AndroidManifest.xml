@@ -51,6 +51,7 @@
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.AlbumActivity_" />
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.AboutActivity_" />
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.SoftwareNoticesActivity" />
+        <activity android:name="com.fei_ke.chiphellclient.ui.activity.SettingActivity" />
 
         <!-- 友盟相关 -->
         <service

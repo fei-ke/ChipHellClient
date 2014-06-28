@@ -29,7 +29,7 @@ import org.androidannotations.annotations.ViewById;
 /**
  * 相册
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-22
  */
 @EActivity(R.layout.activity_album)

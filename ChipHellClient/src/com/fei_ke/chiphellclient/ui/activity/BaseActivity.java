@@ -1,17 +1,15 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.fei_ke.chiphellclient.R;
+import com.fei_ke.chiphellclient.utils.GlobalSetting;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 
@@ -23,7 +21,7 @@ import org.androidannotations.annotations.EActivity;
 /**
  * Activity基类
  *
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-14
  */
 @EActivity
@@ -48,7 +46,7 @@ public abstract class BaseActivity extends SwipeBackActivity {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         initActionBar(this);
-
+        getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
     }
 
     @Override

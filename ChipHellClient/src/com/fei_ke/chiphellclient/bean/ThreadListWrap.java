@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 帖子列表第一页可能会包含子版块
  * 
- * @author 杨金阳
+ * @author fei-ke
  *         2014-6-24 下午6:16:46
  */
 public class ThreadListWrap extends BaseBean {

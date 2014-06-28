@@ -28,7 +28,7 @@ import org.androidannotations.annotations.ViewById;
 /**
  * 主界面
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-15
  */
 @EActivity(R.layout.activity_main)
@@ -52,9 +52,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onAfterViews() {
-        //不允许滑动返回
+        // 不允许滑动返回
         getSwipeBackLayout().setEnableGesture(false);
-        
+
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // mPlateListFragment = PlateListFragment.getInstance();
@@ -171,8 +171,8 @@ public class MainActivity extends BaseActivity {
                 refresh();
                 return true;
             case R.id.action_settings:
-                Intent intent = LoginActivity.getStartIntent(this);
-                startActivityForResult(intent, REQUEST_CODE_LOGIN);
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
                 break;
             case R.id.action_test:
                 test();

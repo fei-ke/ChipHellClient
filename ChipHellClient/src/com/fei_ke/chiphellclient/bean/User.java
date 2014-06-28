@@ -4,7 +4,7 @@ package com.fei_ke.chiphellclient.bean;
 /**
  * 用户
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-16
  */
 public class User {

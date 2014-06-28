@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 版块分组
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-14
  */
 public class PlateGroup extends BaseBean {

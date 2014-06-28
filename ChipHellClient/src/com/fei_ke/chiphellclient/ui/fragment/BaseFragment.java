@@ -9,7 +9,7 @@ import org.androidannotations.annotations.EFragment;
 /**
  * Fragment基类
  *
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-14
  */
 @EFragment

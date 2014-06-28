@@ -14,7 +14,7 @@ import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 /**
  * 一个异步加载的Drawable
  * 
- * @author 杨金阳
+ * @author fei-ke
  *         2014-6-26 下午2:17:27
  */
 public class UrlDrawable extends BitmapDrawable {

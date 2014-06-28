@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 相册适配器
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-22
  */
 public class AlbumAdapter extends FragmentStatePagerAdapter {

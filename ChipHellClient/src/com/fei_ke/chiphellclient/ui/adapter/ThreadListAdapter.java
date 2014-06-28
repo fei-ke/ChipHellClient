@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 帖子列表适配器
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-15
  */
 public class ThreadListAdapter extends BaseAdapter {

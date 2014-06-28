@@ -4,7 +4,7 @@ package com.fei_ke.chiphellclient.bean;
 /**
  * 引用回复的准备数据
  * 
- * @author 杨金阳
+ * @author fei-ke
  *         2014-6-20 上午10:28:43
  */
 public class PrepareQuoteReply {

@@ -4,7 +4,7 @@ package com.fei_ke.chiphellclient.bean;
 /**
  * 回帖
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-16
  */
 public class Post {

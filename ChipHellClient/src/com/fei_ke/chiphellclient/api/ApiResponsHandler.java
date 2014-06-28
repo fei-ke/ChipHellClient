@@ -10,7 +10,7 @@ import org.apache.http.Header;
 /**
  * 异步联网请求解析帮助类
  * 
- * @author 杨金阳
+ * @author fei-ke
  *         2014-6-19 下午6:35:01
  * @param <T>
  */

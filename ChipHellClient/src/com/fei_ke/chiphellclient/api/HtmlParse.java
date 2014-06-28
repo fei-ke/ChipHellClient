@@ -17,19 +17,11 @@ import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.UrlParamsMap;
 
-import org.ccil.cowan.tagsoup.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -217,86 +209,6 @@ class HtmlParse {
             LogMessage.i("parsePostList", "解析时间:" + (System.currentTimeMillis() - s));
         }
         return posts;
-    }
-
-    public static List<Post> parsePostListWithTagSoup(String content) {
-        Parser parser = new Parser();
-        parser.setContentHandler(new ContentHandler() {
-
-            @Override
-            public void startPrefixMapping(String prefix, String uri) throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void startDocument() throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void skippedEntity(String name) throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void setDocumentLocator(Locator locator) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void processingInstruction(String target, String data) throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void endPrefixMapping(String prefix) throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void endElement(String uri, String localName, String qName) throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void endDocument() throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void characters(char[] ch, int start, int length) throws SAXException {
-                // TODO Auto-generated method stub
-
-            }
-        });
-        try {
-            parser.parse(new InputSource(new StringReader(content)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-        return null;
-
     }
 
     /**

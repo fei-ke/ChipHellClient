@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * 将url中的请求参数转换为map
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-19
  */
 public class UrlParamsMap extends HashMap<String, String> {

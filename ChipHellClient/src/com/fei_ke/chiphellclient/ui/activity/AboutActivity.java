@@ -22,7 +22,7 @@ import org.androidannotations.annotations.ViewById;
 /**
  * 关于页面
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-22
  */
 @EActivity(R.layout.activity_about)

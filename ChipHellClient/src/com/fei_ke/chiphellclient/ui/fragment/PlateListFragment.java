@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * 版块列表
  *
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-14
  */
 @EFragment(R.layout.fragment_plate_list)
