@@ -9,7 +9,7 @@ package com.fei_ke.chiphellclient.bean;
  */
 public class User {
     private String avatarUrl = "";
-    private String name = "";
+    private String name = "登录";
     private String info = "";
     private String formHash;
 
