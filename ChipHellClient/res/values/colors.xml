@@ -8,5 +8,6 @@
     <color name="dark_red">#a61f24</color>
     <color name="lighter_gray">#ddd</color>
     <color name="darker_gray">#aaa</color>
+    <color name="background_light">#eeeeee</color>
 
 </resources>

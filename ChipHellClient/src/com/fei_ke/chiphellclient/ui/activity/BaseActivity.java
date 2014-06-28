@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.fei_ke.chiphellclient.R;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -97,7 +98,6 @@ public abstract class BaseActivity extends SwipeBackActivity {
     public static void initActionBar(Activity activity) {
         activity.getActionBar().setDisplayHomeAsUpEnabled(true);
         if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
-            setTranslucentStatus(activity, true);
             SystemBarTintManager tintManager = new SystemBarTintManager(activity);
             tintManager.setStatusBarTintEnabled(true);
             tintManager.setNavigationBarTintEnabled(true);
@@ -106,6 +106,11 @@ public abstract class BaseActivity extends SwipeBackActivity {
                 tintManager.setStatusBarTintColor(0);
             } else {
                 tintManager.setStatusBarTintResource(R.color.chh_red);
+                FrameLayout contentFrameLayout = (FrameLayout) activity.findViewById(android.R.id.content);
+                contentFrameLayout.setClipToPadding(false);
+                SystemBarTintManager.SystemBarConfig systemBarConfig = new SystemBarTintManager(activity).getConfig();
+                contentFrameLayout.setPadding(0, systemBarConfig.getPixelInsetTop(true), systemBarConfig.getPixelInsetRight(),
+                        systemBarConfig.getPixelInsetBottom());
             }
         }
     }
@@ -123,18 +128,4 @@ public abstract class BaseActivity extends SwipeBackActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(19)
-    private static void setTranslucentStatus(Activity activity, boolean on) {
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-        // win.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        win.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-    }
 }

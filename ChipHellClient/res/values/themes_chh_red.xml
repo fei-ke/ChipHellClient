@@ -3,30 +3,29 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="chh_red" parent="@style/_chh_red"/>
+    <style name="chh_red" parent="@style/_chh_red" />
 
-  <style name="_chh_red" parent="android:Theme.Holo.Light.DarkActionBar">
-   	<item name="android:homeAsUpIndicator">@drawable/home_up_indicator</item>
-   	<item name="android:windowIsTranslucent">true</item>
-   	<item name="android:actionBarStyle">@style/ActionBarStylechh_red</item>
-    <item name="android:editTextBackground">@drawable/chh_red_edit_text_holo_light</item>
-    <item name="android:textColorHighlight">#99a90000</item>
-    <item name="android:textSelectHandleLeft">@drawable/chh_red_text_select_handle_left</item>
-    <item name="android:textSelectHandleRight">@drawable/chh_red_text_select_handle_right</item>
-    <item name="android:textSelectHandle">@drawable/chh_red_text_select_handle_middle</item>
+    <style name="_chh_red" parent="android:Theme.Holo.Light">
+        <item name="android:homeAsUpIndicator">@drawable/home_up_indicator</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:actionBarStyle">@style/ActionBarStylechh_red</item>
+        <item name="android:actionDropDownStyle">@style/ActionBarDropDownStyle</item>
+        <item name="android:editTextBackground">@drawable/chh_red_edit_text_holo_light</item>
+        <item name="android:textColorHighlight">#99a90000</item>
+        <item name="android:textSelectHandleLeft">@drawable/chh_red_text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/chh_red_text_select_handle_right</item>
+        <item name="android:textSelectHandle">@drawable/chh_red_text_select_handle_middle</item>
+        <item name="android:buttonStyle">@style/Buttonchh_red</item>
+        <item name="android:imageButtonStyle">@style/ImageButtonchh_red</item>
+        <item name="android:dropDownSpinnerStyle">@style/Spinnerchh_red</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/chh_red_list_selector_holo_light</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/chh_red_activated_background_holo_light</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/chh_red_fastscroll_thumb_holo</item>
+    </style>
 
-    <item name="android:buttonStyle">@style/Buttonchh_red</item>
-
-    <item name="android:imageButtonStyle">@style/ImageButtonchh_red</item>
-
-    <item name="android:dropDownSpinnerStyle">@style/Spinnerchh_red</item>
-
-    <item name="android:listChoiceBackgroundIndicator">@drawable/chh_red_list_selector_holo_light</item>
-
-    <item name="android:activatedBackgroundIndicator">@drawable/chh_red_activated_background_holo_light</item>
-
-    <item name="android:fastScrollThumbDrawable">@drawable/chh_red_fastscroll_thumb_holo</item>
-
-  </style>
+    <style name="MainActivityTheme" parent="chh_red">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
 
 </resources>

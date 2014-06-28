@@ -30,5 +30,10 @@
     <style name="ActionBar.Subtitle.Text.chh_red" parent="android:TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
         <item name="android:textColor">@color/white</item>
     </style>
+    
+    <style name="ActionBarDropDownStyle" parent="@android:style/Widget.Holo.Spinner">
+        <item name="android:popupBackground">@color/chh_red_color</item>
+        <item name="android:dropDownSelector">@drawable/chh_red_list_selector_holo_light</item>
+    </style>
 
 </resources>
