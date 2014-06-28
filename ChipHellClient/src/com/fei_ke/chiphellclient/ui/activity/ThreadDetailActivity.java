@@ -7,9 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
@@ -231,26 +235,17 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
 
     private OnScrollListener onScrollListener = new OnScrollListener() {
         int lastVisibleItem;
-        boolean scrollFlag;
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
-            if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                scrollFlag = true;
-            } else {
-                scrollFlag = false;
-            }
         }
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (scrollFlag) {
-                if (firstVisibleItem > lastVisibleItem) {// 向下
-                    hideReplyPanel();
-                } else if (firstVisibleItem < lastVisibleItem) {
-                    showReplyPanel();
-                }
-
+            if (firstVisibleItem > lastVisibleItem) {// 向下
+                hideReplyPanel();
+            } else if (firstVisibleItem < lastVisibleItem) {
+                showReplyPanel();
             }
             lastVisibleItem = firstVisibleItem;
         }
