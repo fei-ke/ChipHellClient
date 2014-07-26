@@ -114,7 +114,7 @@ class HtmlParse {
                         }
                     }
                 }
-                
+
                 Elements imgElements = bmc.getElementsByTag("img");
                 if (imgElements != null && imgElements.size() != 0) {
                     String src = imgElements.first().absUrl("src");
@@ -149,17 +149,18 @@ class HtmlParse {
         }
         if (parseClass) {
             Elements elements = document.getElementsByClass("box");
-            if (elements.size() != 0 && "box ttp".equals(elements.last().className())) {// 主题分类
-                Element boxTtp = elements.last();
-                Elements as = boxTtp.getElementsByTag("a");
-                List<PlateClass> plateClasses = new ArrayList<PlateClass>();
-                for (Element a : as) {
-                    PlateClass plateClass = new PlateClass();
-                    plateClass.setTitle(a.ownText());
-                    plateClass.setUrl(a.absUrl("href"));
-                    plateClasses.add(plateClass);
+            for (Element box : elements) {
+                if ("box ttp".equals(box.className())) {// 主题分类
+                    Elements as = box.getElementsByTag("a");
+                    List<PlateClass> plateClasses = new ArrayList<PlateClass>();
+                    for (Element a : as) {
+                        PlateClass plateClass = new PlateClass();
+                        plateClass.setTitle(a.ownText());
+                        plateClass.setUrl(a.absUrl("href"));
+                        plateClasses.add(plateClass);
+                    }
+                    threadWrap.setPlateClasses(plateClasses);
                 }
-                threadWrap.setPlateClasses(plateClasses);
             }
         }
         threadWrap.setThreads(threads);
