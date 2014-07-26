@@ -12,6 +12,8 @@ import java.util.List;
 public class ThreadListWrap extends BaseBean {
     List<Thread> threads;
     List<Plate> plates;
+    List<PlateClass> plateClasses;
+    String error;
 
     public List<Thread> getThreads() {
         return threads;
@@ -27,6 +29,22 @@ public class ThreadListWrap extends BaseBean {
 
     public void setPlates(List<Plate> plates) {
         this.plates = plates;
+    }
+
+    public List<PlateClass> getPlateClasses() {
+        return plateClasses;
+    }
+
+    public void setPlateClasses(List<PlateClass> plateClasses) {
+        this.plateClasses = plateClasses;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
 }

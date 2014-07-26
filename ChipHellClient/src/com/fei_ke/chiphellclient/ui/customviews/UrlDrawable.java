@@ -31,11 +31,7 @@ public class UrlDrawable extends BitmapDrawable {
     @SuppressWarnings("deprecation")
     public UrlDrawable(final String url, final View container) {
         this.container = container;
-    }
-
-    @SuppressWarnings("deprecation")
-    public UrlDrawable(final View container) {
-        this.container = container;
+        setUrl(url);
     }
 
     public void setUrl(String url) {
@@ -52,7 +48,7 @@ public class UrlDrawable extends BitmapDrawable {
 
             @Override
             public void onLoadingComplete(String url, View arg1, Bitmap bitmap) {
-                Drawable drawable = new BitmapDrawable(container.getResources(), bitmap);
+                Drawable drawable = new BitmapDrawable(bitmap);
                 int width = bitmap.getWidth() * 2;
                 int height = bitmap.getHeight() * 2;
                 drawable.setBounds(0, 0, width, height);

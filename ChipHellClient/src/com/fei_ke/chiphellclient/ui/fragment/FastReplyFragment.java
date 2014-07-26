@@ -242,6 +242,7 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
                 if (onReplySuccess != null) {
                     onReplySuccess.onSuccess(result);
                 }
+                editTextFastReply.setText("");
             }
         }
 
@@ -264,7 +265,6 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
         public void onFinish() {
             if (dialog.isShowing()) {
                 dialog.cancel();
-                editTextFastReply.setText("");
             }
         }
     }

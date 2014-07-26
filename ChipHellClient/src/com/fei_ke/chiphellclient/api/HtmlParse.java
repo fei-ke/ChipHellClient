@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
 import com.fei_ke.chiphellclient.bean.Plate;
+import com.fei_ke.chiphellclient.bean.PlateClass;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
@@ -79,8 +80,9 @@ class HtmlParse {
      * 解析帖子列表
      * 
      * @param Content
+     * @param parseClass 是否解析主题分类
      */
-    public static ThreadListWrap parseThreadList(String content) {
+    public static ThreadListWrap parseThreadList(String content, boolean parseClass) {
         ThreadListWrap threadWrap = new ThreadListWrap();
         List<Thread> threads = new ArrayList<Thread>();
         List<Plate> plates = null;
@@ -112,7 +114,7 @@ class HtmlParse {
                         }
                     }
                 }
-
+                
                 Elements imgElements = bmc.getElementsByTag("img");
                 if (imgElements != null && imgElements.size() != 0) {
                     String src = imgElements.first().absUrl("src");
@@ -145,8 +147,26 @@ class HtmlParse {
             }
 
         }
+        if (parseClass) {
+            Elements elements = document.getElementsByClass("box");
+            if (elements.size() != 0 && "box ttp".equals(elements.last().className())) {// 主题分类
+                Element boxTtp = elements.last();
+                Elements as = boxTtp.getElementsByTag("a");
+                List<PlateClass> plateClasses = new ArrayList<PlateClass>();
+                for (Element a : as) {
+                    PlateClass plateClass = new PlateClass();
+                    plateClass.setTitle(a.ownText());
+                    plateClass.setUrl(a.absUrl("href"));
+                    plateClasses.add(plateClass);
+                }
+                threadWrap.setPlateClasses(plateClasses);
+            }
+        }
         threadWrap.setThreads(threads);
         threadWrap.setPlates(plates);
+        if (elementsGroup.size() == 0) {
+            threadWrap.setError(document.getElementById("messagetext").text());
+        }
         return threadWrap;
     }
 

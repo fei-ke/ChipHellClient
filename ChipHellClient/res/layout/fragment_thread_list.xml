@@ -6,12 +6,26 @@
     android:layout_height="match_parent"
     android:clipChildren="false" >
 
-    <ImageView
+    <LinearLayout
         android:id="@+id/emptyView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/logo" />
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/textViewError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textColor="@color/chh_red" />
+    </LinearLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/listView_threads"
@@ -25,7 +39,7 @@
         android:paddingBottom="5dp"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
-        android:paddingTop="5dp"
+        android:paddingTop="50dp"
         android:scrollbarSize="2dip"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@color/chh_red_with_alpha"
@@ -33,6 +47,12 @@
         app:ptrDrawable="@drawable/red_ptr_rotate"
         app:ptrHeaderSubTextColor="@color/chh_red"
         app:ptrHeaderTextColor="@color/chh_red" />
+
+    <com.fei_ke.chiphellclient.ui.customviews.PlateHead_
+        android:id="@+id/plateHead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/plate_head_bg" />
 
     <FrameLayout
         android:id="@+id/layout_fast_reply"

@@ -17,16 +17,20 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
+import com.fei_ke.chiphellclient.bean.PlateClass;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.ThreadListWrap;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.ThreadListAdapter;
+import com.fei_ke.chiphellclient.ui.customviews.PlateHead;
+import com.fei_ke.chiphellclient.ui.customviews.PlateHead.OnItemSeleckedListener;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
@@ -37,6 +41,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,6 +59,12 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
     @ViewById
     View emptyView;
 
+    @ViewById
+    TextView textViewError;
+
+    @ViewById(R.id.plateHead)
+    PlateHead mPlateHeadView;
+
     @ViewById(R.id.layout_fast_reply)
     View layoutFastReply;
 
@@ -62,7 +73,11 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
     FastReplyFragment mFastReplyFragment;
 
+    List<PlateClass> mPlateClasses;
+
     int mPage = 1;
+
+    String url;
 
     // 存储子版块列表
     List<Plate> platesHold;
@@ -135,6 +150,20 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         if (mThreadListAdapter.getCount() == 0) {
             mListViewThreads.setRefreshing();
         }
+
+        if (mPlateClasses != null) {
+            mPlateHeadView.bindValue(mPlateClasses);
+        }
+
+        System.out.println("setOnItemSeleckedListener");
+        mPlateHeadView.setOnItemSeleckedListener(new OnItemSeleckedListener() {
+
+            @Override
+            public void onItemSelecked(PlateClass plateClass) {
+                url = plateClass.getUrl();
+                mListViewThreads.setRefreshing();
+            }
+        });
     }
 
     private OnScrollListener onScrollListener = new OnScrollListener() {
@@ -149,6 +178,10 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             if (firstVisibleItem > lastVisibleItem) {// 向上滑动中
                 hideFastReplyPanel();
+                hideHeadPanel();
+            }
+            if (firstVisibleItem < lastVisibleItem) {
+                showHeadPanel();
             }
             lastVisibleItem = firstVisibleItem;
 
@@ -167,7 +200,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         mIsFreshing = true;
 
         ChhApi api = new ChhApi();
-        api.getThreadList(getActivity(), mPlate, page, new ApiCallBack<ThreadListWrap>() {
+        api.getThreadList(getActivity(), url != null ? url : mPlate.getUrl(), page, new ApiCallBack<ThreadListWrap>() {
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
@@ -187,8 +220,26 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                         plates.add(0, mPlate);
                         handSubPlate(plates);
                     }
+
+                    // 设置主题分类
+                    List<PlateClass> plateClasses = result.getPlateClasses();
+                    if (plateClasses != null) {
+                        mPlateClasses = plateClasses;
+                    } else {
+                        List<PlateClass> list = new ArrayList<PlateClass>();
+                        PlateClass plateClass = new PlateClass();
+                        plateClass.setTitle("全部");
+                        plateClass.setUrl(mPlate.getUrl());
+                        list.add(plateClass);
+                        mPlateClasses = list;
+                    }
+                    mPlateHeadView.bindValue(mPlateClasses);
                 }
                 mThreadListAdapter.update(result.getThreads());
+
+                if (result.getError() != null) {
+                    textViewError.setText(result.getError());
+                }
             }
 
             @Override
@@ -275,6 +326,22 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             layoutFastReply.startAnimation(animation);
             layoutFastReply.setVisibility(View.GONE);
             mFastReplyFragment.hide();
+        }
+    }
+
+    protected void showHeadPanel() {
+        if (mPlateHeadView.getVisibility() != View.VISIBLE) {
+            mPlateHeadView.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_from_top);
+            mPlateHeadView.startAnimation(animation);
+        }
+    }
+
+    protected void hideHeadPanel() {
+        if (mPlateHeadView.getVisibility() == View.VISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_to_top);
+            mPlateHeadView.startAnimation(animation);
+            mPlateHeadView.setVisibility(View.GONE);
         }
     }
 }

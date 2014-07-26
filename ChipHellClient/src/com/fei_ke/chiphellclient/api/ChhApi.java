@@ -21,6 +21,7 @@ import com.loopj.android.http.RequestParams;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.List;
 
@@ -79,13 +80,14 @@ public class ChhApi {
      * @param page 页码
      * @param apiCallBack
      */
-    public void getThreadList(Context context, Plate plate, int page, ApiCallBack<ThreadListWrap> apiCallBack) {
+    public void getThreadList(Context context, String url, final int page, ApiCallBack<ThreadListWrap> apiCallBack) {
         RequestParams param = new RequestParams("page", page);
-        getAsyncHttpClient().get(context, plate.getUrl(), param, page == 1, new ApiResponsHandler<ThreadListWrap>(apiCallBack) {
+        getAsyncHttpClient().get(context, url, param, page == 1, new ApiResponsHandler<ThreadListWrap>(apiCallBack) {
 
             @Override
             public ThreadListWrap parseResponse(String responseString) {
-                ThreadListWrap threadListWrap = HtmlParse.parseThreadList(responseString);
+                System.out.println(responseString);
+                ThreadListWrap threadListWrap = HtmlParse.parseThreadList(responseString, page == 1);
                 return threadListWrap;
             }
 
@@ -141,10 +143,17 @@ public class ChhApi {
                 if (messagetext != null) {
                     message = messagetext.child(0).text();
                     sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
-                } else {
-                    return HtmlParse.parsePostList(responseString);
+                    return null;
                 }
-                return null;
+
+                Element jump_c = document.getElementsByClass("jump_c").first();
+
+                if (jump_c != null) {
+                    message = jump_c.text();
+                    sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
+                    return null;
+                }
+                return HtmlParse.parsePostList(responseString);
             }
         });
     }
@@ -177,10 +186,17 @@ public class ChhApi {
                 if (messagetext != null) {
                     message = messagetext.child(0).text();
                     sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
-                } else {
-                    return HtmlParse.parsePostList(responseString);
+                    return null;
                 }
-                return null;
+
+                Element jump_c = document.getElementsByClass("jump_c").first();
+
+                if (jump_c != null) {
+                    message = jump_c.text();
+                    sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
+                    return null;
+                }
+                return HtmlParse.parsePostList(responseString);
             }
         });
     }
