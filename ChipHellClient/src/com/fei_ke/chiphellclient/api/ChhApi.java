@@ -5,7 +5,6 @@ import android.content.Context;
 import android.webkit.CookieManager;
 
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
-import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
@@ -17,11 +16,6 @@ import com.fei_ke.chiphellclient.constant.Mode;
 import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.List;
 
@@ -86,7 +80,6 @@ public class ChhApi {
 
             @Override
             public ThreadListWrap parseResponse(String responseString) {
-                System.out.println(responseString);
                 ThreadListWrap threadListWrap = HtmlParse.parseThreadList(responseString, page == 1);
                 return threadListWrap;
             }
@@ -136,21 +129,10 @@ public class ChhApi {
 
             @Override
             public List<Post> parseResponse(String responseString) {
-                LogMessage.i(TAG + "#reply", responseString);
-                String message = "发送成功";
-                Document document = Jsoup.parse(responseString);
-                Element messagetext = document.getElementById("messagetext");
+                LogMessage.i(TAG + "#quotrReply", responseString);
+                String messagetext = HtmlParse.parseMessageText(responseString);
                 if (messagetext != null) {
-                    message = messagetext.child(0).text();
-                    sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
-                    return null;
-                }
-
-                Element jump_c = document.getElementsByClass("jump_c").first();
-
-                if (jump_c != null) {
-                    message = jump_c.text();
-                    sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
+                    sendFailureMessage(0, null, messagetext.getBytes(), new Throwable(messagetext));
                     return null;
                 }
                 return HtmlParse.parsePostList(responseString);
@@ -180,20 +162,9 @@ public class ChhApi {
             @Override
             public List<Post> parseResponse(String responseString) {
                 LogMessage.i(TAG + "#quotrReply", responseString);
-                String message = "发送成功";
-                Document document = Jsoup.parse(responseString);
-                Element messagetext = document.getElementById("messagetext");
+                String messagetext = HtmlParse.parseMessageText(responseString);
                 if (messagetext != null) {
-                    message = messagetext.child(0).text();
-                    sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
-                    return null;
-                }
-
-                Element jump_c = document.getElementsByClass("jump_c").first();
-
-                if (jump_c != null) {
-                    message = jump_c.text();
-                    sendFailureMessage(0, null, message.getBytes(), new Throwable(message));
+                    sendFailureMessage(0, null, messagetext.getBytes(), new Throwable(messagetext));
                     return null;
                 }
                 return HtmlParse.parsePostList(responseString);

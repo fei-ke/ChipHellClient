@@ -48,7 +48,7 @@ public class PlateHead extends FrameLayout {
     @AfterViews
     void afterViews() {
         mPlateClasses = new ArrayList<PlateClass>();
-        mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, mPlateClasses);
+        mAdapter = new ArrayAdapter<PlateClass>(getContext(), android.R.layout.simple_spinner_dropdown_item, mPlateClasses);
         spinner.setAdapter(mAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 

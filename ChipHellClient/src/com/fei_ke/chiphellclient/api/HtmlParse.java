@@ -328,4 +328,25 @@ class HtmlParse {
         albumWrap.setCurPosition(curpic);
         return albumWrap;
     }
+
+    /**
+     * 解析提示消息
+     * 
+     * @param responseString
+     * @return
+     */
+    public static String parseMessageText(String responseString) {
+        Document document = Jsoup.parse(responseString);
+        Element messagetext = document.getElementById("messagetext");
+        if (messagetext != null) {
+            return messagetext.child(0).text();
+        }
+
+        Element jump_c = document.getElementsByClass("jump_c").first();
+
+        if (jump_c != null) {
+            return jump_c.text();
+        }
+        return null;
+    }
 }
