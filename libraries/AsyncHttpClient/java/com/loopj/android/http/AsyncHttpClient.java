@@ -32,6 +32,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HttpVersion;
+import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthState;
 import org.apache.http.auth.Credentials;
@@ -68,6 +69,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
+import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -943,6 +945,20 @@ public class AsyncHttpClient {
                               ResponseHandlerInterface responseHandler) {
         HttpEntityEnclosingRequestBase request = addEntityToRequestBase(new HttpPost(URI.create(url).normalize()), entity);
         if (headers != null) request.setHeaders(headers);
+        //log post url and params
+        if (BuildConfig.DEBUG) {
+            try {
+                if (!(entity instanceof SimpleMultipartEntity)) {
+                    Log.i("post-url: ", url + "\nparames: \n" + EntityUtils.toString(entity));
+                } else {
+                    Log.i("post-url: ", url + "\nparames: \n包含文件流");
+                }
+            }catch(ParseException e){
+                e.printStackTrace();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
         return sendRequest(httpClient, httpContext, request, contentType, responseHandler, context);
     }
 
