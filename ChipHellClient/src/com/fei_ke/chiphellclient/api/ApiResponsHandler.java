@@ -1,4 +1,3 @@
-
 package com.fei_ke.chiphellclient.api;
 
 import android.os.Message;
@@ -9,10 +8,10 @@ import org.apache.http.Header;
 
 /**
  * 异步联网请求解析帮助类
- * 
+ *
+ * @param <T>
  * @author fei-ke
  *         2014-6-19 下午6:35:01
- * @param <T>
  */
 public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     ApiCallBack<T> mApiCallBack;

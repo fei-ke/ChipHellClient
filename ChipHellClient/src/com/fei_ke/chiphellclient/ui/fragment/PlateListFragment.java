@@ -1,8 +1,8 @@
-
 package com.fei_ke.chiphellclient.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
@@ -10,12 +10,15 @@ import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.diegocarloslima.fgelv.lib.FloatingGroupExpandableListView;
 import com.diegocarloslima.fgelv.lib.WrapperExpandableListAdapter;
+import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.User;
+import com.fei_ke.chiphellclient.constant.Constants;
+import com.fei_ke.chiphellclient.event.FavoriteChangeEvent;
 import com.fei_ke.chiphellclient.ui.activity.LoginActivity;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PlateListAdapter;
@@ -23,11 +26,14 @@ import com.fei_ke.chiphellclient.ui.customviews.UserView;
 import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 版块列表
@@ -41,13 +47,13 @@ public class PlateListFragment extends BaseContentFragment {
     private static final String TAG = "PlateListFragment";
 
     @ViewById(R.id.expandableList_plates)
-    FloatingGroupExpandableListView mExpandableListView;
+    protected FloatingGroupExpandableListView mExpandableListView;
 
-    PlateListAdapter mPlateListAdapter;
-    List<PlateGroup> mPlateGroups = new ArrayList<PlateGroup>();
-    OnPlateClickListener onPlateClickListener;
-    UserView mUserView;
-    MainActivity mMainActivity;
+    private PlateListAdapter mPlateListAdapter;
+    private List<PlateGroup> mPlateGroups = new ArrayList<PlateGroup>();
+    private OnPlateClickListener onPlateClickListener;
+    private UserView mUserView;
+    private MainActivity mMainActivity;
 
     public static PlateListFragment getInstance() {
         return PlateListFragment_.builder().build();
@@ -79,7 +85,17 @@ public class PlateListFragment extends BaseContentFragment {
                 getActivity().startActivityForResult(intent, MainActivity.REQUEST_CODE_LOGIN);
             }
         });
-
+        final Plate plateFavorite = new Plate();
+        plateFavorite.setTitle("我的收藏");
+        plateFavorite.setUrl(Constants.BASE_URL + "home.php?mod=space&do=favorite&view=me&type=thread&mobile=1");
+        mUserView.getButtonFavorite().setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onPlateClickListener != null) {
+                    onPlateClickListener.onPlateClick(plateFavorite);
+                }
+            }
+        });
         mExpandableListView.addHeaderView(mUserView);
 
         mPlateListAdapter = new PlateListAdapter(mPlateGroups);
@@ -101,6 +117,7 @@ public class PlateListFragment extends BaseContentFragment {
 
         update();
 
+
     }
 
     public void update() {
@@ -115,6 +132,7 @@ public class PlateListFragment extends BaseContentFragment {
             public void onSuccess(User result) {
                 LogMessage.i(TAG, result);
                 mUserView.bindValue(result);
+                ChhApplication.getInstance().setFormHash(result.getFormHash());
             }
         });
 
@@ -130,6 +148,8 @@ public class PlateListFragment extends BaseContentFragment {
                 for (int i = 0; i < mPlateListAdapter.getGroupCount(); i++) {
                     mExpandableListView.expandGroup(i);
                 }
+
+                setPlateFavoriteStatus(result);
             }
 
             @Override
@@ -150,6 +170,17 @@ public class PlateListFragment extends BaseContentFragment {
 
     }
 
+    private void setPlateFavoriteStatus(List<PlateGroup> plateGroups) {
+        if (plateGroups != null && plateGroups.size() > 0) {
+            updateAllFavoriteStatus(plateGroups);
+        }
+    }
+
+    @Background
+    protected void updateAllFavoriteStatus(List<PlateGroup> plateGroups) {
+        EventBus.getDefault().postSticky(new FavoriteChangeEvent(plateGroups.get(0).getPlates()));
+    }
+
     public static interface OnPlateClickListener {
         void onPlateClick(Plate plate);
     }
@@ -157,5 +188,24 @@ public class PlateListFragment extends BaseContentFragment {
     @Override
     public void onRefresh() {
         update();
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    public void onEvent(FavoriteChangeEvent event) {
+        if (event.getFavoritePlate() == null) {
+            update();
+        }
     }
 }

@@ -1,10 +1,8 @@
-
 package com.fei_ke.chiphellclient.api;
 
 import android.graphics.Color;
 import android.text.TextUtils;
 
-import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateClass;
@@ -31,7 +29,7 @@ class HtmlParse {
 
     /**
      * 解析板块列表
-     * 
+     *
      * @param content
      * @return
      */
@@ -51,9 +49,11 @@ class HtmlParse {
 
             for (Element bm_c : plateElements) {
                 Plate plate = new Plate();
-                Element a = bm_c.getElementsByTag("a").first();
-                String plateTitle = a.text();
-                String url = a.absUrl("href");
+                //链接，第一个是版块链接，如果有第二个则是删除收藏连接
+                Elements as = bm_c.getElementsByTag("a");
+                Element a1 = as.first();
+                String plateTitle = a1.text();
+                String url = a1.absUrl("href");
                 Elements count = bm_c.getElementsByClass("xg1");
                 String xg1 = null;
                 if (count.size() != 0) {
@@ -61,10 +61,18 @@ class HtmlParse {
                 } else {
                     xg1 = "(0)";
                 }
+
+                //判断是否收藏
+                String favoriteId = null;
+                if (as.size() > 1) {
+                    String urlDelete = as.get(1).absUrl("href");
+                    favoriteId = new UrlParamsMap(urlDelete).get("favid");
+                }
+
                 plate.setTitle(plateTitle);
                 plate.setUrl(url);
                 plate.setXg1(xg1);
-
+                plate.setFavoriteId(favoriteId);
                 plates.add(plate);
 
             }
@@ -78,8 +86,8 @@ class HtmlParse {
 
     /**
      * 解析帖子列表
-     * 
-     * @param Content
+     *
+     * @param content
      * @param parseClass 是否解析主题分类
      */
     public static ThreadListWrap parseThreadList(String content, boolean parseClass) {
@@ -134,16 +142,18 @@ class HtmlParse {
                 if (plates == null) {
                     plates = new ArrayList<Plate>();
                 }
-                Element child = bmc.child(0);
-                Plate plate = new Plate();
-                String title = child.ownText();
-                String url = child.absUrl("href");
-                plate.setTitle(title);
-                plate.setUrl(url);
-                plate.setSubPlate(true);
-                plates.add(plate);
+                if (bmc.children().size() > 0) {
+                    Element child = bmc.child(0);
+                    Plate plate = new Plate();
+                    String title = child.ownText();
+                    String url = child.absUrl("href");
+                    plate.setTitle(title);
+                    plate.setUrl(url);
+                    plate.setSubPlate(true);
+                    plates.add(plate);
 
-                LogMessage.i(TAG, plate);
+                    LogMessage.i(TAG, plate);
+                }
             }
 
         }
@@ -166,14 +176,15 @@ class HtmlParse {
         threadWrap.setThreads(threads);
         threadWrap.setPlates(plates);
         if (elementsGroup.size() == 0) {
-            threadWrap.setError(document.getElementById("messagetext").text());
+            String message = parseMessageText(content);
+            threadWrap.setError(message);
         }
         return threadWrap;
     }
 
     /**
      * 解析回帖列表
-     * 
+     *
      * @param content
      * @return
      */
@@ -234,7 +245,7 @@ class HtmlParse {
 
     /**
      * 解析用户信息
-     * 
+     *
      * @param responseBody
      * @return
      */
@@ -254,8 +265,8 @@ class HtmlParse {
             String url = btn_exit.child(0).attr("href");
             UrlParamsMap map = new UrlParamsMap(url);
             String formHash = map.get("formhash");
-            ChhApplication.getInstance().setFormHash(formHash);
 
+            user.setFormHash(formHash);
             LogMessage.i("formHash", formHash);
         } catch (Exception e) {
             LogMessage.w(TAG + "#parseUserInfo", e);
@@ -265,7 +276,7 @@ class HtmlParse {
 
     /**
      * 解析引用回复的准备数据
-     * 
+     *
      * @param responseBody
      * @return
      */
@@ -306,7 +317,7 @@ class HtmlParse {
 
     /**
      * 解析相册
-     * 
+     *
      * @param responseBody
      * @return
      */
@@ -331,7 +342,7 @@ class HtmlParse {
 
     /**
      * 解析提示消息
-     * 
+     *
      * @param responseString
      * @return
      */
@@ -346,6 +357,11 @@ class HtmlParse {
 
         if (jump_c != null) {
             return jump_c.text();
+        }
+
+        Element message = document.getElementById("message");
+        if (message != null) {
+            return message.text();
         }
         return null;
     }

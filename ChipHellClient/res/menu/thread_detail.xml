@@ -1,18 +1,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.fei_ke.chiphellclient.MainActivity" >
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity_">
 
-    <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/white_ptr_rotate"
-        android:orderInCategory="100"
-        android:showAsAction="always"
-        android:title="@string/refresh"/>
-    <item
-        android:id="@+id/action_brower"
-        android:icon="@drawable/ic_action_location_web_site"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/browser"/>
+	<item
+		android:id="@+id/action_refresh"
+		android:icon="@drawable/white_ptr_rotate"
+		android:orderInCategory="100"
+		android:showAsAction="always"
+		android:title="@string/refresh"/>
+	<item
+		android:id="@+id/action_favorite"
+		android:icon="@drawable/favorite_normal"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+		android:title="@string/favorite"/>
+	<item
+		android:id="@+id/action_browser"
+		android:icon="@drawable/ic_action_location_web_site"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+		android:title="@string/browser"/>
+
 
 </menu>

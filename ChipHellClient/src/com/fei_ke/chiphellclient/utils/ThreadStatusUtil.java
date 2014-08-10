@@ -1,4 +1,3 @@
-
 package com.fei_ke.chiphellclient.utils;
 
 import android.content.Context;
@@ -20,30 +19,30 @@ public class ThreadStatusUtil {
 
     /**
      * 获取帖子状态
-     * 
+     *
      * @param tid
      * @return
      */
-    public boolean isRead(String tid) {
+    public synchronized boolean isRead(String tid) {
         return preferences.getBoolean(tid, false);
     }
 
     /**
      * 设置帖子状态
-     * 
+     *
      * @param tid
      * @param read
      */
-    public void setRead(String tid, boolean read) {
+    public synchronized void setRead(String tid, boolean read) {
         preferences.edit().putBoolean(tid, read).commit();
     }
 
     /**
      * 将帖子标记为已读状态
-     * 
+     *
      * @param tid
      */
-    public void setRead(String tid) {
+    public synchronized void setRead(String tid) {
         setRead(tid, true);
     }
 

@@ -1,11 +1,12 @@
-
 package com.fei_ke.chiphellclient.ui.fragment;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -16,9 +17,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
@@ -26,11 +29,12 @@ import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateClass;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.ThreadListWrap;
+import com.fei_ke.chiphellclient.event.FavoriteChangeEvent;
+import com.fei_ke.chiphellclient.ui.activity.LoginActivity;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.ThreadListAdapter;
 import com.fei_ke.chiphellclient.ui.customviews.PlateHead;
-import com.fei_ke.chiphellclient.ui.customviews.PlateHead.OnItemSeleckedListener;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
@@ -44,49 +48,51 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * 帖子列表
- * 
+ *
  * @author fei-ke
  * @2014-6-14
  */
 @EFragment(R.layout.fragment_thread_list)
-public class ThreadListFragment extends BaseContentFragment implements OnClickListener, OnItemClickListener {
+public class ThreadListFragment extends BaseContentFragment implements OnClickListener, OnItemClickListener, AdapterView.OnItemLongClickListener {
     @ViewById(R.id.listView_threads)
-    PullToRefreshListView mListViewThreads;
+    protected PullToRefreshListView mListViewThreads;
     ThreadListAdapter mThreadListAdapter;
 
     @ViewById
-    View emptyView;
+    protected View emptyView;
 
     @ViewById
-    TextView textViewError;
+    protected TextView textViewError;
 
     @ViewById(R.id.plateHead)
-    PlateHead mPlateHeadView;
+    protected PlateHead mPlateHeadView;
 
     @ViewById(R.id.layout_fast_reply)
-    View layoutFastReply;
+    protected View layoutFastReply;
 
     @FragmentArg
-    Plate mPlate;
+    protected Plate mPlate;
 
-    FastReplyFragment mFastReplyFragment;
+    private FastReplyFragment mFastReplyFragment;
 
-    List<PlateClass> mPlateClasses;
+    private List<PlateClass> mPlateClasses;
 
-    int mPage = 1;
+    private int mPage = 1;
 
-    String url;
-
+    private String url;
+    private boolean orderByDate = false;
     // 存储子版块列表
-    List<Plate> platesHold;
+    private List<Plate> platesHold;
     private MainActivity mMainActivity;
     private boolean mIsFreshing;
 
     /**
      * 获取实例
-     * 
+     *
      * @param plate
      * @return
      */
@@ -151,19 +157,28 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             mListViewThreads.setRefreshing();
         }
 
-        if (mPlateClasses != null) {
-            mPlateHeadView.bindValue(mPlateClasses);
-        }
+        //设置头部
+        mPlateHeadView.bindValue(mPlate, mPlateClasses);
 
-        System.out.println("setOnItemSeleckedListener");
-        mPlateHeadView.setOnItemSeleckedListener(new OnItemSeleckedListener() {
+        mPlateHeadView.setOnClassSelectedListener(new PlateHead.OnClassSelectedListener() {
 
             @Override
-            public void onItemSelecked(PlateClass plateClass) {
+            public void onClassSelected(PlateClass plateClass) {
                 url = plateClass.getUrl();
                 mListViewThreads.setRefreshing();
             }
         });
+        mPlateHeadView.setOnOrderBySelectedListener(new PlateHead.OnOrderBySelectedListener() {
+            @Override
+            public void onOrderBySelected(int index) {
+                orderByDate = index == ORDER_BY_DATE;
+                mListViewThreads.setRefreshing();
+            }
+        });
+
+        mPlateHeadView.setOnBtnFavoriteClickListener(this);
+
+        mListViewThreads.getRefreshableView().setOnItemLongClickListener(this);
     }
 
     private OnScrollListener onScrollListener = new OnScrollListener() {
@@ -198,9 +213,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             return;
         }
         mIsFreshing = true;
-
+        String orderBy = orderByDate ? "dateline" : null;
         ChhApi api = new ChhApi();
-        api.getThreadList(getActivity(), url != null ? url : mPlate.getUrl(), page, new ApiCallBack<ThreadListWrap>() {
+        api.getThreadList(getActivity(), url != null ? url : mPlate.getUrl(), page, orderBy, new ApiCallBack<ThreadListWrap>() {
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
@@ -233,7 +248,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                         list.add(plateClass);
                         mPlateClasses = list;
                     }
-                    mPlateHeadView.bindValue(mPlateClasses);
+                    mPlateHeadView.bindValue(mPlate, mPlateClasses);
                 }
                 mThreadListAdapter.update(result.getThreads());
 
@@ -307,6 +322,10 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.textView_count:
+                if (!ChhApplication.getInstance().isLogin()) {
+                    startActivity(LoginActivity.getStartIntent(getActivity()));
+                    break;
+                }
                 Thread thread = (Thread) v.getTag();
                 layoutFastReply.setVisibility(View.VISIBLE);
                 mFastReplyFragment.setPlateAndThread(mPlate, thread);
@@ -315,8 +334,35 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             case R.id.emptyView:
                 getThreadList();
                 break;
+            case R.id.btnFavorite:
+                handleFavorite();
+                break;
             default:
                 break;
+        }
+    }
+
+    private void handleFavorite() {
+
+        //未登录时
+        if (!ChhApplication.getInstance().isLogin()) {
+            startActivity(LoginActivity.getStartIntent(getActivity()));
+            return;
+        }
+
+        final boolean isFavorite = mPlate.isFavorite();
+        final ChhApi chhApi = new ChhApi();
+        ApiCallBack<String> apiCallBack = new ApiCallBack<String>() {
+            @Override
+            public void onSuccess(String result) {
+                ToastUtil.show(getActivity(), result);
+                EventBus.getDefault().postSticky(new FavoriteChangeEvent());
+            }
+        };
+        if (isFavorite) {//取消收藏
+            chhApi.deleteFavorite(mPlate.getFavoriteId(), ChhApplication.getInstance().getFormHash(), apiCallBack);
+        } else {
+            chhApi.favorite(mPlate.getFid(), ChhApi.TYPE_FORUM, ChhApplication.getInstance().getFormHash(), apiCallBack);
         }
     }
 
@@ -343,5 +389,60 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             mPlateHeadView.startAnimation(animation);
             mPlateHeadView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    /**
+     * 收到收藏状态发生变化事件时
+     *
+     * @param event
+     */
+    public void onEventMainThread(final FavoriteChangeEvent event) {
+        if (event != null && event.getFavoritePlate() != null) {
+            List<Plate> favoritePlate = event.getFavoritePlate();
+            int index = favoritePlate.indexOf(mPlate);
+            if (index != -1) {
+                Plate plate = favoritePlate.get(index);
+                this.mPlate.setFavoriteId(plate.getFavoriteId());
+                this.mPlateHeadView.setFavorite(plate.isFavorite());
+            } else {
+                this.mPlate.setFavoriteId(null);
+                this.mPlateHeadView.setFavorite(false);
+            }
+        }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        final Thread thread = mThreadListAdapter.getItem((int) id);
+        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+        final MenuItem menuItemFavorite = popupMenu.getMenu().add("收藏");
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item == menuItemFavorite) {
+                    new ChhApi().favorite(thread.getTid(), ChhApi.TYPE_THREAD, ChhApplication.getInstance().getFormHash(), new ApiCallBack<String>() {
+                        @Override
+                        public void onSuccess(String result) {
+                            ToastUtil.show(getActivity(), result);
+                        }
+                    });
+                }
+                return true;
+            }
+        });
+        return true;
     }
 }

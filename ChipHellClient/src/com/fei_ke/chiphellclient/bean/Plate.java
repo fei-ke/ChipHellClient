@@ -1,20 +1,20 @@
-
 package com.fei_ke.chiphellclient.bean;
 
 import com.fei_ke.chiphellclient.utils.UrlParamsMap;
 
 /**
  * 版块
- * 
+ *
  * @author fei-ke
  * @2014-6-14
  */
 public class Plate extends BaseBean {
-    String title;
-    String url;
-    String xg1;// 今日帖数
-    String fid;// 版块id
-    boolean isSubPlate;// 是否是子版块
+    private String title;
+    private String url;
+    private String xg1;// 今日帖数
+    private String fid;// 版块id
+    private String favoriteId;
+    private boolean isSubPlate;// 是否是子版块
 
     public String getTitle() {
         return title;
@@ -53,6 +53,19 @@ public class Plate extends BaseBean {
         this.isSubPlate = isSubPlate;
     }
 
+    public boolean isFavorite() {
+        return favoriteId != null;
+    }
+
+    public String getFavoriteId() {
+        return favoriteId;
+    }
+
+    public void setFavoriteId(String favoriteId) {
+        this.favoriteId = favoriteId;
+    }
+
+
     public String getFid() {
         if (fid == null) {
             fid = new UrlParamsMap(url).get("fid");
@@ -60,4 +73,13 @@ public class Plate extends BaseBean {
         return fid;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Plate) {
+            if (((Plate) o).getFid().equals(this.getFid())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

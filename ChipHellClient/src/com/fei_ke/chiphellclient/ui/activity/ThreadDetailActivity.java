@@ -1,4 +1,3 @@
-
 package com.fei_ke.chiphellclient.ui.activity;
 
 import android.annotation.SuppressLint;
@@ -7,13 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
@@ -28,6 +23,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
@@ -58,7 +54,7 @@ import java.util.List;
 
 /**
  * 帖子内容
- * 
+ *
  * @author fei-ke
  * @2014-6-15
  */
@@ -396,15 +392,26 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             case R.id.action_refresh:
                 getPostList();
                 return true;
-            case R.id.action_brower:
+            case R.id.action_browser:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(mThread.getUrl()));
                 startActivity(intent);
                 return true;
+            case R.id.action_favorite:
+                favorite();
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void favorite() {
+        new ChhApi().favorite(mThread.getTid(), ChhApi.TYPE_THREAD, ChhApplication.getInstance().getFormHash(), new ApiCallBack<String>() {
+            @Override
+            public void onSuccess(String result) {
+                ToastUtil.show(getApplicationContext(), result);
+            }
+        });
     }
 
     @Override

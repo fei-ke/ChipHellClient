@@ -1,10 +1,10 @@
-
 package com.fei_ke.chiphellclient;
 
 import android.app.Application;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.webkit.CookieSyncManager;
 
 import com.fei_ke.chiphellclient.utils.LogMessage;
@@ -56,14 +56,14 @@ public class ChhApplication extends Application {
                 .showImageForEmptyUri(R.drawable.logo)
                 .showImageOnFail(R.drawable.logo)
                 .showImageOnLoading(R.drawable.logo)
-                // .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                        // .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                // .memoryCache(new LRULimitedMemoryCache(40 * 1024 * 1024))
-                // .writeDebugLogs() // Remove for release app
+                        // .memoryCache(new LRULimitedMemoryCache(40 * 1024 * 1024))
+                        // .writeDebugLogs() // Remove for release app
                 .defaultDisplayImageOptions(defaultDisplayImageOptions)
                 .build();
         // Initialize ImageLoader with configuration.
@@ -72,6 +72,15 @@ public class ChhApplication extends Application {
 
     public static ChhApplication getInstance() {
         return instance;
+    }
+
+    /**
+     * 是否登录
+     *
+     * @return
+     */
+    public boolean isLogin() {
+        return !TextUtils.isEmpty(formHash);
     }
 
     static void brandGlowEffect(Context context, int brandColor) {

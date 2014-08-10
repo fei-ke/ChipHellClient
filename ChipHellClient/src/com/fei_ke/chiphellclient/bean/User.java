@@ -37,6 +37,14 @@ public class User {
         this.info = info;
     }
 
+    public String getFormHash() {
+        return formHash;
+    }
+
+    public void setFormHash(String formHash) {
+        this.formHash = formHash;
+    }
+
     @Override
     public String toString() {
         return "User [avatarUrl=" + avatarUrl + ", name=" + name + ", info=" + info + "]";
