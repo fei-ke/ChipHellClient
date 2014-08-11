@@ -68,15 +68,18 @@
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="539dc70d56240ba62712fe72" />
-        <!-- <meta-data -->
-        <!-- android:name="UMENG_CHANNEL" -->
-        <!-- android:value="ChipHellForum" /> -->
-        <meta-data
-            android:name="UMENG_CHANNEL" 
-            android:value="Develop" />
-        <!-- <meta-data -->
-        <!-- android:name="UMENG_CHANNEL" -->
-        <!-- android:value="GooglePlay" /> -->
+	    <!--         <meta-data
+			 android:name="UMENG_CHANNEL"
+			 android:value="ChipHellForum" />-->
+   <!--     <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Develop" />-->
+	  <!--  <meta-data
+		    android:name="UMENG_CHANNEL"
+		    android:value="GooglePlay"/>-->
+	    <meta-data
+		    android:name="UMENG_CHANNEL"
+		    android:value="Baidu"/>
 
     </application>
 

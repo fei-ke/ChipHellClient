@@ -40,6 +40,11 @@ public static final int *;
 public *;
 }
 
+#Eventbus
 -keepclassmembers class ** {
     public void onEvent*(**);
 }
+
+#android-gif-drawable
+-keep public class pl.droidsonroids.gif.GifIOException{*;}
+-keep public class pl.droidsonroids.gif.GifDrawable{*;}
