@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 版块顶部视图
  *
- * @author 杨金阳
+ * @author fei-ke
  * @2014年7月5日
  */
 @EViewGroup(R.layout.layout_plate_head)

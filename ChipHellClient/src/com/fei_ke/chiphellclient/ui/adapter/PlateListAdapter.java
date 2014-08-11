@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 版块列表适配器
  * 
- * @author 杨金阳
+ * @author fei-ke
  * @2014-6-14
  */
 public class PlateListAdapter extends BaseExpandableListAdapter {
