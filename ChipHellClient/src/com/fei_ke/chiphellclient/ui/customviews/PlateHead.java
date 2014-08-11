@@ -59,14 +59,19 @@ public class PlateHead extends FrameLayout {
         mPlateClasses = new ArrayList<PlateClass>();
         mAdapter = new ArrayAdapter<PlateClass>(getContext(), android.R.layout.simple_spinner_dropdown_item, mPlateClasses);
         spinnerClass.setAdapter(mAdapter);
+        spinnerClass.setTag(0);
         spinnerClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if ((Integer) spinnerClass.getTag() == position) return;
+
                 if (mOnClassSelectedListener != null) {
                     PlateClass plateClass = mPlateClasses.get(position);
                     mOnClassSelectedListener.onClassSelected(plateClass);
+
                 }
+                spinnerClass.setTag(position);
             }
 
             @Override
@@ -77,13 +82,18 @@ public class PlateHead extends FrameLayout {
 
 
         spinnerOrderBy.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, new String[]{"默认排序", "新帖排序"}));
+        spinnerOrderBy.setTag(0);
         spinnerOrderBy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if ((Integer) spinnerOrderBy.getTag() == position) return;
+
                 if (mOnOrderBySelectedListener != null) {
                     mOnOrderBySelectedListener.onOrderBySelected(position);
                 }
+
+                spinnerOrderBy.setTag(position);
             }
 
             @Override

@@ -58,6 +58,7 @@ import de.greenrobot.event.EventBus;
  */
 @EFragment(R.layout.fragment_thread_list)
 public class ThreadListFragment extends BaseContentFragment implements OnClickListener, OnItemClickListener, AdapterView.OnItemLongClickListener {
+    private static final int REQUEST_CODE_LOGIN = 100;
     @ViewById(R.id.listView_threads)
     protected PullToRefreshListView mListViewThreads;
     ThreadListAdapter mThreadListAdapter;
@@ -323,7 +324,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         switch (v.getId()) {
             case R.id.textView_count:
                 if (!ChhApplication.getInstance().isLogin()) {
-                    startActivity(LoginActivity.getStartIntent(getActivity()));
+                    startActivityForResult(LoginActivity.getStartIntent(getActivity()), REQUEST_CODE_LOGIN);
                     break;
                 }
                 Thread thread = (Thread) v.getTag();
@@ -346,7 +347,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
         //未登录时
         if (!ChhApplication.getInstance().isLogin()) {
-            startActivity(LoginActivity.getStartIntent(getActivity()));
+            startActivityForResult(LoginActivity.getStartIntent(getActivity()), REQUEST_CODE_LOGIN);
             return;
         }
 
@@ -356,7 +357,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onSuccess(String result) {
                 ToastUtil.show(getActivity(), result);
-                EventBus.getDefault().postSticky(new FavoriteChangeEvent());
+                EventBus.getDefault().post(new FavoriteChangeEvent());
             }
         };
         if (isFavorite) {//取消收藏
@@ -394,7 +395,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -444,5 +445,14 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             }
         });
         return true;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_LOGIN && resultCode == Activity.RESULT_OK) {
+            EventBus.getDefault().post(new FavoriteChangeEvent());
+        }
     }
 }

@@ -43,12 +43,14 @@
 			android:weightSum="2">
 
 			<TextView
+				android:id="@+id/button_my_post"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_margin="5dp"
 				android:layout_weight="1"
 				android:background="@drawable/comment_bg_selector"
 				android:gravity="center"
+				android:text="我的主题"
 				android:padding="8dp"
 				/>
 

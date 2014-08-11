@@ -34,6 +34,9 @@ public class UserView extends FrameLayout {
     @ViewById(R.id.button_favorite)
     protected TextView buttonFavorite;
 
+    @ViewById(R.id.button_my_post)
+    protected TextView buttonMyPost;
+
     public static UserView newInstance(Context context) {
         return UserView_.build(context);
     }
@@ -52,4 +55,7 @@ public class UserView extends FrameLayout {
         return buttonFavorite;
     }
 
+    public TextView getButtonMyPost() {
+        return buttonMyPost;
+    }
 }

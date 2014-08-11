@@ -39,3 +39,7 @@ public static final int *;
 -keep public class org.jsoup.** {
 public *;
 }
+
+-keepclassmembers class ** {
+    public void onEvent*(**);
+}

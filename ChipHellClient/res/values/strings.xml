@@ -49,6 +49,8 @@
 	<string name="SystemBarTint_url">https://github.com/jgilfelt/SystemBarTint</string>
 	<string name="SwipeBackLayout">SwipeBackLayout</string>
 	<string name="SwipeBackLayout_url">https://github.com/Issacw0ng/SwipeBackLayout</string>
+	<string name="EventBus">EventBus</string>
+	<string name="EventBus_url">https://github.com/greenrobot/EventBus</string>
 	<string name="not_login">你好像没有登录啊</string>
 	<string name="favorite">收藏</string>
 

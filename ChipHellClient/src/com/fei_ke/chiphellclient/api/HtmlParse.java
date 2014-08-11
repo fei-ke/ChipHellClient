@@ -129,16 +129,18 @@ class HtmlParse {
                     thread.setImgSrc(src);
                 }
 
-                Element a2 = as.get(1);
-                String by = a2.text();
-
-                thread.setBy(by);
+                if (as.size() > 1) {//有作者
+                    Element a2 = as.get(1);
+                    String by = a2.text();
+                    thread.setBy(by);
+                }
                 thread.setTitle(title);
                 thread.setUrl(url);
                 thread.setTimeAndCount(timeAndCount);
 
                 threads.add(thread);
             } catch (Exception e) {// 当有子版块时
+                e.printStackTrace();
                 if (plates == null) {
                     plates = new ArrayList<Plate>();
                 }

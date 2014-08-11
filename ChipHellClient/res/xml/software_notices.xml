@@ -78,5 +78,12 @@
             android:action="android.intent.action.VIEW"
             android:data="@string/SwipeBackLayout_url" />
     </Preference>
+    <Preference
+        android:summary="@string/apache_license_2_0"
+        android:title="@string/EventBus" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="@string/EventBus_url" />
+    </Preference>
 
 </PreferenceScreen>

@@ -10,12 +10,9 @@ import android.webkit.WebViewClient;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.constant.Constants;
-import com.fei_ke.chiphellclient.event.FavoriteChangeEvent;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * 登录页面
@@ -87,7 +84,6 @@ public class LoginActivity extends BaseActivity {
     public void finish() {
         setResult(RESULT_OK);
         super.finish();
-        EventBus.getDefault().postSticky(new FavoriteChangeEvent());
     }
 
 }

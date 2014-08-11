@@ -85,6 +85,20 @@ public class PlateListFragment extends BaseContentFragment {
                 getActivity().startActivityForResult(intent, MainActivity.REQUEST_CODE_LOGIN);
             }
         });
+        //我的主题
+        final Plate plateMyPost = new Plate();
+        plateMyPost.setTitle("我的主题");
+        plateMyPost.setUrl(Constants.BASE_URL + "home.php?mod=space&do=thread&view=me&mobile=1");
+        mUserView.getButtonMyPost().setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onPlateClickListener != null) {
+                    onPlateClickListener.onPlateClick(plateMyPost);
+                }
+            }
+        });
+
+        //我的收藏
         final Plate plateFavorite = new Plate();
         plateFavorite.setTitle("我的收藏");
         plateFavorite.setUrl(Constants.BASE_URL + "home.php?mod=space&do=favorite&view=me&type=thread&mobile=1");
@@ -178,7 +192,7 @@ public class PlateListFragment extends BaseContentFragment {
 
     @Background
     protected void updateAllFavoriteStatus(List<PlateGroup> plateGroups) {
-        EventBus.getDefault().postSticky(new FavoriteChangeEvent(plateGroups.get(0).getPlates()));
+        EventBus.getDefault().post(new FavoriteChangeEvent(plateGroups.get(0).getPlates()));
     }
 
     public static interface OnPlateClickListener {
@@ -194,7 +208,7 @@ public class PlateListFragment extends BaseContentFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
