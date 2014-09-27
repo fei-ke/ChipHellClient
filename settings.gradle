@@ -1,0 +1,7 @@
+include ':libraries:AndroidSlidingUpPanel'
+include ':ChipHellClient'
+include ':libraries:Umeng'
+include ':libraries:PullToRefresh'
+include ':libraries:AsyncHttpClient'
+include ':libraries:FloatingGroupExpandableListView'
+include ':libraries:SwipeBack'
