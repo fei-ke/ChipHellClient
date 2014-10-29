@@ -8,6 +8,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,10 +62,18 @@ public class MainActivity extends BaseActivity {
         MobclickAgent.setOnlineConfigureListener(new UmengOnlineConfigureListener() {
             @Override
             public void onDataReceived(JSONObject data) {
-                Constants.BASE_URL = data.optString("chh_base_url");
+                if (data != null) {
+                    String chhUrl = data.optString("chh_base_url");
+                    if (!TextUtils.isEmpty(chhUrl)) {
+                        Constants.BASE_URL = chhUrl;
+                    }
+                }
             }
         });
-        Constants.BASE_URL = MobclickAgent.getConfigParams(this, "chh_base_url");
+        String chhUrl = MobclickAgent.getConfigParams(this, "chh_base_url");
+        if (!TextUtils.isEmpty(chhUrl)) {
+            Constants.BASE_URL = chhUrl;
+        }
 
         // 不允许滑动返回
         getSwipeBackLayout().setEnableGesture(false);
