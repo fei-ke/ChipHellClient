@@ -12,11 +12,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Plate;
+import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.analytics.onlineconfig.UmengOnlineConfigureListener;
 import com.umeng.update.UmengUpdateAgent;
 
 import org.afinal.simplecache.ACache;
@@ -24,10 +28,11 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONObject;
 
 /**
  * 主界面
- * 
+ *
  * @author fei-ke
  * @2014-6-15
  */
@@ -52,6 +57,15 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onAfterViews() {
+        MobclickAgent.updateOnlineConfig(ChhApplication.getInstance());
+        MobclickAgent.setOnlineConfigureListener(new UmengOnlineConfigureListener() {
+            @Override
+            public void onDataReceived(JSONObject data) {
+                Constants.BASE_URL = data.optString("chh_base_url");
+            }
+        });
+        Constants.BASE_URL = MobclickAgent.getConfigParams(this, "chh_base_url");
+
         // 不允许滑动返回
         getSwipeBackLayout().setEnableGesture(false);
 
@@ -79,16 +93,15 @@ public class MainActivity extends BaseActivity {
                 R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open, /* "open drawer" description for accessibility */
                 R.string.drawer_close /* "close drawer" description for accessibility */
-                )
-                {
-                    public void onDrawerClosed(View view) {
-                        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                    }
+        ) {
+            public void onDrawerClosed(View view) {
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
 
-                    public void onDrawerOpened(View drawerView) {
-                        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                    }
-                };
+            public void onDrawerOpened(View drawerView) {
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         Plate plate = mPlate;
         mPlate = null;
