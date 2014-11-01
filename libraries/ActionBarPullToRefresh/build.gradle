@@ -1,0 +1,19 @@
+apply plugin: 'android-library'
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+dependencies {
+    compile 'com.github.castorflex.smoothprogressbar:library:1.0.+@aar'
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '20.0.0'
+
+    defaultConfig {
+        // This should be 14, but is 7 because extra-abc/extra-abs depend on this library
+        minSdkVersion 14
+        targetSdkVersion 19
+    }
+}

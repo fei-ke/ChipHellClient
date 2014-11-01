@@ -13,10 +13,10 @@ import com.fei_ke.chiphellclient.utils.GlobalSetting;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
  * Activity基类

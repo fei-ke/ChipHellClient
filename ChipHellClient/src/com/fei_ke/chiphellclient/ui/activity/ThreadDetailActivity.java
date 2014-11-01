@@ -37,12 +37,6 @@ import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment.OnReplySuccess;
 import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnPullEventListener;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.State;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.androidannotations.annotations.EActivity;
@@ -61,7 +55,7 @@ import java.util.List;
 @EActivity(R.layout.activity_thread_detail)
 public class ThreadDetailActivity extends BaseActivity implements OnItemLongClickListener {
     @ViewById(R.id.listView_post)
-    PullToRefreshListView mRefreshListView;
+    ListView mRefreshListView;
 
     PostListAdapter mPostListAdapter;
 
@@ -115,37 +109,39 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
         // }
         // }
         // });
-        mRefreshListView.setMode(Mode.BOTH);
-        mRefreshListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
+        //TODO fei-ke 2014/11/1 收起
+//        mRefreshListView.setMode(Mode.BOTH);
+//        mRefreshListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
+//
+//            // 下拉刷新，刷新状态在顶部
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                if (!mIsFreshing) {
+//                    getPostList();
+//                }
+//            }
+//
+//            // 滑到底部刷新，刷新状态在底部
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                if (!mIsFreshing) {
+//                    getPostList(++mPage);
+//                }
+//            }
+//        });
 
-            // 下拉刷新，刷新状态在顶部
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                if (!mIsFreshing) {
-                    getPostList();
-                }
-            }
-
-            // 滑到底部刷新，刷新状态在底部
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                if (!mIsFreshing) {
-                    getPostList(++mPage);
-                }
-            }
-        });
-
-        mRefreshListView.getRefreshableView().setOnItemLongClickListener(this);
+        mRefreshListView.setOnItemLongClickListener(this);
         mRefreshListView.setOnScrollListener(onScrollListener);
-        mRefreshListView.setOnPullEventListener(new OnPullEventListener<ListView>() {
-
-            @Override
-            public void onPullEvent(PullToRefreshBase<ListView> refreshView, State state, Mode direction) {
-                if (state.equals(State.PULL_TO_REFRESH) && direction.equals(Mode.PULL_FROM_START)) {
-                    mPanelLayout.collapsePanel();
-                }
-            }
-        });
+        //TODO fei-ke 2014/11/1  
+//        mRefreshListView.setOnPullEventListener(new OnPullEventListener<ListView>() {
+//
+//            @Override
+//            public void onPullEvent(PullToRefreshBase<ListView> refreshView, State state, Mode direction) {
+//                if (state.equals(State.PULL_TO_REFRESH) && direction.equals(Mode.PULL_FROM_START)) {
+//                    mPanelLayout.collapsePanel();
+//                }
+//            }
+//        });
 
         mFastReplyFragment.setOnReplySuccess(new OnReplySuccess() {
 
@@ -326,7 +322,8 @@ public class ThreadDetailActivity extends BaseActivity implements OnItemLongClic
             @Override
             public void onFinish() {
                 mIsFreshing = false;
-                mRefreshListView.onRefreshComplete();
+                //TODO fei-ke 2014/11/1 刷新完成
+//                mRefreshListView.onRefreshComplete();
                 onEndRefresh();
             }
 

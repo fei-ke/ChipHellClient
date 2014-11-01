@@ -5,7 +5,6 @@ import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +15,6 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -34,12 +32,9 @@ import com.fei_ke.chiphellclient.ui.activity.LoginActivity;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.ThreadListAdapter;
+import com.fei_ke.chiphellclient.ui.customviews.ExtendListView;
 import com.fei_ke.chiphellclient.ui.customviews.PlateHead;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
@@ -49,6 +44,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * 帖子列表
@@ -59,8 +58,12 @@ import de.greenrobot.event.EventBus;
 @EFragment(R.layout.fragment_thread_list)
 public class ThreadListFragment extends BaseContentFragment implements OnClickListener, OnItemClickListener, AdapterView.OnItemLongClickListener {
     private static final int REQUEST_CODE_LOGIN = 100;
+    @ViewById(R.id.refreshLayout)
+    protected PullToRefreshLayout refreshLayout;
+
     @ViewById(R.id.listView_threads)
-    protected PullToRefreshListView mListViewThreads;
+    protected ExtendListView mListViewThreads;
+
     ThreadListAdapter mThreadListAdapter;
 
     @ViewById
@@ -118,27 +121,43 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         if (mThreadListAdapter == null) {
             mThreadListAdapter = new ThreadListAdapter();
         }
+
+        OnRefreshListener onRefreshListener = new OnRefreshListener() {
+            @Override
+            public void onRefreshStarted(View view) {
+                getThreadList();
+            }
+        };
+        ActionBarPullToRefresh.from(getActivity())
+                .allChildrenArePullable()
+                .listener(onRefreshListener)
+                .options(Options.create()
+                        .scrollDistance(.30f)
+                        .build())
+                .setup(refreshLayout);
+
+
         mListViewThreads.setAdapter(mThreadListAdapter);
         mListViewThreads.setEmptyView(emptyView);
         emptyView.setOnClickListener(this);
         mListViewThreads.setOnItemClickListener(this);
         mThreadListAdapter.setOnFastReplylistener(this);
         // mListViewThreads.getRefreshableView().setOnScrollListener(onScrollListener);
-        mListViewThreads.setOnRefreshListener(new OnRefreshListener<ListView>() {
-
-            @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(getActivity(),
-                        System.currentTimeMillis(),
-                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-                                | DateUtils.FORMAT_ABBREV_ALL);
-
-                // Update the LastUpdatedLabel
-                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-                getThreadList();
-            }
-        });
-        mListViewThreads.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
+//        mListViewThreads.setOnRefreshListener(new OnRefreshListener<ListView>() {
+//
+//            @Override
+//            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+//                String label = DateUtils.formatDateTime(getActivity(),
+//                        System.currentTimeMillis(),
+//                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
+//                                | DateUtils.FORMAT_ABBREV_ALL);
+//
+//                // Update the LastUpdatedLabel
+//                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+//
+//            }
+//        });
+        mListViewThreads.setOnLastItemVisibleListener(new ExtendListView.OnLastItemVisibleListener() {
 
             @Override
             public void onLastItemVisible() {
@@ -155,7 +174,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
         // 没有数据进行数据刷新
         if (mThreadListAdapter.getCount() == 0) {
-            mListViewThreads.setRefreshing();
+            getThreadList();
         }
 
         //设置头部
@@ -166,20 +185,20 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onClassSelected(PlateClass plateClass) {
                 url = plateClass.getUrl();
-                mListViewThreads.setRefreshing();
+                getThreadList();
             }
         });
         mPlateHeadView.setOnOrderBySelectedListener(new PlateHead.OnOrderBySelectedListener() {
             @Override
             public void onOrderBySelected(int index) {
                 orderByDate = index == ORDER_BY_DATE;
-                mListViewThreads.setRefreshing();
+              getThreadList();
             }
         });
 
         mPlateHeadView.setOnBtnFavoriteClickListener(this);
 
-        mListViewThreads.getRefreshableView().setOnItemLongClickListener(this);
+        mListViewThreads.setOnItemLongClickListener(this);
     }
 
     private OnScrollListener onScrollListener = new OnScrollListener() {
@@ -206,6 +225,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
     private void getThreadList() {
         mPage = 1;
+        mListViewThreads.setSelection(0);
         getThreadList(1);
     }
 
@@ -220,6 +240,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
+                refreshLayout.setRefreshing(true);
             }
 
             @Override
@@ -266,7 +287,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onFinish() {
                 mIsFreshing = false;
-                mListViewThreads.onRefreshComplete();
+                //TODO fei-ke 2014/11/1  刷新完成
+//                mListViewThreads.onRefreshComplete();
+                refreshLayout.setRefreshComplete();
                 mMainActivity.onEndRefresh();
             }
 
@@ -303,7 +326,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
     @Override
     public void onRefresh() {
-        mListViewThreads.setRefreshing();
+        getThreadList();
     }
 
     @Override

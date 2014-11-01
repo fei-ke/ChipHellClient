@@ -22,12 +22,12 @@ apt {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':libraries:PullToRefresh')
     compile project(':libraries:FloatingGroupExpandableListView')
     compile project(':libraries:AsyncHttpClient')
     compile project(':libraries:Umeng')
     compile project(':libraries:AndroidSlidingUpPanel')
     compile project(':libraries:SwipeBack')
+    compile project(':libraries:ActionBarPullToRefresh')
 
     apt "org.androidannotations:androidannotations:3.1"
 }
