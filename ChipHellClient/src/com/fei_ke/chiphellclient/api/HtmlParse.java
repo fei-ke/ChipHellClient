@@ -8,6 +8,7 @@ import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateClass;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.Post;
+import com.fei_ke.chiphellclient.bean.PostListWrap;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.ThreadListWrap;
@@ -190,8 +191,10 @@ class HtmlParse {
      * @param content
      * @return
      */
-    public static List<Post> parsePostList(String content) {
+    public static PostListWrap parsePostList(String content) {
         long s = System.currentTimeMillis();
+
+        PostListWrap postListWrap = new PostListWrap();
 
         List<Post> posts = new ArrayList<Post>();
         Document document = Jsoup.parse(content);
@@ -242,7 +245,22 @@ class HtmlParse {
             }
             LogMessage.i("parsePostList", "解析时间:" + (System.currentTimeMillis() - s));
         }
-        return posts;
+        //页数
+        int totalPage = 1;
+        Elements pgs = document.getElementsByClass("pg");
+        if (!pgs.isEmpty()) {
+            String text = pgs.toString();
+            int index = text.indexOf("共");
+            if (index != -1) {
+                String t = text.substring(index, text.indexOf("页", index));
+                t = t.substring(1);
+                totalPage = Integer.valueOf(t.trim());
+            }
+
+        }
+        postListWrap.setTotalPage(totalPage);
+        postListWrap.setPosts(posts);
+        return postListWrap;
     }
 
     /**

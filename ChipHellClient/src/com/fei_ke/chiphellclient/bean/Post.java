@@ -3,11 +3,11 @@ package com.fei_ke.chiphellclient.bean;
 
 /**
  * 回帖
- * 
+ *
  * @author fei-ke
  * @2014-6-16
  */
-public class Post {
+public class Post extends BaseBean {
     private String avatarUrl;
     private String replyUrl;
     private String content;

@@ -49,7 +49,7 @@ public class PostListAdapter extends BaseAdapter {
     }
 
     /**
-     * @param posts
+     * @param newPosts
      * @return 是否有新数据加载
      */
     public boolean update(List<Post> newPosts) {

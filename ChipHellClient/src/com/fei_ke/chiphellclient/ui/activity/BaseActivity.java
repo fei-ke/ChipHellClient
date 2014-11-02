@@ -2,15 +2,12 @@
 package com.fei_ke.chiphellclient.ui.activity;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.utils.GlobalSetting;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
@@ -95,22 +92,22 @@ public abstract class BaseActivity extends SwipeBackActivity {
 
     public static void initActionBar(Activity activity) {
         activity.getActionBar().setDisplayHomeAsUpEnabled(true);
-        if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
-            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-            tintManager.setStatusBarTintEnabled(true);
-            tintManager.setNavigationBarTintEnabled(true);
-            tintManager.setNavigationBarAlpha(0);
-            if (activity instanceof AlbumActivity) {
-                tintManager.setStatusBarTintColor(0);
-            } else {
-                tintManager.setStatusBarTintResource(R.color.chh_red);
-                FrameLayout contentFrameLayout = (FrameLayout) activity.findViewById(android.R.id.content);
-                contentFrameLayout.setClipToPadding(false);
-                SystemBarTintManager.SystemBarConfig systemBarConfig = new SystemBarTintManager(activity).getConfig();
-                contentFrameLayout.setPadding(0, systemBarConfig.getPixelInsetTop(true), systemBarConfig.getPixelInsetRight(),
-                        systemBarConfig.getPixelInsetBottom());
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
+//            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
+//            tintManager.setStatusBarTintEnabled(true);
+//            tintManager.setNavigationBarTintEnabled(true);
+//            tintManager.setNavigationBarAlpha(0);
+//            if (activity instanceof AlbumActivity) {
+//                tintManager.setStatusBarTintColor(0);
+//            } else {
+//                tintManager.setStatusBarTintResource(R.color.chh_red);
+//                FrameLayout contentFrameLayout = (FrameLayout) activity.findViewById(android.R.id.content);
+//                contentFrameLayout.setClipToPadding(false);
+//                SystemBarTintManager.SystemBarConfig systemBarConfig = new SystemBarTintManager(activity).getConfig();
+//                contentFrameLayout.setPadding(0, systemBarConfig.getPixelInsetTop(true), systemBarConfig.getPixelInsetRight(),
+//                        systemBarConfig.getPixelInsetBottom());
+//            }
+//        }
     }
 
     @Override

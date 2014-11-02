@@ -19,7 +19,8 @@
 
 		<!-- MAIN CONTENT -->
 
-		<LinearLayout
+		<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+			android:id="@+id/refreshLayout"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@color/white">
@@ -33,7 +34,7 @@
 				android:id="@+id/webView_content"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"/>
-		</LinearLayout>
+		</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 		<!-- SLIDING LAYOUT -->
 
@@ -45,25 +46,10 @@
 			android:focusable="false"
 			android:orientation="vertical">
 
-			<ListView
-				android:id="@+id/listView_post"
+			<android.support.v4.view.ViewPager
+				android:id="@+id/viewPagerPost"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:layout_marginLeft="2dp"
-				android:layout_marginRight="2dp"
-				android:clipToPadding="false"
-				android:divider="@null"
-				android:dividerHeight="5dp"
-				android:fastScrollEnabled="true"
-				android:listSelector="@android:drawable/list_selector_background"
-				android:paddingBottom="5dp"
-				android:paddingLeft="3dp"
-				android:paddingRight="3dp"
-				android:paddingTop="5dp"
-				android:scrollbarSize="2dip"
-				android:scrollbarStyle="outsideOverlay"
-				android:scrollbarThumbVertical="@color/chh_red_with_alpha"
-				android:smoothScrollbar="true"/>
+				android:layout_height="match_parent"/>
 
 			<TextView
 				android:id="@+id/name"

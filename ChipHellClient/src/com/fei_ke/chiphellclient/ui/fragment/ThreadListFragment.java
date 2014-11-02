@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -77,6 +78,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
     @ViewById(R.id.layout_fast_reply)
     protected View layoutFastReply;
+
+    @ViewById(R.id.bottomProgress)
+    protected SmoothProgressBar bottomProgressBar;
 
     @FragmentArg
     protected Plate mPlate;
@@ -192,7 +196,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onOrderBySelected(int index) {
                 orderByDate = index == ORDER_BY_DATE;
-              getThreadList();
+                getThreadList();
             }
         });
 
@@ -240,7 +244,13 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
-                refreshLayout.setRefreshing(true);
+                if (page == 1) {
+                    refreshLayout.setRefreshing(true);
+                } else {
+                    bottomProgressBar.setVisibility(View.VISIBLE);
+                    bottomProgressBar.setProgress(bottomProgressBar.getMax());
+                    bottomProgressBar.setIndeterminate(true);
+                }
             }
 
             @Override
@@ -290,6 +300,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                 //TODO fei-ke 2014/11/1  刷新完成
 //                mListViewThreads.onRefreshComplete();
                 refreshLayout.setRefreshComplete();
+                bottomProgressBar.setIndeterminate(false);
                 mMainActivity.onEndRefresh();
             }
 

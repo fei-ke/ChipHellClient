@@ -49,6 +49,14 @@
 			android:scrollbarStyle="outsideOverlay"
 			android:scrollbarThumbVertical="@color/chh_red_with_alpha"
 			android:smoothScrollbar="true"/>
+
+		<fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+			android:layout_gravity="bottom"
+			android:id="@+id/bottomProgress"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/ptr_progress_bar_stroke_width"
+			android:minHeight="@dimen/ptr_progress_bar_stroke_width"/>
+
 	</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 	<com.fei_ke.chiphellclient.ui.customviews.PlateHead_

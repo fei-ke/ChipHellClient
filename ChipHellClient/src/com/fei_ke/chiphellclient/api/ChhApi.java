@@ -7,7 +7,7 @@ import android.webkit.CookieManager;
 import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
-import com.fei_ke.chiphellclient.bean.Post;
+import com.fei_ke.chiphellclient.bean.PostListWrap;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.ThreadListWrap;
@@ -99,13 +99,13 @@ public class ChhApi {
      * @param page        页码
      * @param apiCallBack
      */
-    public void getPostList(Context context, Thread thread, int page, ApiCallBack<List<Post>> apiCallBack) {
+    public void getPostList(Context context, Thread thread, int page, ApiCallBack<PostListWrap> apiCallBack) {
         RequestParams param = new RequestParams("page", page);
         param.add("mobile", 2);// 回帖列表使用触屏版来解析
-        getAsyncHttpClient().get(context, thread.getUrl(), param, true, new ApiResponsHandler<List<Post>>(apiCallBack) {
+        getAsyncHttpClient().get(context, thread.getUrl(), param, true, new ApiResponsHandler<PostListWrap>(apiCallBack) {
 
             @Override
-            public List<Post> parseResponse(String responseString) {
+            public PostListWrap parseResponse(String responseString) {
                 LogMessage.i(TAG + "#getPostList", responseString);
                 return HtmlParse.parsePostList(responseString);
             }
@@ -122,17 +122,17 @@ public class ChhApi {
      * @param message
      * @param apiCallBack
      */
-    public void reply(String fid, String tid, String formhash, String message, ApiCallBack<List<Post>> apiCallBack) {
+    public void reply(String fid, String tid, String formhash, String message, ApiCallBack<PostListWrap> apiCallBack) {
         String url = Constants.BASE_URL + "forum.php?mod=post&action=reply&replysubmit=yes&mobile=2";
         RequestParams param = new RequestParams();
         param.add("message", message);
         param.add("fid", fid);
         param.add("tid", tid);
         param.add("formhash", formhash);
-        getAsyncHttpClient().post(url, param, new ApiResponsHandler<List<Post>>(apiCallBack) {
+        getAsyncHttpClient().post(url, param, new ApiResponsHandler<PostListWrap>(apiCallBack) {
 
             @Override
-            public List<Post> parseResponse(String responseString) {
+            public PostListWrap parseResponse(String responseString) {
                 LogMessage.i(TAG + "#quotrReply", responseString);
                 String messagetext = HtmlParse.parseMessageText(responseString);
                 if (messagetext != null) {
@@ -150,7 +150,7 @@ public class ChhApi {
      * @param quoteReply
      * @param apiCallBack
      */
-    public void quotrReply(PrepareQuoteReply quoteReply, ApiCallBack<List<Post>> apiCallBack) {
+    public void quotrReply(PrepareQuoteReply quoteReply, ApiCallBack<PostListWrap> apiCallBack) {
         RequestParams params = new RequestParams();
         params.add("formhash", quoteReply.getFormhash());
         params.add("message", quoteReply.getMessage());
@@ -161,10 +161,10 @@ public class ChhApi {
         params.add("replysubmit", quoteReply.getReplysubmit());
         params.add("reppid", quoteReply.getReppid());
         params.add("reppost", quoteReply.getReppost());
-        getAsyncHttpClient().post(quoteReply.getUrl(), params, new ApiResponsHandler<List<Post>>(apiCallBack) {
+        getAsyncHttpClient().post(quoteReply.getUrl(), params, new ApiResponsHandler<PostListWrap>(apiCallBack) {
 
             @Override
-            public List<Post> parseResponse(String responseString) {
+            public PostListWrap parseResponse(String responseString) {
                 LogMessage.i(TAG + "#quotrReply", responseString);
                 String messagetext = HtmlParse.parseMessageText(responseString);
                 if (messagetext != null) {
