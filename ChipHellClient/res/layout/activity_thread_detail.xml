@@ -6,73 +6,76 @@
                 android:layout_height="match_parent"
                 android:background="@color/background_light">
 
-	<com.sothree.slidinguppanel.SlidingUpPanelLayout
-		xmlns:sothree="http://schemas.android.com/apk/res-auto"
-		android:id="@+id/sliding_layout"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:gravity="bottom"
-		sothree:dragView="@+id/name"
-		sothree:panelHeight="?android:attr/actionBarSize"
-		sothree:paralaxOffset="100dp"
-		sothree:shadowHeight="4dp">
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:dragView="@+id/name"
+        sothree:panelHeight="?android:attr/actionBarSize"
+        sothree:paralaxOffset="100dp"
+        sothree:shadowHeight="4dp">
 
-		<!-- MAIN CONTENT -->
+        <!-- MAIN CONTENT -->
 
-		<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-			android:id="@+id/refreshLayout"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@color/white">
+        <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
-			<!-- <com.fei_ke.chiphellclient.ui.customviews.PostMainView_ -->
-			<!-- android:id="@+id/main_post" -->
-			<!-- android:layout_width="match_parent" -->
-			<!-- android:layout_height="match_parent" /> -->
+            <!-- <com.fei_ke.chiphellclient.ui.customviews.PostMainView_ -->
+            <!-- android:id="@+id/main_post" -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="match_parent" /> -->
 
-			<WebView
-				android:id="@+id/webView_content"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
-		</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+            <WebView
+                android:id="@+id/webView_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
-		<!-- SLIDING LAYOUT -->
+        <!-- SLIDING LAYOUT -->
 
-		<RelativeLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:clickable="true"
-			android:clipChildren="false"
-			android:focusable="false"
-			android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/layoutSlideUp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:clipChildren="false"
+            android:focusable="false"
+            android:orientation="vertical">
 
-			<android.support.v4.view.ViewPager
-				android:id="@+id/viewPagerPost"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_marginTop="-9dp"
+                android:background="@drawable/below_shadow"
+                android:drawableRight="@drawable/ic_action_collections_sort_by_size"/>
 
-			<TextView
-				android:id="@+id/name"
-				android:layout_width="match_parent"
-				android:layout_height="?android:attr/actionBarSize"
-				android:layout_marginTop="-9dp"
-				android:background="@drawable/below_shadow"
-				android:drawableRight="@drawable/ic_action_collections_sort_by_size"/>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPagerPost"
+                android:layout_below="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-			<FrameLayout
-				android:id="@+id/layout_fast_reply"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_alignParentBottom="true"
-				android:visibility="visible">
+            <FrameLayout
+                android:id="@+id/layout_fast_reply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:visibility="visible">
 
-				<fragment
-					android:name="com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment_"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:tag="fast_reply"/>
-			</FrameLayout>
-		</RelativeLayout>
-	</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+                <fragment
+                    android:name="com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment_"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="fast_reply"
+                    tools:layout="@layout/fragment_fast_reply"/>
+            </FrameLayout>
+        </RelativeLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </RelativeLayout>

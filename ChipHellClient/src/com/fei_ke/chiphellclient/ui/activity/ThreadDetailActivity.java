@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
@@ -15,6 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
@@ -29,6 +31,8 @@ import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.adapter.PostPageAdapter;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment.OnReplySuccess;
+import com.fei_ke.chiphellclient.ui.fragment.PostListFragment;
+import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -54,8 +58,14 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 @EActivity(R.layout.activity_thread_detail)
 public class ThreadDetailActivity extends BaseActivity {
 
+    private static final String TAG = "ThreadDetailActivity";
     @ViewById
     ViewPager viewPagerPost;
+    @ViewById(R.id.name)
+    TextView textViewName;
+
+    @ViewById
+    ViewGroup layoutSlideUp;
 
     @Extra
     Plate mPlate;
@@ -83,7 +93,8 @@ public class ThreadDetailActivity extends BaseActivity {
     PostPageAdapter mPostPageAdapter;
     int mPage = 1;
     private boolean mIsFreshing;
-    private Object postList;
+
+    private PostListFragment curPostListFragment;
 
     public static Intent getStartIntent(Context context, Plate plate, Thread thread) {
         return ThreadDetailActivity_.intent(context).mThread(thread).mPlate(plate).get();
@@ -101,11 +112,26 @@ public class ThreadDetailActivity extends BaseActivity {
 
         setTitle(mPlate.getTitle());
         getActionBar().setSubtitle(mThread.getTitle());
+        viewPagerPost.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
 
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                curPostListFragment = getCurrentPage(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
         mPostPageAdapter = new PostPageAdapter(getSupportFragmentManager(), mThread);
         viewPagerPost.setAdapter(mPostPageAdapter);
 
-        OnRefreshListener onRefreshListener=new OnRefreshListener() {
+        OnRefreshListener onRefreshListener = new OnRefreshListener() {
             @Override
             public void onRefreshStarted(View view) {
                 getPostList();
@@ -173,6 +199,8 @@ public class ThreadDetailActivity extends BaseActivity {
 
         getPostList();
     }
+
+
 
     private void handExportUrl() {
         String url = getIntent().getDataString();
@@ -357,4 +385,9 @@ public class ThreadDetailActivity extends BaseActivity {
 
     }
 
+    private PostListFragment getCurrentPage(int index) {
+        PostListFragment postListFragment = (PostListFragment) mPostPageAdapter.instantiateItem(viewPagerPost, index);
+        LogMessage.i(TAG, postListFragment);
+        return postListFragment;
+    }
 }

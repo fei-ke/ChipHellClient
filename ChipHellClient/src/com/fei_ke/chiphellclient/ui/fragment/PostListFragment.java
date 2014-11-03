@@ -20,6 +20,7 @@ import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
+import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 
 import org.androidannotations.annotations.EFragment;
@@ -125,7 +126,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
     private void setPrepareQuoteReply(PrepareQuoteReply quoteReply) {
         Activity activity = getActivity();
         if (activity instanceof ThreadDetailActivity) {
-            ((ThreadDetailActivity) activity).onStartRefresh();
+            ((ThreadDetailActivity) activity).setPrepareQuoteReply(quoteReply);
         }
     }
 
@@ -248,5 +249,9 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
 
     }
 
+    public boolean isListOnTop() {
+        LogMessage.i("PostListFragment", mPage + ": " + mRefreshListView.getScrollY());
+        return mRefreshListView.getScrollY() == 0;
+    }
 
 }
