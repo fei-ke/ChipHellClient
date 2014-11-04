@@ -65,6 +65,9 @@ public class Plate extends BaseBean {
         this.favoriteId = favoriteId;
     }
 
+    public void setFid(String fid) {
+        this.fid = fid;
+    }
 
     public String getFid() {
         if (fid == null) {

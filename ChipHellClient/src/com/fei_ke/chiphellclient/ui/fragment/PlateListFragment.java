@@ -87,6 +87,7 @@ public class PlateListFragment extends BaseContentFragment {
         });
         //我的主题
         final Plate plateMyPost = new Plate();
+        plateMyPost.setFid("my_post");//设置fid用于fragment缓存
         plateMyPost.setTitle("我的主题");
         plateMyPost.setUrl(Constants.BASE_URL + "home.php?mod=space&do=thread&view=me&mobile=1");
         mUserView.getButtonMyPost().setOnClickListener(new OnClickListener() {
@@ -100,6 +101,7 @@ public class PlateListFragment extends BaseContentFragment {
 
         //我的收藏
         final Plate plateFavorite = new Plate();
+        plateFavorite.setFid("my_favorite");//设置fid用于fragment缓存
         plateFavorite.setTitle("我的收藏");
         plateFavorite.setUrl(Constants.BASE_URL + "home.php?mod=space&do=favorite&view=me&type=thread&mobile=1");
         mUserView.getButtonFavorite().setOnClickListener(new OnClickListener() {
