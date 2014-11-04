@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class PostListAdapter extends BaseAdapter {
     private List<Post> mPosts;
-
     @Override
     public int getCount() {
         return mPosts == null ? 0 : mPosts.size();

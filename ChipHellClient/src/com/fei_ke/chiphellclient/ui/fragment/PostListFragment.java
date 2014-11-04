@@ -29,6 +29,7 @@ import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 回复列表
@@ -182,6 +183,14 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
         return true;
     }
 
+    public void update(List<Post> posts) {
+        mPostListAdapter.update(posts);
+        mRefreshListView.setSelection(mPostListAdapter.getCount() - 1);
+    }
+
+    public void update() {
+        getPostList(mPage);
+    }
 
     private void getPostList(final int page) {
         if (mIsFreshing) {
@@ -200,7 +209,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
 
             @Override
             public void onCache(PostListWrap result) {
-                if (result == null || result.size() == 0) {
+                if (result == null || result.size() == 0 || mData != null) {
                     return;
                 }
 

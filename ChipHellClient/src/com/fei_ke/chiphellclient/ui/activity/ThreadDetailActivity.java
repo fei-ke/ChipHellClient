@@ -32,7 +32,6 @@ import com.fei_ke.chiphellclient.ui.adapter.PostPageAdapter;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment.OnReplySuccess;
 import com.fei_ke.chiphellclient.ui.fragment.PostListFragment;
-import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -91,10 +90,8 @@ public class ThreadDetailActivity extends BaseActivity {
     PullToRefreshLayout mRefreshLayout;
 
     PostPageAdapter mPostPageAdapter;
-    int mPage = 1;
     private boolean mIsFreshing;
 
-    private PostListFragment curPostListFragment;
 
     public static Intent getStartIntent(Context context, Plate plate, Thread thread) {
         return ThreadDetailActivity_.intent(context).mThread(thread).mPlate(plate).get();
@@ -112,22 +109,6 @@ public class ThreadDetailActivity extends BaseActivity {
 
         setTitle(mPlate.getTitle());
         getActionBar().setSubtitle(mThread.getTitle());
-        viewPagerPost.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i2) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                curPostListFragment = getCurrentPage(i);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
         mPostPageAdapter = new PostPageAdapter(getSupportFragmentManager(), mThread);
         viewPagerPost.setAdapter(mPostPageAdapter);
 
@@ -191,15 +172,17 @@ public class ThreadDetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(List<Post> posts) {
-                //TODO fei-ke 2014/11/2 回复完之后更新列表
-//                mPostListAdapter.update(posts);
+                // 回复完之后更新列表
+                viewPagerPost.setCurrentItem(mPostPageAdapter.getCount() - 1);
+                PostListFragment lastPostListFragment = mPostPageAdapter.getPostFragment(mPostPageAdapter.getCount() - 1);
+                if (lastPostListFragment != null) {
+                    lastPostListFragment.update(posts);
+                }
             }
         });
         initWebView();
-
         getPostList();
     }
-
 
 
     private void handExportUrl() {
@@ -298,7 +281,14 @@ public class ThreadDetailActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 //TODO 这里应该刷新当前评论所在页或者主贴
-//                getPostList();
+                if (!mPanelLayout.isPanelExpanded()) {
+                    getPostList();
+                } else {
+                    PostListFragment curPostListFragment = mPostPageAdapter.getPostFragment(viewPagerPost.getCurrentItem());
+                    if (curPostListFragment != null) {
+                        curPostListFragment.update();
+                    }
+                }
                 return true;
             case R.id.action_browser:
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -375,8 +365,7 @@ public class ThreadDetailActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mIsFreshing = false;
-                //TODO fei-ke 2014/11/1 刷新完成
-//                mRefreshListView.onRefreshComplete();
+                //刷新完成
                 mRefreshLayout.setRefreshComplete();
                 onEndRefresh();
             }
@@ -385,9 +374,4 @@ public class ThreadDetailActivity extends BaseActivity {
 
     }
 
-    private PostListFragment getCurrentPage(int index) {
-        PostListFragment postListFragment = (PostListFragment) mPostPageAdapter.instantiateItem(viewPagerPost, index);
-        LogMessage.i(TAG, postListFragment);
-        return postListFragment;
-    }
 }
