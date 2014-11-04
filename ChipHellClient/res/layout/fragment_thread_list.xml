@@ -47,6 +47,7 @@
 			android:paddingTop="55dp"
 			android:scrollbarSize="2dip"
 			android:scrollbarStyle="outsideOverlay"
+            android:layoutAnimation="@anim/thread__list_layout_anim"
 			android:scrollbarThumbVertical="@color/chh_red_with_alpha"
 			android:smoothScrollbar="true"/>
 

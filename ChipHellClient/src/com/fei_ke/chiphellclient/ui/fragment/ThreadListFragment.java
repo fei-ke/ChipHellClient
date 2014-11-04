@@ -3,7 +3,9 @@ package com.fei_ke.chiphellclient.ui.fragment;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,6 +116,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         super.onAttach(activity);
         mMainActivity = (MainActivity) activity;
     }
+
 
     @Override
     protected void onAfterViews() {
@@ -255,7 +258,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
             @Override
             public void onCache(ThreadListWrap result) {
-                onSuccess(result);
+                if (mThreadListAdapter.getCount() == 0) {
+                    onSuccess(result);
+                }
             }
 
             @Override
@@ -282,7 +287,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                     }
                     mPlateHeadView.bindValue(mPlate, mPlateClasses);
                 }
-                mThreadListAdapter.update(result.getThreads());
+                mThreadListAdapter.update(result.getThreads(), page == 1 ? mListViewThreads.getLastVisiblePosition() : -1);
 
                 if (result.getError() != null) {
                     textViewError.setText(result.getError());
@@ -344,7 +349,15 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Thread thread = mThreadListAdapter.getItem((int) id);
         Intent intent = ThreadDetailActivity.getStartIntent(getActivity(), mPlate, thread);
-        startActivity(intent);
+        if (Build.VERSION.SDK_INT >= 16) {
+            Bundle scaleBundle = ActivityOptions.makeScaleUpAnimation(view, 0, 0,
+                    view.getWidth(), view.getHeight()).toBundle();
+            int[] location = new int[2];
+            view.getLocationInWindow(location);
+            getActivity().startActivity(intent, scaleBundle);
+        } else {
+            startActivity(intent);
+        }
     }
 
     @Override

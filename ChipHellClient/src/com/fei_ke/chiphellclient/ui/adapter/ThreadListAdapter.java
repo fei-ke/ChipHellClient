@@ -1,11 +1,16 @@
 
 package com.fei_ke.chiphellclient.ui.adapter;
 
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 
+import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.customviews.ThreadItemView;
 
@@ -14,13 +19,15 @@ import java.util.List;
 
 /**
  * 帖子列表适配器
- * 
+ *
  * @author fei-ke
  * @2014-6-15
  */
 public class ThreadListAdapter extends BaseAdapter {
     private List<Thread> mThreads;
     private OnClickListener onFastReplylistener;
+    private int lastPosition = -1;
+    private int animToPosition = -1;
 
     @Override
     public int getCount() {
@@ -51,6 +58,19 @@ public class ThreadListAdapter extends BaseAdapter {
             threadItemView.getTextViewCount().setTag(thread);
             threadItemView.setOnFastReplyClickListener(onFastReplylistener);
         }
+        if (position > lastPosition && position <= animToPosition) {
+            Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.slide_in_from_bottom);
+            animation.setDuration(600);
+//            threadItemView.startAnimation(animation);
+            // AnimatorSet animator = (AnimatorSet)
+            // AnimatorInflater.loadAnimator(context,R.animator.rotate_animation);
+            ObjectAnimator animator = (ObjectAnimator) AnimatorInflater.loadAnimator(parent.getContext(),
+                    R.animator.rotate_animation);
+            animator.setStartDelay(position * 80);
+            animator.setTarget(threadItemView);
+            animator.start();
+            lastPosition = position;
+        }
         return threadItemView;
     }
 
@@ -63,6 +83,10 @@ public class ThreadListAdapter extends BaseAdapter {
     }
 
     public void update(List<Thread> newThreads) {
+        update(newThreads, -1);
+    }
+
+    public void update(List<Thread> newThreads, int animToPosition) {
         // if (mThreads == null) {
         // mThreads = new ArrayList<Thread>();
         // }/*
@@ -72,6 +96,9 @@ public class ThreadListAdapter extends BaseAdapter {
         // */
         // mThreads.addAll(newThreads);
         // notifyDataSetChanged();
+        this.animToPosition = animToPosition;
+        this.lastPosition = -1;
+
         if (mThreads == null) {
             mThreads = new LinkedList<Thread>();
         }
@@ -81,6 +108,7 @@ public class ThreadListAdapter extends BaseAdapter {
             return;
         }
         int oldSize = getCount();
+
         // i是老的，j是新的
         for (int i = 0, j = 0; j < newThreads.size(); i++) {
             Thread newThread = newThreads.get(j);
@@ -103,6 +131,8 @@ public class ThreadListAdapter extends BaseAdapter {
     public void clear() {
         if (mThreads != null) {
             mThreads.clear();
+            lastPosition = -1;
+            animToPosition = -1;
         }
     }
 
