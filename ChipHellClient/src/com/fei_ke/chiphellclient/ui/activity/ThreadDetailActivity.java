@@ -173,7 +173,7 @@ public class ThreadDetailActivity extends BaseActivity {
             @Override
             public void onSuccess(List<Post> posts) {
                 // 回复完之后更新列表
-                viewPagerPost.setCurrentItem(mPostPageAdapter.getCount() - 1);
+                viewPagerPost.setCurrentItem(mPostPageAdapter.getCount() - 1,false);
                 PostListFragment lastPostListFragment = mPostPageAdapter.getPostFragment(mPostPageAdapter.getCount() - 1);
                 if (lastPostListFragment != null) {
                     lastPostListFragment.update(posts);
