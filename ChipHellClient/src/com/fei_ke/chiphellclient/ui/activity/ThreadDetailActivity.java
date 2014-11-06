@@ -16,6 +16,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.ChhApplication;
@@ -60,8 +63,6 @@ public class ThreadDetailActivity extends BaseActivity {
     private static final String TAG = "ThreadDetailActivity";
     @ViewById
     ViewPager viewPagerPost;
-    @ViewById(R.id.name)
-    TextView textViewName;
 
     @ViewById
     ViewGroup layoutSlideUp;
@@ -88,6 +89,12 @@ public class ThreadDetailActivity extends BaseActivity {
 
     @ViewById(R.id.refreshLayout)
     PullToRefreshLayout mRefreshLayout;
+
+    @ViewById
+    TextView textViewTotalPage;
+
+    @ViewById
+    Spinner spinnerPage;
 
     PostPageAdapter mPostPageAdapter;
     private boolean mIsFreshing;
@@ -126,54 +133,40 @@ public class ThreadDetailActivity extends BaseActivity {
                         .build())
                 .setup(mRefreshLayout);
 
-        // mRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
-        //
-        // @Override
-        // public void onLastItemVisible() {
-        // if (!mIsFreshing) {
-        // getPostList(++mPage);
-        // }
-        // }
-        // });
-        //TODO fei-ke 2014/11/1 收起
-//        mRefreshListView.setMode(Mode.BOTH);
-//        mRefreshListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
-//
-//            // 下拉刷新，刷新状态在顶部
-//            @Override
-//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                if (!mIsFreshing) {
-//                    getPostList();
-//                }
-//            }
-//
-//            // 滑到底部刷新，刷新状态在底部
-//            @Override
-//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                if (!mIsFreshing) {
-//                    getPostList(++mPage);
-//                }
-//            }
-//        });
 
+        spinnerPage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                viewPagerPost.setCurrentItem(position, false);
+            }
 
-        //TODO fei-ke 2014/11/1  
-//        mRefreshListView.setOnPullEventListener(new OnPullEventListener<ListView>() {
-//
-//            @Override
-//            public void onPullEvent(PullToRefreshBase<ListView> refreshView, State state, Mode direction) {
-//                if (state.equals(State.PULL_TO_REFRESH) && direction.equals(Mode.PULL_FROM_START)) {
-//                    mPanelLayout.collapsePanel();
-//                }
-//            }
-//        });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+        viewPagerPost.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                spinnerPage.setSelection(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
         mFastReplyFragment.setOnReplySuccess(new OnReplySuccess() {
 
             @Override
             public void onSuccess(List<Post> posts) {
                 // 回复完之后更新列表
-                viewPagerPost.setCurrentItem(mPostPageAdapter.getCount() - 1,false);
+                viewPagerPost.setCurrentItem(mPostPageAdapter.getCount() - 1, false);
                 PostListFragment lastPostListFragment = mPostPageAdapter.getPostFragment(mPostPageAdapter.getCount() - 1);
                 if (lastPostListFragment != null) {
                     lastPostListFragment.update(posts);
@@ -352,7 +345,15 @@ public class ThreadDetailActivity extends BaseActivity {
                 }
 
                 loadMainContent(result.getPosts().get(0));
-                mPostPageAdapter.setSize(result.getTotalPage());
+                int totalPage = result.getTotalPage();
+                mPostPageAdapter.setSize(totalPage);
+                textViewTotalPage.setText("/" + totalPage + "页");
+                String[] spinnerPageData = new String[totalPage];
+                for (int i = 0; i < totalPage; i++) {
+                    spinnerPageData[i] = i + 1 + "";
+                }
+                spinnerPage.setAdapter(new ArrayAdapter<String>(ThreadDetailActivity.this, android.R.layout.simple_spinner_dropdown_item, spinnerPageData));
+
                 // 将该帖子设为已读
                 new ThreadStatusUtil(getApplicationContext()).setRead(mThread.getTid());
             }
@@ -374,4 +375,7 @@ public class ThreadDetailActivity extends BaseActivity {
 
     }
 
+    public View getReplyPanel() {
+        return mlayoutFastReply;
+    }
 }

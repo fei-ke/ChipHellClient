@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,14 +52,9 @@ public class PostItemView extends FrameLayout {
         super(context);
     }
 
-    public void bindValue(Post post, boolean isFirst) {
-        textViewContent.setVisibility(View.VISIBLE);
+    public void bindValue(Post post) {
         ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar);
         textViewAuthi.setText(Html.fromHtml(post.getAuthi()));
-        if (isFirst) {
-            textViewContent.setText("");
-            return;
-        }
         String content = post.getContent();
         if (post.getImgList() != null) {
             content += post.getImgList();

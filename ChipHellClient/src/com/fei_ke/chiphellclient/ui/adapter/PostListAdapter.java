@@ -13,12 +13,13 @@ import java.util.List;
 
 /**
  * 回帖列表适配器
- * 
+ *
  * @author fei-ke
  * @2014-6-15
  */
 public class PostListAdapter extends BaseAdapter {
     private List<Post> mPosts;
+
     @Override
     public int getCount() {
         return mPosts == null ? 0 : mPosts.size();
@@ -43,7 +44,7 @@ public class PostListAdapter extends BaseAdapter {
             postItemView = (PostItemView) convertView;
         }
         Post post = getItem(position);
-        postItemView.bindValue(post, position == 0);
+        postItemView.bindValue(post);
         return postItemView;
     }
 

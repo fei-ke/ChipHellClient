@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
-        sothree:dragView="@+id/name"
+        sothree:dragView="@+id/dragView"
         sothree:panelHeight="?android:attr/actionBarSize"
         sothree:paralaxOffset="100dp"
         sothree:shadowHeight="4dp">
@@ -29,7 +29,6 @@
             <!-- android:id="@+id/main_post" -->
             <!-- android:layout_width="match_parent" -->
             <!-- android:layout_height="match_parent" /> -->
-
             <WebView
                 android:id="@+id/webView_content"
                 android:layout_width="match_parent"
@@ -47,17 +46,37 @@
             android:focusable="false"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/name"
+            <LinearLayout
+                android:id="@+id/layoutPostListHeader"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
-                android:layout_marginTop="-9dp"
-                android:background="@drawable/below_shadow"
-                android:drawableRight="@drawable/ic_action_collections_sort_by_size"/>
+                android:layout_height="?android:attr/actionBarSize">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="第"/>
+
+                <Spinner
+                    android:clickable="true"
+                    android:id="@+id/spinnerPage"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewTotalPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:id="@+id/dragView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPagerPost"
-                android:layout_below="@+id/name"
+                android:layout_below="@+id/layoutPostListHeader"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

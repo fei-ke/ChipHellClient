@@ -6,11 +6,11 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.etiennelawlor.quickreturn.library.enums.QuickReturnType;
+import com.etiennelawlor.quickreturn.library.listeners.SpeedyQuickReturnListViewOnScrollListener;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
@@ -20,6 +20,7 @@ import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
+import com.fei_ke.chiphellclient.ui.customviews.ExtendListView;
 import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 
@@ -40,12 +41,12 @@ import java.util.List;
 @EFragment(R.layout.fragment_post_list)
 public class PostListFragment extends BaseFragment implements AdapterView.OnItemLongClickListener {
     @ViewById(R.id.listView_post)
-    ListView mRefreshListView;
+    ExtendListView mRefreshListView;
 
     PostListAdapter mPostListAdapter;
 
     @FragmentArg
-    protected int mPage;
+    protected int mPage;//回帖页码，从1开始
 
     @FragmentArg
     protected com.fei_ke.chiphellclient.bean.Thread mThread;
@@ -73,28 +74,21 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
     protected void onAfterViews() {
         mRefreshListView.setAdapter(mPostListAdapter);
         mRefreshListView.setOnItemLongClickListener(this);
-        mRefreshListView.setOnScrollListener(onScrollListener);
+        mRefreshListView.setOnScrollListener(
+                new SpeedyQuickReturnListViewOnScrollListener(getActivity(),
+                        QuickReturnType.FOOTER, null, getQuickReturnView()));
+
+        mRefreshListView.setOnLastItemVisibleListener(new ExtendListView.OnLastItemVisibleListener() {
+            @Override
+            public void onLastItemVisible() {
+                showReplyPanel();
+            }
+        });
+
         if (mData == null)
             getPostList(mPage);
     }
 
-    private AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
-        int lastVisibleItem;
-
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (firstVisibleItem > lastVisibleItem) {// 向下
-                hideReplyPanel();
-            } else if (firstVisibleItem < lastVisibleItem) {
-                showReplyPanel();
-            }
-            lastVisibleItem = firstVisibleItem;
-        }
-    };
 
     private void showReplyPanel() {
         Activity activity = getActivity();
@@ -108,6 +102,15 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
         if (activity instanceof ThreadDetailActivity) {
             ((ThreadDetailActivity) activity).hideReplyPanel();
         }
+    }
+
+
+    private View getQuickReturnView() {
+        Activity activity = getActivity();
+        if (activity instanceof ThreadDetailActivity) {
+            return ((ThreadDetailActivity) activity).getReplyPanel();
+        }
+        return null;
     }
 
     private void onEndRefresh() {
@@ -134,7 +137,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         // TODO 第一条为主贴，无法引用
-        if (id == 0) {
+        if (mPage == 1 && id == 0) {
 //            mFastReplyFragment.setPlateAndThread(mPlate, mThread);
             return true;
         }
@@ -217,7 +220,11 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
 //                    loadMainContent(result.get(0));
 //                    mPostListAdapter.clear();
 //                }
-                mPostListAdapter.update(result.getPosts());
+                List<Post> posts = result.getPosts();
+                if (mPage == 1) {
+                    posts.get(0).setContent("");
+                }
+                mPostListAdapter.update(posts);
             }
 
             @Override
@@ -234,6 +241,9 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
 //                    new ThreadStatusUtil(getApplicationContext()).setRead(mThread.getTid());
 //                }
                 mData = (ArrayList<Post>) result.getPosts();
+                if (mPage == 1) {
+                    mData.get(0).setContent("");
+                }
                 boolean hasNewData = mPostListAdapter.update(mData);
                 if (!hasNewData) {
                     // mPage -= 1;
@@ -249,14 +259,13 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
             @Override
             public void onFinish() {
                 mIsFreshing = false;
-                //TODO fei-ke 2014/11/1 刷新完成
-//                mRefreshListView.onRefreshComplete();
                 onEndRefresh();
             }
 
         });
 
     }
+
 
     public boolean isListOnTop() {
         LogMessage.i("PostListFragment", mPage + ": " + mRefreshListView.getScrollY());
