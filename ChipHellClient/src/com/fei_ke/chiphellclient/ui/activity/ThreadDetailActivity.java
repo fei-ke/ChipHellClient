@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
+import android.util.FloatMath;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -177,6 +179,23 @@ public class ThreadDetailActivity extends BaseActivity {
         getPostList();
     }
 
+    private float lastPosition;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) {
+            lastPosition = event.getY();
+        } else if (action == MotionEvent.ACTION_UP) {
+            lastPosition = Integer.MAX_VALUE;
+        }
+        PostListFragment curPostListFra = mPostPageAdapter.getPostFragment(viewPagerPost.getCurrentItem());
+        if (curPostListFra != null && curPostListFra.isListOnTop() && event.getY() - lastPosition > 100) {
+            mPanelLayout.collapsePanel();
+            return true;
+        }
+        return super.dispatchTouchEvent(event);
+    }
 
     private void handExportUrl() {
         String url = getIntent().getDataString();
@@ -205,6 +224,40 @@ public class ThreadDetailActivity extends BaseActivity {
         webViewContent.setVerticalScrollBarEnabled(true);
         webViewContent.setHorizontalScrollBarEnabled(false);
         settings.setJavaScriptEnabled(true);
+
+
+        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+            boolean isBottom;
+            float beginY;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //WebView的总高度
+                float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContent.getScale());
+                //WebView的现高度
+                float webViewCurrentHeight = (webViewContent.getHeight() + webViewContent.getScrollY());
+
+                isBottom = webViewCurrentHeight >= webViewContentHeight;
+
+                if (isBottom && beginY == -1) {
+                    beginY = event.getY();
+                }
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    float diff = beginY - event.getY();
+                    if (isBottom && beginY != -1 && diff >= 100) {
+                        mPanelLayout.expandPanel();
+                    }
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    beginY = -1;
+                    isBottom = false;
+                }
+                return false;
+            }
+        };
+        webViewContent.setOnTouchListener(onTouchListener);
+        mRefreshLayout.setOnTouchListener(onTouchListener);
     }
 
     private boolean handleUrl(String url) {

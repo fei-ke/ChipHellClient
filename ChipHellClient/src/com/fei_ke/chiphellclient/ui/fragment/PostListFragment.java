@@ -21,7 +21,6 @@ import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.PostListAdapter;
 import com.fei_ke.chiphellclient.ui.customviews.ExtendListView;
-import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 
 import org.androidannotations.annotations.EFragment;
@@ -187,6 +186,9 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
     }
 
     public void update(List<Post> posts) {
+        if (mPage == 1) {
+            posts.remove(0);
+        }
         mPostListAdapter.update(posts);
         mRefreshListView.setSelection(mPostListAdapter.getCount() - 1);
     }
@@ -268,8 +270,26 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
 
 
     public boolean isListOnTop() {
-        LogMessage.i("PostListFragment", mPage + ": " + mRefreshListView.getScrollY());
-        return mRefreshListView.getScrollY() == 0;
+        if (null == mPostListAdapter || mPostListAdapter.isEmpty()) {
+            return true;
+
+        } else {
+            /**
+             * This check should really just be:
+             * mRefreshableView.getFirstVisiblePosition() == 0, but PtRListView
+             * internally use a HeaderView which messes the positions up. For
+             * now we'll just add one to account for it and rely on the inner
+             * condition which checks getTop().
+             */
+            if (mRefreshListView.getFirstVisiblePosition() == 0) {
+                final View firstVisibleChild = mRefreshListView.getChildAt(0);
+                if (firstVisibleChild != null) {
+                    return firstVisibleChild.getTop() >= mRefreshListView.getTop();
+                }
+            }
+        }
+
+        return false;
     }
 
 }

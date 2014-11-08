@@ -30,8 +30,11 @@ public class ChhApplication extends Application {
         LogMessage.setDebug(BuildConfig.DEBUG);
 
         initImageLoader();
-
-        brandGlowEffect(this, getResources().getColor(R.color.chh_red));
+        try {
+            brandGlowEffect(this, getResources().getColor(R.color.chh_red));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         umeng();
     }
