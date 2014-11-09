@@ -6,95 +6,99 @@
                 android:layout_height="match_parent"
                 android:background="@color/background_light">
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        xmlns:sothree="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sliding_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        sothree:dragView="@+id/dragView"
-        sothree:panelHeight="?android:attr/actionBarSize"
-        sothree:paralaxOffset="100dp"
-        sothree:shadowHeight="4dp">
+	<com.sothree.slidinguppanel.SlidingUpPanelLayout
+		xmlns:sothree="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/sliding_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="bottom"
+		sothree:dragView="@+id/dragView"
+		sothree:panelHeight="?android:attr/actionBarSize"
+		sothree:paralaxOffset="100dp"
+		sothree:shadowHeight="4dp">
 
-        <!-- MAIN CONTENT -->
+		<!-- MAIN CONTENT -->
 
-        <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-            android:id="@+id/refreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white">
+		<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+			android:id="@+id/refreshLayout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@color/white">
 
-            <!-- <com.fei_ke.chiphellclient.ui.customviews.PostMainView_ -->
-            <!-- android:id="@+id/main_post" -->
-            <!-- android:layout_width="match_parent" -->
-            <!-- android:layout_height="match_parent" /> -->
-            <WebView
-                android:id="@+id/webView_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+			<!-- <com.fei_ke.chiphellclient.ui.customviews.PostMainView_ -->
+			<!-- android:id="@+id/main_post" -->
+			<!-- android:layout_width="match_parent" -->
+			<!-- android:layout_height="match_parent" /> -->
+			<WebView
+				android:id="@+id/webView_content"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+		</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
-        <!-- SLIDING LAYOUT -->
+		<!-- SLIDING LAYOUT -->
 
-        <RelativeLayout
-            android:id="@+id/layoutSlideUp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:clipChildren="false"
-            android:focusable="false"
-            android:orientation="vertical">
+		<RelativeLayout
+			android:id="@+id/layoutSlideUp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:clickable="true"
+			android:clipChildren="false"
+			android:focusable="false"
+			android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/layoutPostListHeader"
-                android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize">
+			<LinearLayout
+				android:id="@+id/layoutPostListHeader"
+				android:layout_width="match_parent"
+				android:layout_height="?android:attr/actionBarSize">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="第"/>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:layout_marginLeft="10dp"
+					android:text="第"/>
 
-                <Spinner
-                    android:clickable="true"
-                    android:id="@+id/spinnerPage"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    />
+				<Spinner
+					android:clickable="true"
+					android:id="@+id/spinnerPage"
+					android:layout_width="wrap_content"
+					android:background="@drawable/chh_red_list_selector_holo_light"
+					android:layout_height="match_parent"
+					/>
 
-                <TextView
-                    android:id="@+id/textViewTotalPage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+				<TextView
+					android:id="@+id/textViewTotalPage"
+					android:gravity="center"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"/>
 
-                <Button
-                    android:id="@+id/dragView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </LinearLayout>
+				<View
+					android:id="@+id/dragView"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"/>
+			</LinearLayout>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPagerPost"
-                android:layout_below="@+id/layoutPostListHeader"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+			<android.support.v4.view.ViewPager
+				android:id="@+id/viewPagerPost"
+				android:layout_below="@+id/layoutPostListHeader"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
 
-            <FrameLayout
-                android:id="@+id/layout_fast_reply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:visibility="visible">
+			<FrameLayout
+				android:id="@+id/layout_fast_reply"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:visibility="visible">
 
-                <fragment
-                    android:name="com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment_"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:tag="fast_reply"
-                    tools:layout="@layout/fragment_fast_reply"/>
-            </FrameLayout>
-        </RelativeLayout>
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+				<fragment
+					android:name="com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment_"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:tag="fast_reply"
+					tools:layout="@layout/fragment_fast_reply"/>
+			</FrameLayout>
+		</RelativeLayout>
+	</com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </RelativeLayout>

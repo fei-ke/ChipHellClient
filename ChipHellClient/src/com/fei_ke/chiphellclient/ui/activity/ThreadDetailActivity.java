@@ -135,11 +135,18 @@ public class ThreadDetailActivity extends BaseActivity {
                         .build())
                 .setup(mRefreshLayout);
 
-
+        spinnerPage.setTag(0);
         spinnerPage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if ((Integer) spinnerPage.getTag() == position) return;
+
                 viewPagerPost.setCurrentItem(position, false);
+                if (!mPanelLayout.isPanelExpanded()) {
+                    mPanelLayout.expandPanel();
+                }
+
+                spinnerPage.setTag(position);
             }
 
             @Override
@@ -400,7 +407,7 @@ public class ThreadDetailActivity extends BaseActivity {
                 loadMainContent(result.getPosts().get(0));
                 int totalPage = result.getTotalPage();
                 mPostPageAdapter.setSize(totalPage);
-                textViewTotalPage.setText("/" + totalPage + "页");
+                textViewTotalPage.setText("页 / " + totalPage + "页");
                 String[] spinnerPageData = new String[totalPage];
                 for (int i = 0; i < totalPage; i++) {
                     spinnerPageData[i] = i + 1 + "";
