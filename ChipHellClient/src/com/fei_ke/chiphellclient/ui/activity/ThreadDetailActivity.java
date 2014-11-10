@@ -100,6 +100,7 @@ public class ThreadDetailActivity extends BaseActivity {
 
     PostPageAdapter mPostPageAdapter;
     private boolean mIsFreshing;
+    private float webViewContentScale;
 
 
     public static Intent getStartIntent(Context context, Plate plate, Thread thread) {
@@ -220,6 +221,12 @@ public class ThreadDetailActivity extends BaseActivity {
                 // 回复
                 return handleUrl(url);
             }
+
+            @Override
+            public void onScaleChanged(WebView view, float oldScale, float newScale) {
+                super.onScaleChanged(view, oldScale, newScale);
+                webViewContentScale = newScale;
+            }
         });
         webViewContent.setWebChromeClient(new WebChromeClient());
 
@@ -235,12 +242,15 @@ public class ThreadDetailActivity extends BaseActivity {
 
         View.OnTouchListener onTouchListener = new View.OnTouchListener() {
             boolean isBottom;
-            float beginY;
+            float beginY = -1;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (webViewContentScale == 0) {
+                    webViewContentScale = webViewContent.getScale();
+                }
                 //WebView的总高度
-                float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContent.getScale());
+                float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContentScale);
                 //WebView的现高度
                 float webViewCurrentHeight = (webViewContent.getHeight() + webViewContent.getScrollY());
 
