@@ -245,6 +245,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
                 mData = (ArrayList<Post>) result.getPosts();
                 if (mPage == 1) {
                     mData.get(0).setContent("");
+                    mData.get(0).setImgList(null);
                 }
                 boolean hasNewData = mPostListAdapter.update(mData);
                 if (!hasNewData) {
