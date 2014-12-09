@@ -12,12 +12,23 @@
 <!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
 <!-- See the License for the specific language governing permissions and -->
 <!-- limitations under the License. -->
-
-<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="600"
-    android:propertyName="rotationX"
-    android:repeatCount="0"
-    android:valueFrom="180"
-    android:valueTo="0"
-    android:valueType="floatType"
-     />
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+	android:interpolator="@android:interpolator/linear">
+	<objectAnimator
+		android:duration="300"
+		android:propertyName="rotationX"
+		android:repeatCount="0"
+		android:valueFrom="0"
+		android:valueTo="-90"
+		android:valueType="floatType"
+		/>
+	<objectAnimator
+		android:duration="300"
+		android:propertyName="rotationX"
+		android:repeatCount="0"
+		android:valueFrom="90"
+		android:valueTo="0"
+		android:valueType="floatType"
+	    android:startOffset="300"
+		/>
+</set>

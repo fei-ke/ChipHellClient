@@ -82,6 +82,7 @@ public class SwipeBackActivityHelper {
             method.setAccessible(true);
             method.invoke(mActivity, null);
         } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
@@ -113,6 +114,7 @@ public class SwipeBackActivityHelper {
                 null
             });
         } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 }

@@ -1,8 +1,8 @@
 
 package com.fei_ke.chiphellclient.ui.adapter;
 
+import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.animation.ObjectAnimator;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -64,8 +64,9 @@ public class ThreadListAdapter extends BaseAdapter {
 //            threadItemView.startAnimation(animation);
             // AnimatorSet animator = (AnimatorSet)
             // AnimatorInflater.loadAnimator(context,R.animator.rotate_animation);
-            ObjectAnimator animator = (ObjectAnimator) AnimatorInflater.loadAnimator(parent.getContext(),
+            Animator animator = AnimatorInflater.loadAnimator(parent.getContext(),
                     R.animator.rotate_animation);
+
             animator.setStartDelay(position * 80);
             animator.setTarget(threadItemView);
             animator.start();
