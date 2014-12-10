@@ -200,7 +200,7 @@ public class ThreadDetailActivity extends BaseActivity {
         PostListFragment curPostListFra = mPostPageAdapter.getPostFragment(viewPagerPost.getCurrentItem());
         if (curPostListFra != null && curPostListFra.isListOnTop() && event.getY() - lastPosition > 100) {
             mPanelLayout.collapsePanel();
-            return true;
+//            return true;
         }
         return super.dispatchTouchEvent(event);
     }

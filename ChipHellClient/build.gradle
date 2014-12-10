@@ -15,7 +15,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 apt {
     arguments {
-        androidManifestFile variant.processResources.manifestFile
+        androidManifestFile variant.outputs[0].processResources.manifestFile
         resourcePackageName "com.fei_ke.chiphellclient"
     }
 }
@@ -62,7 +62,7 @@ android {
         release.setRoot('build-types/release')
         buildTypes {
             release {
-                runProguard false
+                minifyEnabled false
                 proguardFile 'proguard-project.txt'
             }
         }
