@@ -28,6 +28,7 @@
 
     <style name="MainActivityTheme" parent="chh_red">
         <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@color/background_light</item>
     </style>
 
 </resources>
