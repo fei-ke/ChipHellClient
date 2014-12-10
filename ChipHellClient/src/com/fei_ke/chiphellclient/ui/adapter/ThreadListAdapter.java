@@ -1,16 +1,11 @@
 
 package com.fei_ke.chiphellclient.ui.adapter;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 
-import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.ui.customviews.ThreadItemView;
 
@@ -59,17 +54,18 @@ public class ThreadListAdapter extends BaseAdapter {
             threadItemView.setOnFastReplyClickListener(onFastReplylistener);
         }
         if (position > lastPosition && position <= animToPosition) {
-            Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.slide_in_from_bottom);
-            animation.setDuration(600);
+//            Animation animation = AnimationUtils.loadAnimation(parent.getContext(), R.anim.scale);
+//            animation.setStartOffset(position * 50);
+//            threadItemView.startAnimation(animation);
 //            threadItemView.startAnimation(animation);
             // AnimatorSet animator = (AnimatorSet)
             // AnimatorInflater.loadAnimator(context,R.animator.rotate_animation);
-            Animator animator = AnimatorInflater.loadAnimator(parent.getContext(),
-                    R.animator.rotate_animation);
+//            Animator animator = AnimatorInflater.loadAnimator(parent.getContext(),
+//                    R.animator.rotate_animation);
 
-            animator.setStartDelay(position * 80);
-            animator.setTarget(threadItemView);
-            animator.start();
+//            animator.setStartDelay(position * 80);
+//            animator.setTarget(threadItemView);
+//            animator.start();
             lastPosition = position;
         }
         return threadItemView;

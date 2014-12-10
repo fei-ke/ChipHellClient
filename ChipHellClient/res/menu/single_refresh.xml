@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity_">
+
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/white_ptr_rotate"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/refresh"/>
+
+
+</menu>

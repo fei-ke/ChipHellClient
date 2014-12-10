@@ -80,7 +80,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
         mRefreshListView.setOnLastItemVisibleListener(new ExtendListView.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
-                showReplyPanel();
+//                showReplyPanel();
             }
         });
 

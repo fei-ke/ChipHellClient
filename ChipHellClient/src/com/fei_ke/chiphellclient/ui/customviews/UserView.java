@@ -1,14 +1,20 @@
 package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.User;
+import com.fei_ke.chiphellclient.utils.BitmapUtil;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -37,6 +43,9 @@ public class UserView extends FrameLayout {
     @ViewById(R.id.button_my_post)
     protected TextView buttonMyPost;
 
+    @ViewById(R.id.main_frame)
+    protected View mainFrame;
+
     public static UserView newInstance(Context context) {
         return UserView_.build(context);
     }
@@ -46,7 +55,27 @@ public class UserView extends FrameLayout {
     }
 
     public void bindValue(User user) {
-        ImageLoader.getInstance().displayImage(user.getAvatarUrl(), imageViewAvatar);
+
+        DisplayImageOptions avatarOption = new DisplayImageOptions.Builder()
+                .cacheInMemory(true).cacheOnDisc(true)
+                .showImageForEmptyUri(R.drawable.noavatar)
+                .showImageOnFail(R.drawable.noavatar)
+                .showImageOnLoading(R.drawable.noavatar)
+                .build();
+
+        ImageLoader.getInstance().displayImage(user.getAvatarUrl(), imageViewAvatar, avatarOption,
+                new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        super.onLoadingComplete(imageUri, view, loadedImage);
+                        if (loadedImage != null) {
+                            Bitmap bg = BitmapUtil.fastblur(loadedImage, 30);
+                            mainFrame.setBackgroundDrawable(new BitmapDrawable(bg));
+                        } else {
+                            mainFrame.setBackgroundResource(R.drawable.card_bg_normal);
+                        }
+                    }
+                });
         textViewName.setText(user.getName());
         textViewInfo.setText(Html.fromHtml(user.getInfo()));
     }

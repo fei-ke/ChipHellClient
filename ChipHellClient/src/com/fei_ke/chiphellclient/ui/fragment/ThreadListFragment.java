@@ -59,7 +59,8 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * @2014-6-14
  */
 @EFragment(R.layout.fragment_thread_list)
-public class ThreadListFragment extends BaseContentFragment implements OnClickListener, OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class ThreadListFragment extends BaseContentFragment implements OnClickListener,
+        OnItemClickListener, AdapterView.OnItemLongClickListener {
     private static final int REQUEST_CODE_LOGIN = 100;
     @ViewById(R.id.refreshLayout)
     protected PullToRefreshLayout refreshLayout;
@@ -302,10 +303,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onFinish() {
                 mIsFreshing = false;
-                //TODO fei-ke 2014/11/1  刷新完成
-//                mListViewThreads.onRefreshComplete();
                 refreshLayout.setRefreshComplete();
                 bottomProgressBar.setIndeterminate(false);
+                bottomProgressBar.setVisibility(View.INVISIBLE);
                 mMainActivity.onEndRefresh();
             }
 

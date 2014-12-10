@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -40,12 +42,13 @@ public class LoginActivity extends BaseActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                System.out.println(url);
                 if (url.startsWith(Constants.BASE_URL + "member.php")) {
                     view.loadUrl(url);
-                } else if (url.startsWith(Constants.BASE_URL + "?mobile=2")) {// 首页
-                    finish();
                 } else if (url.startsWith(Constants.BASE_URL + "member.php?mod=logging&action=logout")) {// 登出
                     view.loadUrl(loginUrl);
+                } else if (url.startsWith(Constants.BASE_URL + "?mobile=2")) {// 首页
+                    finish();
                 }
                 return true;
             }
@@ -53,11 +56,13 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                onStartRefresh();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                onEndRefresh();
                 String string = CookieManager.getInstance().getCookie(Constants.BASE_URL);
 
                 // PersistentCookieStore cookieStore = new PersistentCookieStore(getApplicationContext());
@@ -78,6 +83,45 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.single_refresh, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_refresh) {
+            mWebView.reload();
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    /**
+     * 开始刷新
+     */
+    public void onStartRefresh() {
+        mIsRefreshing = true;
+
+        if (menuItemRefresh != null) {
+            menuItemRefresh.setActionView(R.layout.indeterminate_progress_action);
+        }
+    }
+
+    /**
+     * 刷新结束
+     */
+    public void onEndRefresh() {
+        mIsRefreshing = false;
+
+        if (menuItemRefresh != null) {
+            menuItemRefresh.setActionView(null);
+            menuItemRefresh.setIcon(R.drawable.white_ptr_rotate);
+        }
     }
 
     @Override
