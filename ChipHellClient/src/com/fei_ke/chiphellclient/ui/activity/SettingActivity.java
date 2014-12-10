@@ -2,20 +2,23 @@
 package com.fei_ke.chiphellclient.ui.activity;
 
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.utils.GlobalSetting;
+import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
-
-import me.imid.swipebacklayout.lib.SwipeBackLayout;
-import me.imid.swipebacklayout.lib.app.SwipeBackPreferenceActivity;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import me.imid.swipebacklayout.lib.SwipeBackLayout;
+import me.imid.swipebacklayout.lib.app.SwipeBackPreferenceActivity;
 
 /**
  * 设置页面
@@ -26,6 +29,7 @@ import java.util.Set;
 public class SettingActivity extends SwipeBackPreferenceActivity implements OnPreferenceChangeListener {
 
     private MultiSelectListPreference mSwipeEdge;
+    private EditTextPreference mForumAddress;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -38,6 +42,19 @@ public class SettingActivity extends SwipeBackPreferenceActivity implements OnPr
         BaseActivity.initActionBar(this);
         getListView().setBackgroundResource(R.color.background_light);
 
+        setSwipeEdge();
+        setForumAddress();
+    }
+
+    private void setForumAddress() {
+        mForumAddress = (EditTextPreference) findPreference(GlobalSetting.FORUM_ADDRESS);
+        String forumAddress = GlobalSetting.getForumAddress();
+        mForumAddress.setSummary(forumAddress);
+        mForumAddress.setText(forumAddress);
+        mForumAddress.setOnPreferenceChangeListener(this);
+    }
+
+    private void setSwipeEdge() {
         mSwipeEdge = (MultiSelectListPreference) findPreference(GlobalSetting.SWIPE_BACK_EDGE);
         int edge = GlobalSetting.getSwipeBackEdge();
 
@@ -105,6 +122,21 @@ public class SettingActivity extends SwipeBackPreferenceActivity implements OnPr
             }
             GlobalSetting.putSwipeBackEdge(edge);
             mSwipeEdge.setSummary(summary.toString());
+            return true;
+        } else if (preference == mForumAddress) {
+            String newAddress = (String) newValue;
+            if (TextUtils.isEmpty(newAddress)) {
+                newAddress = GlobalSetting.DEFAULT_FORUM_ADDRESS;
+            }
+            if (!newAddress.startsWith("http")) {
+                newAddress = "http://" + newAddress;
+            }
+            if (!newAddress.endsWith("/")) {
+                newAddress += "/";
+            }
+            GlobalSetting.setForumAddress(newAddress);
+            mForumAddress.setSummary(newAddress);
+            ToastUtil.show(this, "需重新启动应用生效");
             return true;
         }
         return false;

@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.constant.Constants;
+import com.fei_ke.chiphellclient.utils.LogMessage;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -42,7 +43,7 @@ public class LoginActivity extends BaseActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                System.out.println(url);
+                LogMessage.i("LoginWebView", url);
                 if (url.startsWith(Constants.BASE_URL + "member.php")) {
                     view.loadUrl(url);
                 } else if (url.startsWith(Constants.BASE_URL + "member.php?mod=logging&action=logout")) {// 登出

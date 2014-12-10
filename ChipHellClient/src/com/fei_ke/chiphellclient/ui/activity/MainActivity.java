@@ -8,30 +8,26 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Plate;
-import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.analytics.onlineconfig.UmengOnlineConfigureListener;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 
 import org.afinal.simplecache.ACache;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
-import org.json.JSONObject;
 
 /**
  * 主界面
@@ -60,22 +56,22 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onAfterViews() {
-        MobclickAgent.updateOnlineConfig(ChhApplication.getInstance());
-        MobclickAgent.setOnlineConfigureListener(new UmengOnlineConfigureListener() {
-            @Override
-            public void onDataReceived(JSONObject data) {
-                if (data != null) {
-                    String chhUrl = data.optString("chh_base_url");
-                    if (!TextUtils.isEmpty(chhUrl)) {
-                        Constants.BASE_URL = chhUrl;
-                    }
-                }
-            }
-        });
-        String chhUrl = MobclickAgent.getConfigParams(this, "chh_base_url");
-        if (!TextUtils.isEmpty(chhUrl)) {
-            Constants.BASE_URL = chhUrl;
-        }
+//        MobclickAgent.updateOnlineConfig(ChhApplication.getInstance());
+//        MobclickAgent.setOnlineConfigureListener(new UmengOnlineConfigureListener() {
+//            @Override
+//            public void onDataReceived(JSONObject data) {
+//                if (data != null) {
+//                    String chhUrl = data.optString("chh_base_url");
+//                    if (!TextUtils.isEmpty(chhUrl)) {
+//                        Constants.BASE_URL = chhUrl;
+//                    }
+//                }
+//            }
+//        });
+//        String chhUrl = MobclickAgent.getConfigParams(this, "chh_base_url");
+//        if (!TextUtils.isEmpty(chhUrl)) {
+//            Constants.BASE_URL = chhUrl;
+//        }
 
         // 不允许滑动返回
         getSwipeBackLayout().setEnableGesture(false);
@@ -208,18 +204,39 @@ public class MainActivity extends BaseActivity {
                 startActivity(AboutActivity.getStartIntent(this));
                 break;
             case R.id.action_version_update:
-                UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
-                    @Override
-                    public void onUpdateReturned(int i, UpdateResponse updateResponse) {
-                        
-                    }
-                });
-                UmengUpdateAgent.forceUpdate(this);
+                umengUpdate();
+                break;
+            case R.id.action_exit:
+                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
                 break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void umengUpdate() {
+        UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+            @Override
+            public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
+                switch (updateStatus) {
+                    case UpdateStatus.Yes: // has update
+                        //UmengUpdateAgent.showUpdateDialog(MainActivity.this, updateInfo);
+                        break;
+                    case UpdateStatus.No: // has no update
+                        Toast.makeText(MainActivity.this, "没有新版本哦", Toast.LENGTH_SHORT).show();
+                        break;
+                    case UpdateStatus.NoneWifi: // none wifi
+                        Toast.makeText(MainActivity.this, "没有wifi连接， 只在wifi下更新", Toast.LENGTH_SHORT).show();
+                        break;
+                    case UpdateStatus.Timeout: // time out
+                        Toast.makeText(MainActivity.this, "检查更新超时", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+        UmengUpdateAgent.forceUpdate(this);
     }
 
     protected void refresh() {

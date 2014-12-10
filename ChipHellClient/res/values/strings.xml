@@ -9,6 +9,7 @@
 	<string name="drawer_open">Open navigation drawer</string>
 	<string name="drawer_close">Close navigation drawer</string>
 	<string name="about">关于</string>
+	<string name="exit">退出</string>
 	<string name="open_source_notices">开源协议</string>
 	<string name="about_version">版本: %s</string>
 	<string name="action_version_update">检查更新</string>
@@ -21,6 +22,8 @@
 	<string name="swipe_edge_left">左边</string>
 	<string name="swipe_edge_right">右边</string>
 	<string name="swipe_edge_bottom">底边</string>
+	<string name="forum_address">论坛地址</string>
+	<string name="default_forum_address">http://www.chiphell.com/</string>
 
 	<!-- 开源协议 -->
 	<string name="apache_license_2_0">Apache License, Version 2.0</string>
@@ -53,5 +56,6 @@
 	<string name="EventBus_url">https://github.com/greenrobot/EventBus</string>
 	<string name="not_login">你好像没有登录啊</string>
 	<string name="favorite">收藏</string>
+
 
 </resources>

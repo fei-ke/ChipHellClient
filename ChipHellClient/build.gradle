@@ -46,6 +46,14 @@ android {
     compileSdkVersion 21
     buildToolsVersion "20.0.0"
 
+
+    defaultConfig {
+        versionCode 10
+        versionName "1.2.3"
+        minSdkVersion 14
+        targetSdkVersion 21
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -80,6 +88,6 @@ android {
         }
     }
     lintOptions {
-        abortOnError false
+//        abortOnError false
     }
 }
