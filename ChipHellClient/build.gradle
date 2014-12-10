@@ -60,7 +60,6 @@ android {
             java.srcDirs = ['src', 'src']
             resources.srcDirs = ['src', 'src']
             aidl.srcDirs = ['src', 'src']
-            jniLibs.srcDirs = ['src', 'libs']
             renderscript.srcDirs = ['src', 'src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']

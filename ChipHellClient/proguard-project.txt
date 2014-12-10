@@ -15,9 +15,7 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
--keepclassmembers class fqcn.of.javascript.interface.for.webview {
-   public *;
-}
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {   public *;}
 
 -dontwarn org.apache.commons.httpclient.**
 -dontwarn org.androidannotations.api.rest.**
@@ -46,5 +44,9 @@ public *;
 }
 
 #android-gif-drawable
--keep public class pl.droidsonroids.gif.GifIOException{<init>(int);}
--keep class pl.droidsonroids.gif.GifInfoHandle{<init>(long,int,int,int);}
+-keep public class pl.droidsonroids.gif.GifIOException{*;}
+-keep public class pl.droidsonroids.gif.GifDrawable{*;}
+-keep class pl.droidsonroids.gif.GifInfoHandle{*;}
+
+-dontwarn org.androidannotations.**
+-dontwarn com.sun.codemodel.util.SingleByteEncoder
