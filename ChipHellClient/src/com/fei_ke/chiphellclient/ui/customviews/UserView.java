@@ -2,7 +2,6 @@ package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -11,10 +10,9 @@ import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.User;
-import com.fei_ke.chiphellclient.utils.BitmapUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -68,12 +66,12 @@ public class UserView extends FrameLayout {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         super.onLoadingComplete(imageUri, view, loadedImage);
-                        if (loadedImage != null) {
+                        /*if (loadedImage != null) {
                             Bitmap bg = BitmapUtil.fastblur(loadedImage, 30);
                             mainFrame.setBackgroundDrawable(new BitmapDrawable(bg));
                         } else {
                             mainFrame.setBackgroundResource(R.drawable.card_bg_normal);
-                        }
+                        }*/
                     }
                 });
         textViewName.setText(user.getName());

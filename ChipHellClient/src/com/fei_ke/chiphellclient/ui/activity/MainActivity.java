@@ -23,6 +23,8 @@ import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.onlineconfig.UmengOnlineConfigureListener;
 import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
 
 import org.afinal.simplecache.ACache;
 import org.androidannotations.annotations.EActivity;
@@ -206,6 +208,12 @@ public class MainActivity extends BaseActivity {
                 startActivity(AboutActivity.getStartIntent(this));
                 break;
             case R.id.action_version_update:
+                UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+                    @Override
+                    public void onUpdateReturned(int i, UpdateResponse updateResponse) {
+                        
+                    }
+                });
                 UmengUpdateAgent.forceUpdate(this);
                 break;
             default:
@@ -237,7 +245,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.openDrawer(GravityCompat.START);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_HOME);

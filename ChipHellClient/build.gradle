@@ -22,6 +22,14 @@ apt {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.+'
+    compile 'org.androidannotations:androidannotations:3.2'
+    compile 'org.jsoup:jsoup:1.8.1'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+
     compile project(':libraries:FloatingGroupExpandableListView')
     compile project(':libraries:AsyncHttpClient')
     compile project(':libraries:Umeng')
@@ -29,12 +37,11 @@ dependencies {
     compile project(':libraries:SwipeBack')
     compile project(':libraries:ActionBarPullToRefresh')
     compile project(':libraries:QuickReturn')
-
-    apt "org.androidannotations:androidannotations:3.1"
+    apt "org.androidannotations:androidannotations:3.2"
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 21
     buildToolsVersion "20.0.0"
 
     sourceSets {
@@ -62,9 +69,15 @@ android {
         release.setRoot('build-types/release')
         buildTypes {
             release {
-                minifyEnabled false
+                minifyEnabled true
                 proguardFile 'proguard-project.txt'
             }
+            debug {
+
+            }
         }
+    }
+    lintOptions {
+        abortOnError false
     }
 }

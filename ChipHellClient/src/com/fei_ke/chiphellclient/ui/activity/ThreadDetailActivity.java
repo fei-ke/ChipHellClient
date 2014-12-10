@@ -417,7 +417,7 @@ public class ThreadDetailActivity extends BaseActivity {
                 loadMainContent(result.getPosts().get(0));
                 int totalPage = result.getTotalPage();
                 mPostPageAdapter.setSize(totalPage);
-                textViewTotalPage.setText("页 / " + totalPage + "页");
+                textViewTotalPage.setText(totalPage + "");
                 String[] spinnerPageData = new String[totalPage];
                 for (int i = 0; i < totalPage; i++) {
                     spinnerPageData[i] = i + 1 + "";

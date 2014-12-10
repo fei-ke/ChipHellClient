@@ -14,8 +14,8 @@ import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;

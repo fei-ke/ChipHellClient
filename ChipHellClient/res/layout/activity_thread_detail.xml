@@ -63,14 +63,30 @@
 					android:id="@+id/spinnerPage"
 					android:layout_width="wrap_content"
 					android:background="@drawable/chh_red_list_selector_holo_light"
+					android:gravity="center"
 					android:layout_height="match_parent"
+				    android:minWidth="20dp"
 					/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:text="页 / 共 "/>
+
 
 				<TextView
 					android:id="@+id/textViewTotalPage"
 					android:gravity="center"
 					android:layout_width="wrap_content"
-					android:layout_height="match_parent"/>
+					android:layout_height="match_parent"
+					android:text="　"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:text=" 页"/>
 
 				<View
 					android:id="@+id/dragView"

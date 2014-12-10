@@ -2,9 +2,12 @@
 package com.fei_ke.chiphellclient.utils;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -14,7 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 
 public class SmileyPickerUtility {
     public static void hideSoftInput(View paramEditText) {
-        ((InputMethodManager) paramEditText.getContext().getSystemService("input_method"))
+        ((InputMethodManager) paramEditText.getContext().getSystemService(Service.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }
 
@@ -23,7 +26,7 @@ public class SmileyPickerUtility {
         paramEditText.post(new Runnable() {
             @Override
             public void run() {
-                ((InputMethodManager) paramEditText.getContext().getSystemService("input_method"))
+                ((InputMethodManager) paramEditText.getContext().getSystemService(Service.INPUT_METHOD_SERVICE))
                         .showSoftInput(paramEditText, 0);
             }
         });
@@ -77,11 +80,12 @@ public class SmileyPickerUtility {
         int height = SmileyPickerUtility.getScreenHeight(paramActivity)
                 - SmileyPickerUtility.getStatusBarHeight(paramActivity)
                 - SmileyPickerUtility.getAppHeight(paramActivity);
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(paramActivity);
         if (height == 0) {
-            height = 400;
+            height = defaultSharedPreferences.getInt("soft_input_height", 500);
+        } else {
+            defaultSharedPreferences.edit().putInt("soft_input_height", height).apply();
         }
-        // TODO 保存软键盘高度
-
         return height;
     }
 
@@ -108,7 +112,7 @@ public class SmileyPickerUtility {
     }
 
     public static int getDimensionPixelSize(Activity activity, int attr, int defaultValue) {
-        int[] attrs = new int[] {
+        int[] attrs = new int[]{
                 attr
         };
         TypedArray ta = activity.obtainStyledAttributes(attrs);
