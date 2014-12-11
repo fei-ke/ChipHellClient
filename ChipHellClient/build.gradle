@@ -29,22 +29,19 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
-
     compile 'com.diegocarloslima:fgelv:0.1.+@aar'
-
     compile project(':libraries:AsyncHttpClient')
     compile project(':libraries:Umeng')
     compile project(':libraries:AndroidSlidingUpPanel')
     compile project(':libraries:SwipeBack')
     compile project(':libraries:ActionBarPullToRefresh')
     compile project(':libraries:QuickReturn')
-
     apt "org.androidannotations:androidannotations:3.2"
 }
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "20.0.0"
+    buildToolsVersion '21.1.1'
 
 
     defaultConfig {
