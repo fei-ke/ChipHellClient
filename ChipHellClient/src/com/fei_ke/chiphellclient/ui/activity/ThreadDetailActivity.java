@@ -39,7 +39,6 @@ import com.fei_ke.chiphellclient.ui.customviews.MySlidingUpPanelLayout;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment.OnReplySuccess;
 import com.fei_ke.chiphellclient.ui.fragment.PostListFragment;
-import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 
@@ -257,7 +256,7 @@ public class ThreadDetailActivity extends BaseActivity {
                     lastPosY = -1;
                     lastPosX = -1;
                 }
-                LogMessage.i("HookDispatchTouchEvent", this);
+//                LogMessage.i("HookDispatchTouchEvent", this);
                 return false;
             }
 
@@ -313,11 +312,11 @@ public class ThreadDetailActivity extends BaseActivity {
     }
 
     private boolean isWebViewToBottom() {
-        if (webViewContentScale == 0) {
-            webViewContentScale = webViewContent.getScale();
-        }
+//        if (webViewContentScale == 0) {
+//            webViewContentScale = webViewContent.getScale();
+//        }
         //WebView的总高度
-        float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContentScale);
+        float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContent.getScale());
         //WebView的现高度
         float webViewCurrentHeight = (webViewContent.getHeight() + webViewContent.getScrollY());
 

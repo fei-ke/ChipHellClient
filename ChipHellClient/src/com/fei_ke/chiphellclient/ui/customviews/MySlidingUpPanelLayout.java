@@ -36,7 +36,10 @@ public class MySlidingUpPanelLayout extends SlidingUpPanelLayout {
         if (hookDispatchTouchEvent != null) {
             hookRet = hookDispatchTouchEvent.dispatchTouchEvent(ev);
         }
-        return hookRet || super.dispatchTouchEvent(ev);
+        try {
+            return hookRet || super.dispatchTouchEvent(ev);
+        } catch (ArrayIndexOutOfBoundsException e) {}
+        return false;
     }
 
     public boolean callSuperDispatchTouchEvent(MotionEvent ev) {
