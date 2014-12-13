@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -34,12 +35,13 @@ import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.constant.Constants;
 import com.fei_ke.chiphellclient.ui.adapter.PostPageAdapter;
+import com.fei_ke.chiphellclient.ui.customviews.MySlidingUpPanelLayout;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment;
 import com.fei_ke.chiphellclient.ui.fragment.FastReplyFragment.OnReplySuccess;
 import com.fei_ke.chiphellclient.ui.fragment.PostListFragment;
+import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -87,7 +89,7 @@ public class ThreadDetailActivity extends BaseActivity {
     View mlayoutFastReply;
 
     @ViewById(R.id.sliding_layout)
-    SlidingUpPanelLayout mPanelLayout;
+    MySlidingUpPanelLayout mPanelLayout;
 
     @ViewById(R.id.refreshLayout)
     PullToRefreshLayout mRefreshLayout;
@@ -97,7 +99,8 @@ public class ThreadDetailActivity extends BaseActivity {
 
     @ViewById
     Spinner spinnerPage;
-
+    @ViewById(R.id.dragView)
+    View dragView;
     PostPageAdapter mPostPageAdapter;
     private boolean mIsFreshing;
     private float webViewContentScale;
@@ -184,26 +187,95 @@ public class ThreadDetailActivity extends BaseActivity {
             }
         });
         initWebView();
+        hookPanelTouchEvent();
         getPostList();
     }
 
-    private float lastPosition;
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        if (action == MotionEvent.ACTION_DOWN) {
-            lastPosition = event.getY();
-        } else if (action == MotionEvent.ACTION_UP) {
-            lastPosition = Integer.MAX_VALUE;
-        }
-        PostListFragment curPostListFra = mPostPageAdapter.getPostFragment(viewPagerPost.getCurrentItem());
-        if (curPostListFra != null && curPostListFra.isListOnTop() && event.getY() - lastPosition > 100) {
-            mPanelLayout.collapsePanel();
-//            return true;
-        }
-        return super.dispatchTouchEvent(event);
+    private void hookPanelTouchEvent() {
+        final ViewConfiguration vc = ViewConfiguration.get(this);
+        mPanelLayout.setHookDispatchTouchEvent(new MySlidingUpPanelLayout.HookDispatchTouchEvent() {
+            float offsetY;
+            float lastPosY = -1;
+            float lastPosX = -1;
+            float curPosY;
+
+            boolean needForward;
+            boolean readyForward;
+            boolean forwarding;
+            boolean hasCalcOffset;
+
+            @Override
+            public boolean dispatchTouchEvent(MotionEvent event) {
+                int action = event.getAction();
+                curPosY = event.getY();
+
+                if (action == MotionEvent.ACTION_DOWN) {
+                    lastPosX = event.getX();
+                }
+
+                PostListFragment curPostListFra = mPostPageAdapter.getPostFragment(viewPagerPost.getCurrentItem());
+
+                boolean isPanelExpanded = mPanelLayout.isPanelExpanded();
+
+                //是否需要转发触摸事件
+                needForward = (!isPanelExpanded && isWebViewToBottom()) ||
+                        (isPanelExpanded && curPostListFra != null && curPostListFra.isListOnTop());
+
+                if (needForward && !hasCalcOffset) {
+                    //计算偏移
+                    int[] loc = new int[2];
+                    dragView.getLocationOnScreen(loc);
+                    offsetY = loc[1] - event.getRawY();
+
+                    lastPosY = curPosY;
+                    hasCalcOffset = true;
+                }
+
+                float diffY = curPosY - lastPosY;
+                float diffX = event.getX() - lastPosX;
+                readyForward = needForward && (diffX < vc.getScaledTouchSlop()) && (isPanelExpanded ? diffY > vc.getScaledTouchSlop() : diffY < -vc.getScaledTouchSlop());
+
+                if (readyForward && !forwarding) {
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                    mPanelLayout.callSuperDispatchTouchEvent(event);
+                    event.setAction(MotionEvent.ACTION_DOWN);
+                    forwarding = true;
+                }
+
+
+                if (forwarding) {//设置偏移
+                    event.offsetLocation(0, offsetY + dragView.getHeight() / 2);
+                    event.setLocation(dragView.getWidth() / 2, event.getY());
+                }
+
+                if (action == MotionEvent.ACTION_UP) {
+                    forwarding = false;
+                    hasCalcOffset = false;
+                    needForward = false;
+                    readyForward = false;
+                    lastPosY = -1;
+                    lastPosX = -1;
+                }
+                LogMessage.i("HookDispatchTouchEvent", this);
+                return false;
+            }
+
+            @Override
+            public String toString() {
+                return "$classname{" +
+                        "offsetY=" + offsetY +
+                        ", lastPosY=" + lastPosY +
+                        ", curPosY=" + curPosY +
+                        ", needForward=" + needForward +
+                        ", readyForward=" + readyForward +
+                        ", forwarding=" + forwarding +
+                        ", hasCalcOffset=" + hasCalcOffset +
+                        '}';
+            }
+        });
     }
+
 
     private void handExportUrl() {
         String url = getIntent().getDataString();
@@ -238,43 +310,18 @@ public class ThreadDetailActivity extends BaseActivity {
         webViewContent.setVerticalScrollBarEnabled(true);
         webViewContent.setHorizontalScrollBarEnabled(false);
         settings.setJavaScriptEnabled(true);
+    }
 
+    private boolean isWebViewToBottom() {
+        if (webViewContentScale == 0) {
+            webViewContentScale = webViewContent.getScale();
+        }
+        //WebView的总高度
+        float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContentScale);
+        //WebView的现高度
+        float webViewCurrentHeight = (webViewContent.getHeight() + webViewContent.getScrollY());
 
-        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-            boolean isBottom;
-            float beginY = -1;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (webViewContentScale == 0) {
-                    webViewContentScale = webViewContent.getScale();
-                }
-                //WebView的总高度
-                float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContentScale);
-                //WebView的现高度
-                float webViewCurrentHeight = (webViewContent.getHeight() + webViewContent.getScrollY());
-
-                isBottom = webViewCurrentHeight >= webViewContentHeight;
-
-                if (isBottom && beginY == -1) {
-                    beginY = event.getY();
-                }
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    float diff = beginY - event.getY();
-                    if (isBottom && beginY != -1 && diff >= 100) {
-                        mPanelLayout.expandPanel();
-                    }
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    beginY = -1;
-                    isBottom = false;
-                }
-                return false;
-            }
-        };
-        webViewContent.setOnTouchListener(onTouchListener);
-        mRefreshLayout.setOnTouchListener(onTouchListener);
+        return webViewCurrentHeight >= webViewContentHeight;
     }
 
     private boolean handleUrl(String url) {
