@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<color name="white">#FFFFFF</color>
+	<color name="black">#000000</color>
+	<color name="chh_red">#a90000</color>
+	<color name="chh_red_with_alpha">#aaa90000</color>
+	<color name="dark_red">#a61f24</color>
+	<color name="lighter_gray">#ddd</color>
+	<color name="darker_gray">#aaa</color>
+	<color name="background_light">#eeeeee</color>
+
+
+	<color name="gplus_color_1">#3e802f</color>
+	<color name="gplus_color_2">#f4b400</color>
+	<color name="gplus_color_3">#427fed</color>
+	<color name="gplus_color_4">#b23424</color>
+	<integer-array name="gplus_colors">
+		<item>@color/gplus_color_1</item>
+		<item>@color/gplus_color_2</item>
+		<item>@color/gplus_color_3</item>
+		<item>@color/gplus_color_4</item>
+	</integer-array>
+</resources>

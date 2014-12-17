@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
+
+	<Spinner
+		android:id="@+id/spinnerClass"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"/>
+
+	<Spinner
+		android:id="@+id/spinnerOrderBy"
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"/>
+
+
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:orientation="horizontal"
+		android:weightSum="2">
+
+
+		<ImageView
+			android:id="@+id/btnFavorite"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@drawable/chh_red_list_selector_holo_light"
+			android:padding="10dp"
+			android:src="@drawable/favorite_selector"/>
+
+		<ImageView
+			android:id="@+id/btnPost"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:background="@drawable/chh_red_list_selector_holo_light"
+			android:padding="10dp"
+			android:src="@android:drawable/ic_menu_edit"
+			android:clickable="true"/>
+	</LinearLayout>
+</LinearLayout>
