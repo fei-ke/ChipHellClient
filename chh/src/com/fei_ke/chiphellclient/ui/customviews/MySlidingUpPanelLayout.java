@@ -51,5 +51,4 @@ public class MySlidingUpPanelLayout extends SlidingUpPanelLayout {
     public static interface HookDispatchTouchEvent {
         boolean dispatchTouchEvent(MotionEvent ev);
     }
-
 }
