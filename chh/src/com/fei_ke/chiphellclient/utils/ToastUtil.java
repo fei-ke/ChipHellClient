@@ -5,7 +5,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 /**
- * Created by YJY on 2014/6/27.
+ * Created by fei-ke on 2014/6/27.
  */
 public class ToastUtil {
     public static void show(Context context, CharSequence text) {

@@ -7,7 +7,7 @@ import android.graphics.Rect;
 
 /**
  * bitmap缩放工具
- * Created by 杨金阳 on 2014/9/5.
+ * Created by fei-ke on 2014/9/5.
  */
 public class BitmapUtil {
     public static Bitmap createScaledBitmap(Bitmap unscaledBitmap, int dstWidth, int dstHeight, ScalingLogic scalingLogic) {

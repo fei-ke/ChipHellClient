@@ -233,7 +233,11 @@ public class ThreadDetailActivity extends BaseActivity {
 
                 float diffY = curPosY - lastPosY;
                 float diffX = event.getX() - lastPosX;
-                readyForward = needForward && (diffX < vc.getScaledTouchSlop()) && (isPanelExpanded ? diffY > vc.getScaledTouchSlop() : diffY < -vc.getScaledTouchSlop());
+                readyForward = needForward
+                        && (diffX < vc.getScaledTouchSlop())
+                        && (isPanelExpanded
+                        ? diffY > vc.getScaledTouchSlop()
+                        : diffY < -vc.getScaledTouchSlop());
 
                 if (readyForward && !forwarding) {
                     event.setAction(MotionEvent.ACTION_CANCEL);

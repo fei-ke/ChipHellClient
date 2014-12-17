@@ -56,23 +56,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onAfterViews() {
-//        MobclickAgent.updateOnlineConfig(ChhApplication.getInstance());
-//        MobclickAgent.setOnlineConfigureListener(new UmengOnlineConfigureListener() {
-//            @Override
-//            public void onDataReceived(JSONObject data) {
-//                if (data != null) {
-//                    String chhUrl = data.optString("chh_base_url");
-//                    if (!TextUtils.isEmpty(chhUrl)) {
-//                        Constants.BASE_URL = chhUrl;
-//                    }
-//                }
-//            }
-//        });
-//        String chhUrl = MobclickAgent.getConfigParams(this, "chh_base_url");
-//        if (!TextUtils.isEmpty(chhUrl)) {
-//            Constants.BASE_URL = chhUrl;
-//        }
-
         // 不允许滑动返回
         getSwipeBackLayout().setEnableGesture(false);
 
