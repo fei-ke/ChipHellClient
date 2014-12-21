@@ -371,6 +371,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         switch (v.getId()) {
             case R.id.textView_count:
                 if (!ChhApplication.getInstance().isLogin()) {
+                    ToastUtil.show(getActivity(), R.string.need_login);
                     startActivityForResult(LoginActivity.getStartIntent(getActivity()), REQUEST_CODE_LOGIN);
                     break;
                 }

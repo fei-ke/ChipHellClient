@@ -25,8 +25,10 @@ import com.fei_ke.chiphellclient.bean.PostListWrap;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.constant.SmileTable;
+import com.fei_ke.chiphellclient.ui.activity.LoginActivity;
 import com.fei_ke.chiphellclient.ui.fragment.SmileFragment.OnSmileChoose;
 import com.fei_ke.chiphellclient.utils.SmileyPickerUtility;
+import com.fei_ke.chiphellclient.utils.ToastUtil;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -167,6 +169,11 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_reply_send:
+                if (!ChhApplication.getInstance().isLogin()) {
+                    ToastUtil.show(getActivity(), R.string.need_login);
+                    startActivity(LoginActivity.getStartIntent(getActivity()));
+                    return;
+                }
                 if (mQuoteReply != null) {
                     quoteReply();
                 } else {
