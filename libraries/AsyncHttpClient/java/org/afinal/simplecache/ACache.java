@@ -15,6 +15,17 @@
  */
 package org.afinal.simplecache;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -36,17 +47,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-
 /**
  * @author Michael Yang（www.yangfuhai.com） update at 2013.08.07
  */
@@ -63,7 +63,7 @@ public class ACache {
     }
 
     public static ACache get(Context ctx, String cacheName) {
-        File f = new File(ctx.getCacheDir(), cacheName);
+        File f = new File(getCacheDir(ctx), cacheName);
         return get(f, MAX_SIZE, MAX_COUNT);
     }
 
@@ -72,8 +72,16 @@ public class ACache {
     }
 
     public static ACache get(Context ctx, long max_zise, int max_count) {
-        File f = new File(ctx.getCacheDir(), "ACache");
+        File f = new File(getCacheDir(ctx), "ACache");
         return get(f, max_zise, max_count);
+    }
+
+    private static File getCacheDir(Context ctx) {
+        File cache = ctx.getExternalCacheDir();
+        if (cache == null) {
+            cache = ctx.getCacheDir();
+        }
+        return cache;
     }
 
     public static ACache get(File cacheDir, long max_zise, int max_count) {
