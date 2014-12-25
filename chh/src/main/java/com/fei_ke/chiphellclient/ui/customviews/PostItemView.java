@@ -53,7 +53,7 @@ public class PostItemView extends FrameLayout {
     }
 
     public void bindValue(Post post) {
-        ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar);
+        ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar,Constants.avatarDisplayOption);
         textViewAuthi.setText(Html.fromHtml(post.getAuthi()));
         String content = post.getContent();
         if (post.getImgList() != null) {

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.User;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.fei_ke.chiphellclient.constant.Constants;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -53,15 +53,7 @@ public class UserView extends FrameLayout {
     }
 
     public void bindValue(User user) {
-
-        DisplayImageOptions avatarOption = new DisplayImageOptions.Builder()
-                .cacheInMemory(true).cacheOnDisc(true)
-                .showImageForEmptyUri(R.drawable.noavatar)
-                .showImageOnFail(R.drawable.noavatar)
-                .showImageOnLoading(R.drawable.noavatar)
-                .build();
-
-        ImageLoader.getInstance().displayImage(user.getAvatarUrl(), imageViewAvatar, avatarOption,
+        ImageLoader.getInstance().displayImage(user.getAvatarUrl(), imageViewAvatar, Constants.avatarDisplayOption,
                 new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
