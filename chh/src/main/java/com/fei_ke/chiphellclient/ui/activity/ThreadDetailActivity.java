@@ -216,7 +216,7 @@ public class ThreadDetailActivity extends BaseActivity {
 
             @Override
             public boolean dispatchTouchEvent(MotionEvent event) {
-                int action = event.getAction();
+                int action = event.getActionMasked();
                 curPosY = event.getY();
 
                 if (action == MotionEvent.ACTION_DOWN) {
@@ -259,9 +259,9 @@ public class ThreadDetailActivity extends BaseActivity {
                 }
 
 
-                if (forwarding) {//设置偏移
-                    event.offsetLocation(0, offsetY + dragView.getHeight() / 2);
-                    event.setLocation(dragView.getWidth() / 2, event.getY());
+                if (forwarding) {//设置偏移 定位到draView的中央位置
+                    event.offsetLocation(-event.getX() + dragView.getLeft() + dragView.getWidth() / 2,
+                            offsetY + dragView.getHeight() / 2);
                 }
 
                 if (action == MotionEvent.ACTION_UP) {
@@ -281,6 +281,7 @@ public class ThreadDetailActivity extends BaseActivity {
                     lastPosX = -1;
                 }
 //                LogMessage.i("HookDispatchTouchEvent", this);
+
                 return false;
             }
 
