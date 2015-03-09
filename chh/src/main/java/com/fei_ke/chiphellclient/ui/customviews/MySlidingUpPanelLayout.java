@@ -48,6 +48,18 @@ public class MySlidingUpPanelLayout extends SlidingUpPanelLayout {
 
     HookDispatchTouchEvent hookDispatchTouchEvent;
 
+    public void expandPanel() {
+        setPanelState(PanelState.EXPANDED);
+    }
+
+    public boolean isPanelExpanded() {
+        return PanelState.EXPANDED.equals(getPanelState());
+    }
+
+    public void collapsePanel() {
+        setPanelState(PanelState.COLLAPSED);
+    }
+
     public static interface HookDispatchTouchEvent {
         boolean dispatchTouchEvent(MotionEvent ev);
     }

@@ -103,7 +103,6 @@ public class ThreadDetailActivity extends BaseActivity {
     View dragView;
     PostPageAdapter mPostPageAdapter;
     private boolean mIsFreshing;
-    private float webViewContentScale;
 
 
     public static Intent getStartIntent(Context context, Plate plate, Thread thread) {
@@ -240,7 +239,6 @@ public class ThreadDetailActivity extends BaseActivity {
                     lastPosY = curPosY;
                     hasCalcOffset = true;
                 }
-
                 float diffY = curPosY - lastPosY;
                 float diffX = event.getX() - lastPosX;
                 readyForward = needForward
@@ -280,7 +278,7 @@ public class ThreadDetailActivity extends BaseActivity {
                     lastPosY = -1;
                     lastPosX = -1;
                 }
-//                LogMessage.i("HookDispatchTouchEvent", this);
+                //LogMessage.i("HookDispatchTouchEvent", this);
 
                 return false;
             }
@@ -321,7 +319,6 @@ public class ThreadDetailActivity extends BaseActivity {
             @Override
             public void onScaleChanged(WebView view, float oldScale, float newScale) {
                 super.onScaleChanged(view, oldScale, newScale);
-                webViewContentScale = newScale;
             }
         });
         webViewContent.setWebChromeClient(new WebChromeClient());
@@ -337,15 +334,15 @@ public class ThreadDetailActivity extends BaseActivity {
     }
 
     private boolean isWebViewToBottom() {
-//        if (webViewContentScale == 0) {
-//            webViewContentScale = webViewContent.getScale();
-//        }
+        //if (webViewContentScale == 0) {
+        //    webViewContentScale = webViewContent.getScale();
+        //}
         //WebView的总高度
         float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContent.getScale());
         //WebView的现高度
         float webViewCurrentHeight = (webViewContent.getHeight() + webViewContent.getScrollY());
-
-        return webViewCurrentHeight >= webViewContentHeight;
+        System.out.println(webViewCurrentHeight + ","+webViewContentHeight);
+        return webViewCurrentHeight >= webViewContentHeight - 20;
     }
 
     private boolean handleUrl(String url) {

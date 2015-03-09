@@ -12,10 +12,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:gravity="bottom"
-		sothree:dragView="@+id/dragView"
-		sothree:panelHeight="?android:attr/actionBarSize"
-		sothree:paralaxOffset="100dp"
-		sothree:shadowHeight="4dp">
+		sothree:umanoDragView="@+id/dragView"
+		sothree:umanoPanelHeight="?android:attr/actionBarSize"
+		sothree:umanoParalaxOffset="100dp"
+		sothree:umanoShadowHeight="4dp">
 
 		<!-- MAIN CONTENT -->
 
