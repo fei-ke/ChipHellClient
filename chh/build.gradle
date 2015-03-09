@@ -26,8 +26,8 @@ android {
 
 
     defaultConfig {
-        versionCode 10
-        versionName "1.2.3"
+        versionCode 11
+        versionName "1.2.4"
         minSdkVersion 14
         targetSdkVersion 21
     }
@@ -77,7 +77,7 @@ android {
         compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
         compile 'org.androidannotations:androidannotations:3.2'
         compile 'com.android.support:support-v4:21.0.+'
-        compile 'com.sothree.slidinguppanel:library:+'
+        compile 'com.sothree.slidinguppanel:library:3.0.0'
         compile 'com.diegocarloslima:fgelv:0.1.+@aar'
         compile 'de.greenrobot:eventbus:2.4.0'
         compile 'org.jsoup:jsoup:1.8.1'
