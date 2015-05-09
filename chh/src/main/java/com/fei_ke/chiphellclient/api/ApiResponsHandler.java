@@ -64,16 +64,21 @@ public abstract class ApiResponsHandler<T> extends TextHttpResponseHandler {
     @Override
     // 后台线程解析
     public void onSuccess(int statusCode, Header[] headers, String responseString) {
-        T t = parseResponse(responseString);
-
-        sendMessage(obtainMessage(PARSED_MESSAGE, t));
+        try {
+            T t = parseResponse(responseString);
+            sendMessage(obtainMessage(PARSED_MESSAGE, t));
+        } catch (Throwable e) {
+            sendFailureMessage(statusCode, headers, responseString.getBytes(), e);
+        }
 
     }
 
     @Override
     public void onCache(String cacheString) {
-        T t = parseResponse(cacheString);
-        sendMessage(obtainMessage(PARSE_CACHE_MESSAGE, t));
+        try {
+            T t = parseResponse(cacheString);
+            sendMessage(obtainMessage(PARSE_CACHE_MESSAGE, t));
+        } catch (Throwable t) { }
     }
 
     public abstract T parseResponse(String responseString);
