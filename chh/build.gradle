@@ -26,8 +26,8 @@ android {
 
 
     defaultConfig {
-        versionCode 11
-        versionName "1.2.4"
+        versionCode 12
+        versionName "1.2.5"
         minSdkVersion 14
         targetSdkVersion 21
     }
@@ -42,13 +42,22 @@ android {
     productFlavors.all { flavor ->
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
+    signingConfigs {
+        chh {
+            storeFile file("../" + chh_storeFile)
+            storePassword chh_storePassword
+            keyAlias chh_keyAlias
+            keyPassword chh_keyPassword
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),'proguard-project.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            signingConfig signingConfigs.chh
         }
         debug {
-
+            signingConfig signingConfigs.chh
         }
     }
     lintOptions {
