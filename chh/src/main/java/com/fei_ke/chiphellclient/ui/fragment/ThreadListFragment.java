@@ -1,12 +1,12 @@
 package com.fei_ke.chiphellclient.ui.fragment;
 
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
+import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -318,7 +318,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         if (mPlate.isSubPlate() && plates == null) {
             return;
         }
-        ActionBar actionBar = getActivity().getActionBar();
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         if (actionBar == null || plates == null || plates.size() == 0) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
@@ -329,7 +329,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
 
         actionBar.setDisplayShowTitleEnabled(false);
         SpinnerAdapter adapter = new ArrayAdapter<Plate>(getActivity(), R.layout.main_spinner_item, plates);
-        actionBar.setListNavigationCallbacks(adapter, new OnNavigationListener() {
+        actionBar.setListNavigationCallbacks(adapter, new android.support.v7.app.ActionBar.OnNavigationListener() {
 
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {

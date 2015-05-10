@@ -6,19 +6,12 @@ import android.preference.EditTextPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.text.TextUtils;
+import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.utils.GlobalSetting;
-import com.fei_ke.chiphellclient.utils.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import me.imid.swipebacklayout.lib.SwipeBackLayout;
-import me.imid.swipebacklayout.lib.app.SwipeBackPreferenceActivity;
 
 /**
  * 设置页面
@@ -26,7 +19,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackPreferenceActivity;
  * @author fei-ke
  * @2014年6月28日
  */
-public class SettingActivity extends SwipeBackPreferenceActivity implements OnPreferenceChangeListener {
+public class SettingActivity extends PreferenceActivity implements OnPreferenceChangeListener {
 
     private MultiSelectListPreference mSwipeEdge;
     private EditTextPreference mForumAddress;
@@ -36,10 +29,11 @@ public class SettingActivity extends SwipeBackPreferenceActivity implements OnPr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.setting);
-        getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
+        //TODO fei-ke 2015/5/3 滑动返回
+        //getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.open_source_notices);
-        BaseActivity.initActionBar(this);
+        //BaseActivity.initActionBar(this);
         getListView().setBackgroundResource(R.color.background_light);
 
         setSwipeEdge();
@@ -55,7 +49,7 @@ public class SettingActivity extends SwipeBackPreferenceActivity implements OnPr
     }
 
     private void setSwipeEdge() {
-        mSwipeEdge = (MultiSelectListPreference) findPreference(GlobalSetting.SWIPE_BACK_EDGE);
+       /* mSwipeEdge = (MultiSelectListPreference) findPreference(GlobalSetting.SWIPE_BACK_EDGE);
         int edge = GlobalSetting.getSwipeBackEdge();
 
         Set<String> edges = new HashSet<String>();
@@ -74,7 +68,7 @@ public class SettingActivity extends SwipeBackPreferenceActivity implements OnPr
         }
         mSwipeEdge.setValues(edges);
         mSwipeEdge.setSummary(summary.toString());
-        mSwipeEdge.setOnPreferenceChangeListener(this);
+        mSwipeEdge.setOnPreferenceChangeListener(this);*/
     }
 
     @Override
@@ -100,7 +94,7 @@ public class SettingActivity extends SwipeBackPreferenceActivity implements OnPr
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference == mSwipeEdge) {
+       /* if (preference == mSwipeEdge) {
             Set<String> newValues = (Set<String>) newValue;
             int edge = 0;
             StringBuilder summary = new StringBuilder();
@@ -138,7 +132,7 @@ public class SettingActivity extends SwipeBackPreferenceActivity implements OnPr
             mForumAddress.setSummary(newAddress);
             ToastUtil.show(this, "需重新启动应用生效");
             return true;
-        }
+        }*/
         return false;
     }
 

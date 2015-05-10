@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onAfterViews() {
         // 不允许滑动返回
-        getSwipeBackLayout().setEnableGesture(false);
+        //getSwipeBackLayout().setEnableGesture(false);
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
@@ -74,8 +74,8 @@ public class MainActivity extends BaseActivity {
         // .replace(R.id.left_frame, mPlateListFragment)
         // .commit();
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, /* host Activity */

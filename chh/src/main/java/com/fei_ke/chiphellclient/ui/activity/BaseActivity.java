@@ -1,19 +1,16 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.utils.GlobalSetting;
 import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
  * Activity基类
@@ -22,7 +19,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
  * @2014-6-14
  */
 @EActivity
-public abstract class BaseActivity extends SwipeBackActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     protected MenuItem menuItemRefresh;
     boolean mIsRefreshing = true;
 
@@ -43,7 +40,7 @@ public abstract class BaseActivity extends SwipeBackActivity {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         initActionBar(this);
-        getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
+        //getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
     }
 
     @Override
@@ -90,9 +87,9 @@ public abstract class BaseActivity extends SwipeBackActivity {
         }
     }
 
-    public static void initActionBar(Activity activity) {
-        activity.getActionBar().setDisplayHomeAsUpEnabled(true);
-       /* if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
+    public static void initActionBar(AppCompatActivity activity) {
+       /* activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
             SystemBarTintManager tintManager = new SystemBarTintManager(activity);
             tintManager.setStatusBarTintEnabled(true);
             tintManager.setNavigationBarTintEnabled(true);

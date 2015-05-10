@@ -120,7 +120,7 @@ public class ThreadDetailActivity extends BaseActivity {
 
 
         setTitle(mPlate.getTitle());
-        getActionBar().setSubtitle(mThread.getTitle());
+        getSupportActionBar().setSubtitle(mThread.getTitle());
         mPostPageAdapter = new PostPageAdapter(getSupportFragmentManager(), mThread);
         viewPagerPost.setAdapter(mPostPageAdapter);
 
