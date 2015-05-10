@@ -41,7 +41,7 @@ public class ChhApi {
      * 获取版块列表
      */
     public void getPlateGroups(Context context, ApiCallBack<List<PlateGroup>> apiCallBack) {
-        getAsyncHttpClient().get(context, Constants.BASE_URL + "forum.php?mobile=yes", true,
+        getAsyncHttpClient().get(context, Constants.BASE_URL + "forum.php?forumlist=1&mobile=1", true,
                 new ApiResponsHandler<List<PlateGroup>>(apiCallBack) {
 
                     @Override

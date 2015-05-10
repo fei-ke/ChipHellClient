@@ -13,7 +13,19 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.umeng.update.UmengUpdateAgent;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ChhApplication extends Application {
     private static ChhApplication instance;
@@ -68,9 +80,44 @@ public class ChhApplication extends Application {
                         // .memoryCache(new LRULimitedMemoryCache(40 * 1024 * 1024))
                         // .writeDebugLogs() // Remove for release app
                 .defaultDisplayImageOptions(defaultDisplayImageOptions)
+                .imageDownloader(new ChhBaseImageDownloader(this))
                 .build();
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
+
+    }
+
+    class ChhBaseImageDownloader extends BaseImageDownloader {
+
+        public ChhBaseImageDownloader(Context context) {
+            super(context);
+        }
+
+        public ChhBaseImageDownloader(Context context, int connectTimeout, int readTimeout) {
+            super(context, connectTimeout, readTimeout);
+        }
+
+        protected InputStream getStreamFromNetwork(String imageUri, Object extra) throws IOException {
+
+            HttpResponse response = getResponse(imageUri);
+            int statusCode = response.getStatusLine().getStatusCode();
+            int redirectCount = 0;
+
+            while (statusCode / 100 == 3 && redirectCount < MAX_REDIRECT_COUNT) {
+                response = getResponse(response.getFirstHeader("Location").getValue());
+                statusCode = response.getStatusLine().getStatusCode();
+                redirectCount++;
+            }
+            return response.getEntity().getContent();
+        }
+
+        protected HttpResponse getResponse(String url) throws IOException {
+            HttpParams params = new BasicHttpParams();
+            HttpClient httpClient = new DefaultHttpClient(params);
+            HttpUriRequest request = new HttpGet(url);
+            return httpClient.execute(request);
+        }
+
     }
 
     public static ChhApplication getInstance() {
