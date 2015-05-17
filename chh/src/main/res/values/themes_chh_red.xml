@@ -22,8 +22,6 @@
         <item name="android:listChoiceBackgroundIndicator">@drawable/chh_red_list_selector_holo_light</item>
         <item name="android:activatedBackgroundIndicator">@drawable/chh_red_activated_background_holo_light</item>
         <item name="android:fastScrollThumbDrawable">@drawable/chh_red_fastscroll_thumb_holo</item>
-
-	    <item name="spbStyle">@style/GNowProgressBar</item>
     </style>
 
     <style name="MainActivityTheme" parent="chh_red">

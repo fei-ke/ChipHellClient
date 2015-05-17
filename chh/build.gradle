@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:latest.integration'
     }
 }
 repositories {
@@ -53,6 +53,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
             signingConfig signingConfigs.chh
         }
@@ -92,9 +93,9 @@ android {
         compile 'de.greenrobot:eventbus:latest.integration'
         compile 'org.jsoup:jsoup:latest.integration'
         compile 'com.umeng.analytics:analytics:latest.integration'
+        compile 'in.srain.cube:ultra-ptr:1.0.9'
 
         apt "org.androidannotations:androidannotations:latest.integration"
-        compile project(':libraries:ActionBarPullToRefresh')
         compile project(':libraries:AsyncHttpClient')
         compile project(':libraries:QuickReturn')
 //        compile project(':libraries:SwipeBack')

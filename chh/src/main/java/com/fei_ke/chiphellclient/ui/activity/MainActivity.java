@@ -1,27 +1,28 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.fei_ke.chiphellclient.R;
+import com.fei_ke.chiphellclient.api.ApiCallBack;
+import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.bean.AppUpdate;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
-import com.umeng.update.UmengUpdateAgent;
-import com.umeng.update.UmengUpdateListener;
-import com.umeng.update.UpdateResponse;
-import com.umeng.update.UpdateStatus;
 
 import org.afinal.simplecache.ACache;
 import org.androidannotations.annotations.EActivity;
@@ -200,26 +201,25 @@ public class MainActivity extends BaseActivity {
     }
 
     private void umengUpdate() {
-        UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+        new ChhApi().checkAppUpdate(new ApiCallBack<AppUpdate>() {
             @Override
-            public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
-                switch (updateStatus) {
-                    case UpdateStatus.Yes: // has update
-                        //UmengUpdateAgent.showUpdateDialog(MainActivity.this, updateInfo);
-                        break;
-                    case UpdateStatus.No: // has no update
-                        Toast.makeText(MainActivity.this, "没有新版本哦", Toast.LENGTH_SHORT).show();
-                        break;
-                    case UpdateStatus.NoneWifi: // none wifi
-                        Toast.makeText(MainActivity.this, "没有wifi连接， 只在wifi下更新", Toast.LENGTH_SHORT).show();
-                        break;
-                    case UpdateStatus.Timeout: // time out
-                        Toast.makeText(MainActivity.this, "检查更新超时", Toast.LENGTH_SHORT).show();
-                        break;
-                }
+            public void onSuccess(final AppUpdate result) {
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(result.getName())
+                        .setMessage(result.getVersionShort() + "\n" + result.getChangelog())
+                        .setPositiveButton("更新", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(result.getInstallUrl()));
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .create();
+                alertDialog.show();
             }
         });
-        UmengUpdateAgent.forceUpdate(this);
     }
 
     protected void refresh() {

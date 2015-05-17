@@ -3,6 +3,7 @@ package com.fei_ke.chiphellclient.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
@@ -48,6 +49,8 @@ public class PlateListFragment extends BaseContentFragment {
 
     @ViewById(R.id.expandableList_plates)
     protected FloatingGroupExpandableListView mExpandableListView;
+    @ViewById(R.id.swipeRefreshLayout)
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
     private PlateListAdapter mPlateListAdapter;
     private List<PlateGroup> mPlateGroups = new ArrayList<PlateGroup>();
@@ -75,7 +78,13 @@ public class PlateListFragment extends BaseContentFragment {
 
     @Override
     protected void onAfterViews() {
-
+        swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.gplus_colors));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                update();
+            }
+        });
         mUserView = UserView.newInstance(getActivity());
         mUserView.setOnClickListener(new OnClickListener() {
 
@@ -176,6 +185,7 @@ public class PlateListFragment extends BaseContentFragment {
             @Override
             public void onStart() {
                 mMainActivity.onStartRefresh();
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override

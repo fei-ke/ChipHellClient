@@ -1,5 +1,4 @@
 include ':chh'
-include ':libraries:ActionBarPullToRefresh'
 include ':libraries:AsyncHttpClient'
 include ':libraries:QuickReturn'
 include ':libraries:SwipeBack'

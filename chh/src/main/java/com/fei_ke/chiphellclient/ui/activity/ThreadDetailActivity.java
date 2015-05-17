@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.FloatMath;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,11 +51,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
 /**
  * 帖子内容
  *
@@ -92,7 +88,7 @@ public class ThreadDetailActivity extends BaseActivity {
     MySlidingUpPanelLayout mPanelLayout;
 
     @ViewById(R.id.refreshLayout)
-    PullToRefreshLayout mRefreshLayout;
+    SwipeRefreshLayout mRefreshLayout;
 
     @ViewById
     TextView textViewTotalPage;
@@ -124,19 +120,20 @@ public class ThreadDetailActivity extends BaseActivity {
         mPostPageAdapter = new PostPageAdapter(getSupportFragmentManager(), mThread);
         viewPagerPost.setAdapter(mPostPageAdapter);
 
-        OnRefreshListener onRefreshListener = new OnRefreshListener() {
+        mRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.gplus_colors));
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefreshStarted(View view) {
+            public void onRefresh() {
                 getPostList();
             }
-        };
-        ActionBarPullToRefresh.from(this)
-                .allChildrenArePullable()
-                .listener(onRefreshListener)
-                .options(Options.create()
-                        .scrollDistance(.30f)
-                        .build())
-                .setup(mRefreshLayout);
+        });
+        //ActionBarPullToRefresh.from(this)
+        //        .allChildrenArePullable()
+        //        .listener(onRefreshListener)
+        //        .options(Options.create()
+        //                .scrollDistance(.30f)
+        //                .build())
+        //        .setup(mRefreshLayout);
 
         spinnerPage.setTag(0);
         spinnerPage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -505,7 +502,7 @@ public class ThreadDetailActivity extends BaseActivity {
             public void onFinish() {
                 mIsFreshing = false;
                 //刷新完成
-                mRefreshLayout.setRefreshComplete();
+                mRefreshLayout.setRefreshing(false);
                 onEndRefresh();
             }
 

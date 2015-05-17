@@ -2,14 +2,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.diegocarloslima.fgelv.lib.FloatingGroupExpandableListView
-        android:id="@+id/expandableList_plates"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:dividerHeight="0dp"
-        android:divider="@null"
-        android:scrollbars="none"
-        android:groupIndicator="@null"/>
+        android:layout_height="match_parent">
 
+        <com.diegocarloslima.fgelv.lib.FloatingGroupExpandableListView
+            android:id="@+id/expandableList_plates"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:groupIndicator="@null"
+            android:scrollbars="none"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

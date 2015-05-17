@@ -1,11 +1,12 @@
 package com.fei_ke.chiphellclient.ui.fragment;
 
-import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
 import com.fei_ke.chiphellclient.ui.adapter.ThreadListAdapter;
 import com.fei_ke.chiphellclient.ui.customviews.ExtendListView;
 import com.fei_ke.chiphellclient.ui.customviews.PlateHead;
+import com.fei_ke.chiphellclient.utils.SmileyPickerUtility;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
 
 import org.androidannotations.annotations.EFragment;
@@ -46,11 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * 帖子列表
@@ -63,7 +60,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         OnItemClickListener, AdapterView.OnItemLongClickListener {
     private static final int REQUEST_CODE_LOGIN = 100;
     @ViewById(R.id.refreshLayout)
-    protected PullToRefreshLayout refreshLayout;
+    protected SwipeRefreshLayout refreshLayout;
 
     @ViewById(R.id.listView_threads)
     protected ExtendListView mListViewThreads;
@@ -82,8 +79,8 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
     @ViewById(R.id.layout_fast_reply)
     protected View layoutFastReply;
 
-    @ViewById(R.id.bottomProgress)
-    protected SmoothProgressBar bottomProgressBar;
+    //@ViewById(R.id.bottomProgress)
+    //protected SmoothProgressBar bottomProgressBar;
 
     @FragmentArg
     protected Plate mPlate;
@@ -130,19 +127,21 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             mThreadListAdapter = new ThreadListAdapter();
         }
 
-        OnRefreshListener onRefreshListener = new OnRefreshListener() {
+        refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.gplus_colors));
+        refreshLayout.setProgressViewOffset(false, 0, SmileyPickerUtility.dip2px(getActivity(), 64));
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefreshStarted(View view) {
+            public void onRefresh() {
                 getThreadList();
             }
-        };
-        ActionBarPullToRefresh.from(getActivity())
-                .allChildrenArePullable()
-                .listener(onRefreshListener)
-                .options(Options.create()
-                        .scrollDistance(.30f)
-                        .build())
-                .setup(refreshLayout);
+        });
+        //ActionBarPullToRefresh.from(getActivity())
+        //        .allChildrenArePullable()
+        //        .listener(onRefreshListener)
+        //        .options(Options.create()
+        //                .scrollDistance(.30f)
+        //                .build())
+        //        .setup(refreshLayout);
 
 
         mListViewThreads.setAdapter(mThreadListAdapter);
@@ -151,20 +150,20 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         mListViewThreads.setOnItemClickListener(this);
         mThreadListAdapter.setOnFastReplylistener(this);
         // mListViewThreads.getRefreshableView().setOnScrollListener(onScrollListener);
-//        mListViewThreads.setOnRefreshListener(new OnRefreshListener<ListView>() {
-//
-//            @Override
-//            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-//                String label = DateUtils.formatDateTime(getActivity(),
-//                        System.currentTimeMillis(),
-//                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-//                                | DateUtils.FORMAT_ABBREV_ALL);
-//
-//                // Update the LastUpdatedLabel
-//                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-//
-//            }
-//        });
+        //        mListViewThreads.setOnRefreshListener(new OnRefreshListener<ListView>() {
+        //
+        //            @Override
+        //            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+        //                String label = DateUtils.formatDateTime(getActivity(),
+        //                        System.currentTimeMillis(),
+        //                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
+        //                                | DateUtils.FORMAT_ABBREV_ALL);
+        //
+        //                // Update the LastUpdatedLabel
+        //                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+        //
+        //            }
+        //        });
         mListViewThreads.setOnLastItemVisibleListener(new ExtendListView.OnLastItemVisibleListener() {
 
             @Override
@@ -251,9 +250,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                 if (page == 1) {
                     refreshLayout.setRefreshing(true);
                 } else {
-                    bottomProgressBar.setVisibility(View.VISIBLE);
-                    bottomProgressBar.setProgress(bottomProgressBar.getMax());
-                    bottomProgressBar.setIndeterminate(true);
+                    //bottomProgressBar.setVisibility(View.VISIBLE);
+                    //bottomProgressBar.setProgress(bottomProgressBar.getMax());
+                    //bottomProgressBar.setIndeterminate(true);
                 }
             }
 
@@ -303,9 +302,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public void onFinish() {
                 mIsFreshing = false;
-                refreshLayout.setRefreshComplete();
-                bottomProgressBar.setIndeterminate(false);
-                bottomProgressBar.setVisibility(View.INVISIBLE);
+                refreshLayout.setRefreshing(false);
+                //bottomProgressBar.setIndeterminate(false);
+                //bottomProgressBar.setVisibility(View.INVISIBLE);
                 mMainActivity.onEndRefresh();
             }
 
@@ -318,7 +317,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         if (mPlate.isSubPlate() && plates == null) {
             return;
         }
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar == null || plates == null || plates.size() == 0) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
