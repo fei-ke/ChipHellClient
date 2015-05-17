@@ -8,13 +8,10 @@ import android.text.TextUtils;
 import android.webkit.CookieSyncManager;
 
 import com.fei_ke.chiphellclient.utils.LogMessage;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.umeng.update.UmengUpdateAgent;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -48,13 +45,9 @@ public class ChhApplication extends Application {
             e.printStackTrace();
         }
 
-        umeng();
+        //TODO fei-ke 2015/5/17 updateApp
     }
 
-    private void umeng() {
-        UmengUpdateAgent.setUpdateOnlyWifi(false);
-        UmengUpdateAgent.update(this);
-    }
 
     public String getFormHash() {
         return formHash;
@@ -67,18 +60,15 @@ public class ChhApplication extends Application {
     // 初始化ImageLoader
     private void initImageLoader() {
         DisplayImageOptions defaultDisplayImageOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true).cacheOnDisc(true)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
                 .showImageForEmptyUri(R.drawable.logo)
                 .showImageOnFail(R.drawable.logo)
                 .showImageOnLoading(R.drawable.logo)
                         // .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-                .threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()
-                .discCacheFileNameGenerator(new Md5FileNameGenerator())
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                        // .memoryCache(new LRULimitedMemoryCache(40 * 1024 * 1024))
-                        // .writeDebugLogs() // Remove for release app
+                .denyCacheImageMultipleSizesInMemory()
                 .defaultDisplayImageOptions(defaultDisplayImageOptions)
                 .imageDownloader(new ChhBaseImageDownloader(this))
                 .build();
