@@ -29,6 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @AfterViews
     final protected void onPrivateAfterViews() {
         onAfterViews();
+        initActionBar(this);
     }
 
     /**
@@ -37,12 +38,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void onAfterViews();
 
     @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        initActionBar(this);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         //getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
     }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -88,7 +87,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public static void initActionBar(AppCompatActivity activity) {
-       /* activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       /*
         if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
             SystemBarTintManager tintManager = new SystemBarTintManager(activity);
             tintManager.setStatusBarTintEnabled(true);

@@ -2,8 +2,6 @@ package com.fei_ke.chiphellclient;
 
 import android.app.Application;
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.webkit.CookieSyncManager;
 
@@ -39,11 +37,7 @@ public class ChhApplication extends Application {
         LogMessage.setDebug(BuildConfig.DEBUG);
 
         initImageLoader();
-        try {
-            brandGlowEffect(this, getResources().getColor(R.color.chh_red));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         //TODO fei-ke 2015/5/17 updateApp
     }
@@ -123,14 +117,5 @@ public class ChhApplication extends Application {
         return !TextUtils.isEmpty(formHash);
     }
 
-    static void brandGlowEffect(Context context, int brandColor) {
-        // glow
-        int glowDrawableId = context.getResources().getIdentifier("overscroll_glow", "drawable", "android");
-        Drawable androidGlow = context.getResources().getDrawable(glowDrawableId);
-        androidGlow.setColorFilter(brandColor, PorterDuff.Mode.SRC_IN);
-        // edge
-        int edgeDrawableId = context.getResources().getIdentifier("overscroll_edge", "drawable", "android");
-        Drawable androidEdge = context.getResources().getDrawable(edgeDrawableId);
-        androidEdge.setColorFilter(brandColor, PorterDuff.Mode.SRC_IN);
-    }
+
 }

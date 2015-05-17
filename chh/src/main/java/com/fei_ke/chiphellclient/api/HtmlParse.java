@@ -141,7 +141,7 @@ class HtmlParse {
 
                 threads.add(thread);
             } catch (Exception e) {// 当有子版块时
-                e.printStackTrace();
+                //e.printStackTrace();
                 if (plates == null) {
                     plates = new ArrayList<Plate>();
                 }

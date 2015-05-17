@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,8 @@ import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
+import com.fei_ke.chiphellclient.utils.SmileyPickerUtility;
+import com.fei_ke.chiphellclient.utils.ThemeUtil;
 
 import org.afinal.simplecache.ACache;
 import org.androidannotations.annotations.EActivity;
@@ -57,6 +60,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onAfterViews() {
+        ThemeUtil.brandGlowEffect(this);
+
         // 不允许滑动返回
         //getSwipeBackLayout().setEnableGesture(false);
 
@@ -74,7 +79,9 @@ public class MainActivity extends BaseActivity {
         // getSupportFragmentManager().beginTransaction()
         // .replace(R.id.left_frame, mPlateListFragment)
         // .commit();
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(SmileyPickerUtility.dip2px(this, 8));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 

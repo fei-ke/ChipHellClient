@@ -9,7 +9,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/chh_red" />
+        android:background="?colorPrimary" />
 
     <TextView
         android:id="@+id/textView_hint"
@@ -33,7 +33,7 @@
             android:layout_gravity="bottom"
             android:layout_weight="1" >
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/editText_fast_reply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
