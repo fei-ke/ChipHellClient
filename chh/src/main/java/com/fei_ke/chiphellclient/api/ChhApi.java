@@ -6,6 +6,7 @@ import android.webkit.CookieManager;
 
 import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
+import com.fei_ke.chiphellclient.bean.AppUpdate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.PostListWrap;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
@@ -18,6 +19,8 @@ import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
 
 import java.util.List;
 
@@ -261,6 +264,17 @@ public class ChhApi {
                 return HtmlParse.parseMessageText(responseString);
             }
         });
+    }
+
+    public void checkAppUpdate(ApiCallBack<AppUpdate> apiCallBack) {
+        new AsyncHttpClient().get("http://fir.im/api/v2/app/version/548cf2e12b17bad661000596",
+                new ApiResponsHandler<AppUpdate>(apiCallBack) {
+
+                    @Override
+                    public AppUpdate parseResponse(String responseString) {
+                        return new AppUpdate().fromJson(responseString);
+                    }
+                });
     }
 
     private AsyncHttpClient getAsyncHttpClient() {
