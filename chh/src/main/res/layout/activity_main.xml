@@ -1,6 +1,8 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
@@ -13,16 +15,21 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/action_bar"
+            style="@style/MainToolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"/>
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="?attr/actionBarPopupTheme"
+            app:theme="?attr/actionBarTheme" />
 
         <!-- The main content view -->
         <FrameLayout
             android:id="@+id/content_frame"
+            style="@style/MainViewArea"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:windowContentOverlay="@drawable/toolbar_dropshadow" />
     </LinearLayout>
     <!-- The navigation drawer -->
 
@@ -37,7 +44,8 @@
             android:id="@+id/fragment_plate_list"
             android:name="com.fei_ke.chiphellclient.ui.fragment.PlateListFragment_"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_plate_list" />
     </FrameLayout>
 </android.support.v4.widget.DrawerLayout>
 

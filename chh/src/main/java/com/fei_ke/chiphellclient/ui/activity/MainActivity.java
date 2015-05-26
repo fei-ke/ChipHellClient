@@ -24,7 +24,6 @@ import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
-import com.fei_ke.chiphellclient.utils.SmileyPickerUtility;
 import com.fei_ke.chiphellclient.utils.ThemeUtil;
 
 import org.afinal.simplecache.ACache;
@@ -81,7 +80,6 @@ public class MainActivity extends BaseActivity {
         // .commit();
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setElevation(SmileyPickerUtility.dip2px(this, 8));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 

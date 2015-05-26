@@ -3,13 +3,17 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="chh_red" parent="@style/_chh_red"/>
+    <style name="chh_red" parent="@style/_chh_red" />
+
+    <style name="MainViewArea">
+        <item name="android:foreground">?android:windowContentOverlay</item>
+    </style>
 
     <style name="_chh_red" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/chh_red</item>
         <item name="colorPrimaryDark">@color/dark_red</item>
         <item name="colorAccent">@color/chh_red</item>
-
+        <item name="android:windowContentOverlay">@drawable/bottom_shadow</item>
 
         <!--<item name="android:homeAsUpIndicator">@drawable/home_up_indicator</item>-->
         <!--  <item name="android:windowIsTranslucent">true</item>
