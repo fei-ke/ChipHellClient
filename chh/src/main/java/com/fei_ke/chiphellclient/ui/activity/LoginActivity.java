@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -28,6 +28,9 @@ public class LoginActivity extends BaseActivity {
     @ViewById(R.id.webView)
     WebView mWebView;
 
+    @ViewById
+    SwipeRefreshLayout refreshLayout;
+
     public static Intent getStartIntent(Context context) {
         return LoginActivity_.intent(context).get();
     }
@@ -39,6 +42,15 @@ public class LoginActivity extends BaseActivity {
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         final String loginUrl = Constants.BASE_URL + "member.php?mod=logging&action=login&mobile=2";
+
+        refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.gplus_colors));
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mWebView.reload();
+            }
+        });
+
         mWebView.loadUrl(loginUrl);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -56,32 +68,12 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                onStartRefresh();
+                postStartRefresh();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                onEndRefresh();
-                String string = CookieManager.getInstance().getCookie(Constants.BASE_URL);
-
-                // PersistentCookieStore cookieStore = new PersistentCookieStore(getApplicationContext());
-                // cookieStore.clear();
-                // String[] keyValueSets = CookieManager.getInstance().getCookie(Constants.BASE_URL).split(";");
-                // for(String cookie : keyValueSets)
-                // {
-                // String[] keyValue = cookie.split("=");
-                // String key = keyValue[0];
-                // String value = "";
-                // if(keyValue.length>1) value = keyValue[1];
-                // BasicClientCookie2 cookieForRequest = (BasicClientCookie2) new BasicClientCookie2(key, value);
-                // cookieForRequest.setDomain(Constants.BASE_URL);
-                //
-                // cookieForRequest.setPath("/");
-                // cookieStore.addCookie(cookieForRequest);
-                // }
-
+                postEndRefresh();
             }
         });
     }
@@ -106,23 +98,14 @@ public class LoginActivity extends BaseActivity {
      * 开始刷新
      */
     public void onStartRefresh() {
-        mIsRefreshing = true;
-
-        if (menuItemRefresh != null) {
-            menuItemRefresh.setActionView(R.layout.indeterminate_progress_action);
-        }
+        refreshLayout.setRefreshing(true);
     }
 
     /**
      * 刷新结束
      */
     public void onEndRefresh() {
-        mIsRefreshing = false;
-
-        if (menuItemRefresh != null) {
-            menuItemRefresh.setActionView(null);
-            menuItemRefresh.setIcon(R.drawable.white_ptr_rotate);
-        }
+        refreshLayout.setRefreshing(false);
     }
 
     @Override

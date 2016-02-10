@@ -12,8 +12,9 @@ import android.widget.Toast;
 import com.etiennelawlor.quickreturn.library.enums.QuickReturnType;
 import com.etiennelawlor.quickreturn.library.listeners.SpeedyQuickReturnListViewOnScrollListener;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.api.support.ApiCallBack;
+import com.fei_ke.chiphellclient.api.support.ApiHelper;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PostListWrap;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
@@ -80,7 +81,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
         mRefreshListView.setOnLastItemVisibleListener(new ExtendListView.OnLastItemVisibleListener() {
             @Override
             public void onLastItemVisible() {
-//                showReplyPanel();
+                //                showReplyPanel();
             }
         });
 
@@ -115,14 +116,14 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
     private void onEndRefresh() {
         Activity activity = getActivity();
         if (activity instanceof ThreadDetailActivity) {
-            ((ThreadDetailActivity) activity).onEndRefresh();
+            ((ThreadDetailActivity) activity).postEndRefresh();
         }
     }
 
     private void onStartRefresh() {
         Activity activity = getActivity();
         if (activity instanceof ThreadDetailActivity) {
-            ((ThreadDetailActivity) activity).onStartRefresh();
+            ((ThreadDetailActivity) activity).postStartRefresh();
         }
     }
 
@@ -137,7 +138,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         // TODO 第一条为主贴，无法引用
         if (mPage == 1 && id == 0) {
-//            mFastReplyFragment.setPlateAndThread(mPlate, mThread);
+            //            mFastReplyFragment.setPlateAndThread(mPlate, mThread);
             return true;
         }
 
@@ -148,8 +149,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
             Toast.makeText(getActivity(), R.string.not_login, Toast.LENGTH_SHORT).show();
             return true;
         }
-        ChhApi api = new ChhApi();
-        api.prepareQuoteReply(post.getReplyUrl(), new ApiCallBack<PrepareQuoteReply>() {
+        ApiHelper.requestApi(ChhApi.prepareQuoteReply(post.getReplyUrl()), new ApiCallBack<PrepareQuoteReply>() {
             ProgressDialog dialog;
 
             @Override
@@ -205,8 +205,7 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
         if (mPage < 1) {
             mPage = 1;
         }
-        ChhApi api = new ChhApi();
-        api.getPostList(getActivity(), mThread, page, new ApiCallBack<PostListWrap>() {
+        ApiHelper.requestApi(ChhApi.getPostList(mThread, page), new ApiCallBack<PostListWrap>() {
             @Override
             public void onStart() {
                 onStartRefresh();
@@ -218,10 +217,10 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
                     return;
                 }
 
-//                if (page == 1) {
-//                    loadMainContent(result.get(0));
-//                    mPostListAdapter.clear();
-//                }
+                //                if (page == 1) {
+                //                    loadMainContent(result.get(0));
+                //                    mPostListAdapter.clear();
+                //                }
                 List<Post> posts = result.getPosts();
                 if (mPage == 1) {
                     posts.get(0).setContent("");
@@ -235,13 +234,13 @@ public class PostListFragment extends BaseFragment implements AdapterView.OnItem
                     return;
                 }
 
-//                if (page == 1) {
-//                    loadMainContent(result.get(0));
-//                    mPostListAdapter.clear();
-//
-//                    // 将该帖子设为已读
-//                    new ThreadStatusUtil(getApplicationContext()).setRead(mThread.getTid());
-//                }
+                //                if (page == 1) {
+                //                    loadMainContent(result.get(0));
+                //                    mPostListAdapter.clear();
+                //
+                //                    // 将该帖子设为已读
+                //                    new ThreadStatusUtil(getApplicationContext()).setRead(mThread.getTid());
+                //                }
                 mData = (ArrayList<Post>) result.getPosts();
                 if (mPage == 1) {
                     mData.get(0).setContent("");

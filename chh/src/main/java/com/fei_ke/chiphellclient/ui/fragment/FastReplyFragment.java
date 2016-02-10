@@ -17,8 +17,9 @@ import android.widget.Toast;
 
 import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.api.support.ApiCallBack;
+import com.fei_ke.chiphellclient.api.support.ApiHelper;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PostListWrap;
@@ -205,8 +206,7 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
         }
         mQuoteReply.setMessage(message);
 
-        ChhApi api = new ChhApi();
-        api.quotrReply(mQuoteReply, new ReplyApiCallBack());
+        ApiHelper.requestApi(ChhApi.quotrReply(mQuoteReply), new ReplyApiCallBack());
     }
 
     void reply() {
@@ -215,8 +215,8 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
             Toast.makeText(getActivity(), "不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        ChhApi api = new ChhApi();
-        api.reply(mPlate.getFid(), mThread.getTid(), ChhApplication.getInstance().getFormHash(), message, new ReplyApiCallBack());
+        ApiHelper.requestApi(ChhApi.reply(mPlate.getFid(), mThread.getTid(), ChhApplication.getInstance().getFormHash(), message)
+                , new ReplyApiCallBack());
     }
 
     public void show() {

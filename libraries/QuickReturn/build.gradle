@@ -1,20 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.1'
+    compileSdkVersion CHH_COMPILE_SDK_VERSION
+    buildToolsVersion CHH_BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 }
 

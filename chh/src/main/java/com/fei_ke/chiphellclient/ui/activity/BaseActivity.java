@@ -1,16 +1,25 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.fei_ke.chiphellclient.R;
+import com.fei_ke.chiphellclient.utils.GlobalSetting;
 import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
  * Activity基类
@@ -19,9 +28,10 @@ import org.androidannotations.annotations.EActivity;
  * @2014-6-14
  */
 @EActivity
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends SwipeBackActivity {
     protected MenuItem menuItemRefresh;
     boolean mIsRefreshing = true;
+    private Toolbar toolbar;
 
     /**
      * 切勿调用和复写此方法
@@ -29,7 +39,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @AfterViews
     final protected void onPrivateAfterViews() {
         onAfterViews();
-        initActionBar(this);
     }
 
     /**
@@ -40,8 +49,50 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
+        getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
     }
+
+    @Override
+    public void setContentView(int layoutId) {
+        setContentView(View.inflate(this, layoutId, null));
+    }
+
+    @Override
+    public void setContentView(View view) {
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        if (toolbar == null) {
+            super.setContentView(R.layout.activity_base);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            FrameLayout rootLayout = (FrameLayout) findViewById(R.id.root_layout);
+            if (rootLayout != null) {
+                rootLayout.addView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            }
+        } else {
+            super.setContentView(view);
+        }
+        initToolBar(toolbar);
+
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    private void initToolBar(@NonNull Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+    }
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -58,53 +109,48 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         menuItemRefresh = menu.findItem(R.id.action_refresh);
         if (menuItemRefresh != null && mIsRefreshing) {
-            menuItemRefresh.setActionView(R.layout.indeterminate_progress_action);
+            postStartRefresh();
         }
         return super.onPrepareOptionsMenu(menu);
     }
 
-    /**
-     * 开始刷新
-     */
-    public void onStartRefresh() {
+    public void postStartRefresh() {
         mIsRefreshing = true;
 
         if (menuItemRefresh != null) {
             menuItemRefresh.setActionView(R.layout.indeterminate_progress_action);
         }
+        onStartRefresh();
+    }
+
+    /**
+     * 开始刷新
+     */
+    protected void onStartRefresh() {
+
+    }
+
+    public void postEndRefresh() {
+        mIsRefreshing = false;
+
+        if (menuItemRefresh != null) {
+            menuItemRefresh.setActionView(null);
+            menuItemRefresh.setIcon(R.drawable.ic_renew);
+        }
+        onEndRefresh();
     }
 
     /**
      * 刷新结束
      */
-    public void onEndRefresh() {
-        mIsRefreshing = false;
+    protected void onEndRefresh() {
 
-        if (menuItemRefresh != null) {
-            menuItemRefresh.setActionView(null);
-            menuItemRefresh.setIcon(R.drawable.white_ptr_rotate);
-        }
     }
 
-    public static void initActionBar(AppCompatActivity activity) {
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       /*
-        if (Build.VERSION.SDK_INT >= 19) {// 设置状态栏
-            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-            tintManager.setStatusBarTintEnabled(true);
-            tintManager.setNavigationBarTintEnabled(true);
-            tintManager.setNavigationBarAlpha(0);
-            if (activity instanceof AlbumActivity) {
-                tintManager.setStatusBarTintColor(0);
-            } else {
-                tintManager.setStatusBarTintResource(R.color.chh_red);
-                FrameLayout contentFrameLayout = (FrameLayout) activity.findViewById(android.R.id.content);
-                contentFrameLayout.setClipToPadding(false);
-                SystemBarTintManager.SystemBarConfig systemBarConfig = new SystemBarTintManager(activity).getConfig();
-                contentFrameLayout.setPadding(0, systemBarConfig.getPixelInsetTop(true), systemBarConfig.getPixelInsetRight(),
-                        systemBarConfig.getPixelInsetBottom());
-            }
-        }*/
+    public void setSubtitle(CharSequence title) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setSubtitle(title);
+        }
     }
 
     @Override

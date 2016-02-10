@@ -1,51 +1,40 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:fitsSystemWindows="true">
+    tools:context=".ui.activity.MainActivity_">
+
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context=".ui.activity.MainActivity_">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/action_bar"
-            style="@style/MainToolBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:popupTheme="?attr/actionBarPopupTheme"
-            app:theme="?attr/actionBarTheme" />
 
-        <!-- The main content view -->
+        <include layout="@layout/layout_toolbar"/>
+
         <FrameLayout
             android:id="@+id/content_frame"
             style="@style/MainViewArea"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:windowContentOverlay="@drawable/toolbar_dropshadow" />
+            tools:layout="@layout/fragment_thread_list"/>
     </LinearLayout>
-    <!-- The navigation drawer -->
 
-    <FrameLayout
-        android:id="@+id/left_frame"
-        android:layout_width="280dp"
+
+    <fragment
+        android:id="@+id/fragment_plate_list"
+        android:name="com.fei_ke.chiphellclient.ui.fragment.PlateListFragment_"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white">
-
-        <fragment
-            android:id="@+id/fragment_plate_list"
-            android:name="com.fei_ke.chiphellclient.ui.fragment.PlateListFragment_"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/fragment_plate_list" />
-    </FrameLayout>
+        tools:layout="@layout/fragment_plate_list"
+        />
 </android.support.v4.widget.DrawerLayout>
 

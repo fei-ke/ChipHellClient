@@ -2,44 +2,35 @@
 package com.fei_ke.chiphellclient.ui.activity;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.view.MenuItem;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.fei_ke.chiphellclient.R;
-import com.umeng.analytics.MobclickAgent;
 
-public class SoftwareNoticesActivity extends PreferenceActivity {
+public class SoftwareNoticesActivity extends BaseActivity {
+    @Override
+    protected void onAfterViews() {
+
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.software_notices);
-        //getSwipeBackLayout().setEdgeTrackingEnabled(GlobalSetting.getSwipeBackEdge());
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_base);
         setTitle(R.string.open_source_notices);
-        //BaseActivity.initActionBar(this);
-        getListView().setBackgroundResource(R.color.background_light);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.root_layout, new SoftwareNoticesFragment())
+                .commit();
+
+        onPrivateAfterViews();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
+    public static class SoftwareNoticesFragment extends PreferenceFragmentCompat {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+        @Override
+        public void onCreatePreferences(Bundle bundle, String s) {
+            addPreferencesFromResource(R.xml.software_notices);
         }
-        return super.onOptionsItemSelected(item);
     }
-
 }

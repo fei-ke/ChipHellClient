@@ -10,13 +10,6 @@
     </Preference>
     <Preference
         android:summary="@string/apache_license_2_0"
-        android:title="@string/Android_PullToRefresh" >
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="@string/Android_PullToRefresh_url" />
-    </Preference>
-    <Preference
-        android:summary="@string/apache_license_2_0"
         android:title="@string/Android_Universal_Image_Loader" >
         <intent
             android:action="android.intent.action.VIEW"
@@ -24,10 +17,10 @@
     </Preference>
     <Preference
         android:summary="@string/apache_license_2_0"
-        android:title="@string/android_async_http" >
+        android:title="@string/OkHttp" >
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="@string/android_async_http_url" />
+            android:data="@string/OkHttp_url" />
     </Preference>
     <Preference
         android:summary="@string/apache_license_2_0"
@@ -64,13 +57,6 @@
             android:action="android.intent.action.VIEW"
             android:data="@string/jsoup_url" />
     </Preference>
-   <!-- <Preference
-        android:summary="@string/apache_license_2_0"
-        android:title="@string/SystemBarTint" >
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="@string/SystemBarTint_url" />
-    </Preference>-->
     <Preference
         android:summary="@string/apache_license_2_0"
         android:title="@string/SwipeBackLayout" >

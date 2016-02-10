@@ -5,15 +5,14 @@
     android:gravity="center" >
 
     <ProgressBar
-        style="?android:attr/progressBarStyleSmall"
+        android:id="@+id/progressBar"
         android:layout_width="25dip"
         android:layout_gravity="left"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="15dp"
         android:layout_height="25dip"
-        android:indeterminateDrawable="@drawable/rotation_refresh"
         android:indeterminateDuration="@android:integer/config_longAnimTime"
         android:interpolator="@android:anim/linear_interpolator"
-        android:indeterminate="true" />
+        android:indeterminate="false" />
 
 </FrameLayout>

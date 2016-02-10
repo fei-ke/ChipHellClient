@@ -1,8 +1,11 @@
 package com.fei_ke.chiphellclient.ui.customviews;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.text.Html;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,6 +53,19 @@ public class UserView extends FrameLayout {
 
     public UserView(Context context) {
         super(context);
+    }
+
+    public UserView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public UserView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public UserView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     public void bindValue(User user) {

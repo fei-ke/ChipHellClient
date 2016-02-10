@@ -7,7 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,18 +19,21 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.api.support.ApiCallBack;
+import com.fei_ke.chiphellclient.api.support.ApiHelper;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateClass;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.ThreadListWrap;
 import com.fei_ke.chiphellclient.event.FavoriteChangeEvent;
+import com.fei_ke.chiphellclient.ui.activity.BaseActivity;
 import com.fei_ke.chiphellclient.ui.activity.LoginActivity;
 import com.fei_ke.chiphellclient.ui.activity.MainActivity;
 import com.fei_ke.chiphellclient.ui.activity.ThreadDetailActivity;
@@ -48,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 /**
  * 帖子列表
@@ -242,11 +246,10 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         }
         mIsFreshing = true;
         String orderBy = orderByDate ? "dateline" : null;
-        ChhApi api = new ChhApi();
-        api.getThreadList(getActivity(), url != null ? url : mPlate.getUrl(), page, orderBy, new ApiCallBack<ThreadListWrap>() {
+        ApiHelper.requestApi(ChhApi.getThreadList(url != null ? url : mPlate.getUrl(), page, orderBy), new ApiCallBack<ThreadListWrap>() {
             @Override
             public void onStart() {
-                mMainActivity.onStartRefresh();
+                mMainActivity.postStartRefresh();
                 if (page == 1) {
                     refreshLayout.setRefreshing(true);
                 } else {
@@ -305,7 +308,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
                 refreshLayout.setRefreshing(false);
                 //bottomProgressBar.setIndeterminate(false);
                 //bottomProgressBar.setVisibility(View.INVISIBLE);
-                mMainActivity.onEndRefresh();
+                mMainActivity.postEndRefresh();
             }
 
         });
@@ -317,26 +320,56 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         if (mPlate.isSubPlate() && plates == null) {
             return;
         }
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar == null || plates == null || plates.size() == 0) {
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        ActionBar actionBar = ((BaseActivity) getActivity()).getSupportActionBar();
+        Toolbar toolbar = ((BaseActivity) getActivity()).getToolbar();
+        Spinner spinner = (Spinner) toolbar.findViewById(R.id.spinner);
+
+        if (actionBar != null && (plates == null || plates.size() == 0)) {
+            //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
+            if (spinner != null) {
+                spinner.setVisibility(View.GONE);
+            }
             return;
         }
+
         // 保存子版块记录
         platesHold = plates;
 
-        actionBar.setDisplayShowTitleEnabled(false);
-        SpinnerAdapter adapter = new ArrayAdapter<Plate>(getActivity(), R.layout.main_spinner_item, plates);
-        actionBar.setListNavigationCallbacks(adapter, new android.support.v7.app.ActionBar.OnNavigationListener() {
 
-            @Override
-            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                mMainActivity.replaceContent(plates.get(itemPosition));
-                return true;
-            }
-        });
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setDisplayShowTitleEnabled(false);
+        if (spinner == null) {
+            SpinnerAdapter adapter = new ArrayAdapter<>(actionBar.getThemedContext(), R.layout.main_spinner_item, plates);
+            spinner = new Spinner(actionBar.getThemedContext());
+            spinner.setId(R.id.spinner);
+            spinner.setAdapter(adapter);
+            ((BaseActivity) getActivity()).getToolbar().addView(spinner);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    mMainActivity.replaceContent(plates.get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        } else {
+            ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
+            adapter.clear();
+            adapter.addAll(plates);
+        }
+        spinner.setVisibility(View.VISIBLE);
+        //actionBar.setListNavigationCallbacks(adapter, new android.support.v7.app.ActionBar.OnNavigationListener() {
+        //
+        //    @Override
+        //    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        //        mMainActivity.replaceContent(plates.get(itemPosition));
+        //        return true;
+        //    }
+        //});
+        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     }
 
     @Override
@@ -399,7 +432,6 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
         }
 
         final boolean isFavorite = mPlate.isFavorite();
-        final ChhApi chhApi = new ChhApi();
         ApiCallBack<String> apiCallBack = new ApiCallBack<String>() {
             @Override
             public void onSuccess(String result) {
@@ -408,9 +440,9 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             }
         };
         if (isFavorite) {//取消收藏
-            chhApi.deleteFavorite(mPlate.getFavoriteId(), ChhApplication.getInstance().getFormHash(), apiCallBack);
+            ApiHelper.requestApi(ChhApi.deleteFavorite(mPlate.getFavoriteId(), ChhApplication.getInstance().getFormHash()), apiCallBack);
         } else {
-            chhApi.favorite(mPlate.getFid(), ChhApi.TYPE_FORUM, ChhApplication.getInstance().getFormHash(), apiCallBack);
+            ApiHelper.requestApi(ChhApi.favorite(mPlate.getFid(), ChhApi.TYPE_FORUM, ChhApplication.getInstance().getFormHash()), apiCallBack);
         }
     }
 
@@ -456,6 +488,7 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
      *
      * @param event
      */
+    @Subscribe
     public void onEventMainThread(final FavoriteChangeEvent event) {
         if (event != null && event.getFavoritePlate() != null) {
             List<Plate> favoritePlate = event.getFavoritePlate();
@@ -481,12 +514,13 @@ public class ThreadListFragment extends BaseContentFragment implements OnClickLi
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item == menuItemFavorite) {
-                    new ChhApi().favorite(thread.getTid(), ChhApi.TYPE_THREAD, ChhApplication.getInstance().getFormHash(), new ApiCallBack<String>() {
-                        @Override
-                        public void onSuccess(String result) {
-                            ToastUtil.show(getActivity(), result);
-                        }
-                    });
+                    ApiHelper.requestApi(ChhApi.favorite(thread.getTid(), ChhApi.TYPE_THREAD, ChhApplication.getInstance().getFormHash())
+                            , new ApiCallBack<String>() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    ToastUtil.show(getActivity(), result);
+                                }
+                            });
                 }
                 return true;
             }

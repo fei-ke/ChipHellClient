@@ -57,4 +57,8 @@ public class LogMessage {
         LogMessage.isDebug = isDebug;
     }
 
+    public static boolean isDebug(){
+        return isDebug;
+    }
+
 }

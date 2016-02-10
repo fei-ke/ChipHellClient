@@ -1,4 +1,4 @@
 include ':chh'
-include ':libraries:AsyncHttpClient'
 include ':libraries:QuickReturn'
 include ':libraries:SwipeBack'
+include ':libraries:UmengUpdate'

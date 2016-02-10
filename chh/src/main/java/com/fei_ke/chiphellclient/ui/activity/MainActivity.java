@@ -1,30 +1,26 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ApiCallBack;
-import com.fei_ke.chiphellclient.api.ChhApi;
-import com.fei_ke.chiphellclient.bean.AppUpdate;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment;
 import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListener;
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
 import com.fei_ke.chiphellclient.utils.ThemeUtil;
+import com.fei_ke.chiphellclient.utils.ToastUtil;
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 
 import org.afinal.simplecache.ACache;
 import org.androidannotations.annotations.EActivity;
@@ -62,11 +58,10 @@ public class MainActivity extends BaseActivity {
         ThemeUtil.brandGlowEffect(this);
 
         // 不允许滑动返回
-        //getSwipeBackLayout().setEnableGesture(false);
+        getSwipeBackLayout().setEnableGesture(false);
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        // mPlateListFragment = PlateListFragment.getInstance();
         mPlateListFragment.setOnPlateClickListener(new OnPlateClickListener() {
 
             @Override
@@ -75,30 +70,13 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        // getSupportFragmentManager().beginTransaction()
-        // .replace(R.id.left_frame, mPlateListFragment)
-        // .commit();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this, /* host Activity */
-                mDrawerLayout, /* DrawerLayout object */
-                R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open, /* "open drawer" description for accessibility */
-                R.string.drawer_close /* "close drawer" description for accessibility */
-        ) {
-            public void onDrawerClosed(View view) {
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(
+                this, drawer, getToolbar(), R.string.drawer_open, R.string.drawer_close);
+        drawer.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
         Plate plate = mPlate;
         mPlate = null;
         if (plate == null) {
@@ -115,10 +93,16 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        umengUpdate(true);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        ACache aCache = ACache.get(this);
         if (mPlate != null) {
+            ACache aCache = ACache.get(this);
             aCache.put(KEY_CACHE_PLATE, mPlate);
         }
     }
@@ -134,7 +118,6 @@ public class MainActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, mThreadListFragment, plate.getFid())
                 .addToBackStack(mPlate.getFid())
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
         mDrawerLayout.closeDrawers();
         setTitle(plate.getTitle());
@@ -193,7 +176,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(AboutActivity.getStartIntent(this));
                 break;
             case R.id.action_version_update:
-                umengUpdate();
+                umengUpdate(false);
                 break;
             case R.id.action_exit:
                 finish();
@@ -205,26 +188,37 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void umengUpdate() {
-        new ChhApi().checkAppUpdate(new ApiCallBack<AppUpdate>() {
+    private void umengUpdate(final boolean auto) {
+        if (!auto) {
+            ToastUtil.show(getApplicationContext(), "正在检查新版本");
+        }
+        UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
             @Override
-            public void onSuccess(final AppUpdate result) {
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(result.getName())
-                        .setMessage(result.getVersionShort() + "\n" + result.getChangelog())
-                        .setPositiveButton("更新", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(result.getInstallUrl()));
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton("取消", null)
-                        .create();
-                alertDialog.show();
+            public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
+                switch (updateStatus) {
+                    case UpdateStatus.Yes: // has update
+                        startActivity(UpdateActivity.getStartIntent(getApplicationContext(), updateInfo));
+                        break;
+                    case UpdateStatus.No: // has no update
+                        if (!auto) {
+                            ToastUtil.show(getApplicationContext(), "没有新版本");
+                        }
+                        break;
+                    case UpdateStatus.NoneWifi: // none wifi
+                        break;
+                    case UpdateStatus.Timeout: // time out
+                        if (!auto) {
+                            ToastUtil.show(getApplicationContext(), "网络超时");
+                        }
+                        break;
+                }
             }
         });
+        if (auto) {
+            UmengUpdateAgent.update(this);
+        } else {
+            UmengUpdateAgent.forceUpdate(this);
+        }
     }
 
     protected void refresh() {

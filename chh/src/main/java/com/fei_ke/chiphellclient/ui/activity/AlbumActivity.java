@@ -14,8 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.api.support.ApiCallBack;
+import com.fei_ke.chiphellclient.api.support.ApiHelper;
 import com.fei_ke.chiphellclient.bean.AlbumWrap;
 import com.fei_ke.chiphellclient.ui.adapter.AlbumAdapter;
 import com.fei_ke.chiphellclient.utils.LogMessage;
@@ -58,18 +59,18 @@ public class AlbumActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-//        Window window = getWindow();
-//        // window.addFlags(Window.FEATURE_ACTION_BAR_OVERLAY);
-//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-//        tintManager.setStatusBarTintEnabled(true);
-//        tintManager.setNavigationBarTintEnabled(true);
-//        tintManager.setNavigationBarAlpha(0);
-//        tintManager.setStatusBarAlpha(0);
-//        if (Build.VERSION.SDK_INT < 19) {
-//            getActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-//        } else {
-//            getActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        }
+        //        Window window = getWindow();
+        //        // window.addFlags(Window.FEATURE_ACTION_BAR_OVERLAY);
+        //        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        //        tintManager.setStatusBarTintEnabled(true);
+        //        tintManager.setNavigationBarTintEnabled(true);
+        //        tintManager.setNavigationBarAlpha(0);
+        //        tintManager.setStatusBarAlpha(0);
+        //        if (Build.VERSION.SDK_INT < 19) {
+        //            getActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        //        } else {
+        //            getActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //        }
         toggleHideyBar();
     }
 
@@ -96,8 +97,7 @@ public class AlbumActivity extends BaseActivity {
             }
         });
 
-        ChhApi api = new ChhApi();
-        api.getAlbum(mUrl, new ApiCallBack<AlbumWrap>() {
+        ApiHelper.requestApi(ChhApi.getAlbum(mUrl), new ApiCallBack<AlbumWrap>() {
 
             @Override
             public void onStart() {

@@ -8,12 +8,11 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 /**
  * 一个异步加载的Drawable
- * 
+ *
  * @author fei-ke
  *         2014-6-26 下午2:17:27
  */
@@ -36,15 +35,7 @@ public class UrlDrawable extends BitmapDrawable {
 
     public void setUrl(String url) {
         setBounds(0, 0, 100, 100);
-        ImageLoader.getInstance().loadImage(url, new ImageLoadingListener() {
-
-            @Override
-            public void onLoadingStarted(String arg0, View arg1) {
-            }
-
-            @Override
-            public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-            }
+        ImageLoader.getInstance().loadImage(url, new SimpleImageLoadingListener() {
 
             @Override
             public void onLoadingComplete(String url, View arg1, Bitmap bitmap) {
@@ -56,11 +47,6 @@ public class UrlDrawable extends BitmapDrawable {
                 setBounds(0, 0, width, height);
 
                 container.invalidate();
-            }
-
-            @Override
-            public void onLoadingCancelled(String arg0, View arg1) {
-
             }
         });
     }

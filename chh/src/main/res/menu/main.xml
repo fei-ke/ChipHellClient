@@ -11,7 +11,7 @@
         android:visible="false"/>
     <item
         android:id="@+id/action_refresh"
-        android:icon="@drawable/white_ptr_rotate"
+        android:icon="@drawable/ic_renew"
         android:orderInCategory="100"
         app:showAsAction="always"
         android:title="@string/refresh"/>

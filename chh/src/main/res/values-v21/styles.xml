@@ -1,0 +1,15 @@
+<resources>
+
+    <style name="AppTheme" parent="@style/AppBaseTheme">
+        <item name="android:statusBarColor">@color/status_bar_color</item>
+    </style>
+
+    <style name="AppTheme.MainActivity" parent="@style/AppTheme">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="AppTheme.ToolBar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:elevation">16dp</item>
+    </style>
+</resources>

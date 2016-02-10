@@ -5,13 +5,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.+'
-    compile 'com.android.support:appcompat-v7:22.1.0'
+    compile "com.android.support:support-v4:$CHH_SUPPORT_VERSION"
+    compile "com.android.support:appcompat-v7:$CHH_SUPPORT_VERSION"
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.1'
+    compileSdkVersion CHH_COMPILE_SDK_VERSION
+    buildToolsVersion CHH_BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 7

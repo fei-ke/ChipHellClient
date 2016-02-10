@@ -9,18 +9,16 @@ import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ContentLengthInputStream;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.ResponseBody;
+import com.umeng.update.UmengUpdateAgent;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 public class ChhApplication extends Application {
     private static ChhApplication instance;
@@ -38,8 +36,12 @@ public class ChhApplication extends Application {
 
         initImageLoader();
 
+        setupUpdate();
+    }
 
-        //TODO fei-ke 2015/5/17 updateApp
+    private void setupUpdate() {
+        UmengUpdateAgent.setUpdateAutoPopup(false);
+        UmengUpdateAgent.setUpdateOnlyWifi(false);
     }
 
 
@@ -59,49 +61,42 @@ public class ChhApplication extends Application {
                 .showImageForEmptyUri(R.drawable.logo)
                 .showImageOnFail(R.drawable.logo)
                 .showImageOnLoading(R.drawable.logo)
-                        // .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                // .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .build();
+
+        OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(10, TimeUnit.SECONDS);
+        client.setReadTimeout(10, TimeUnit.SECONDS);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .denyCacheImageMultipleSizesInMemory()
                 .defaultDisplayImageOptions(defaultDisplayImageOptions)
-                .imageDownloader(new ChhBaseImageDownloader(this))
+                .imageDownloader(new OkHttpImageDownloader(this, client))
                 .build();
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
 
     }
 
-    class ChhBaseImageDownloader extends BaseImageDownloader {
+    static class OkHttpImageDownloader extends BaseImageDownloader {
 
-        public ChhBaseImageDownloader(Context context) {
+
+        private OkHttpClient client;
+
+
+        public OkHttpImageDownloader(Context context, OkHttpClient client) {
             super(context);
+            this.client = client;
         }
 
-        public ChhBaseImageDownloader(Context context, int connectTimeout, int readTimeout) {
-            super(context, connectTimeout, readTimeout);
-        }
 
+        @Override
         protected InputStream getStreamFromNetwork(String imageUri, Object extra) throws IOException {
-
-            HttpResponse response = getResponse(imageUri);
-            int statusCode = response.getStatusLine().getStatusCode();
-            int redirectCount = 0;
-
-            while (statusCode / 100 == 3 && redirectCount < MAX_REDIRECT_COUNT) {
-                response = getResponse(response.getFirstHeader("Location").getValue());
-                statusCode = response.getStatusLine().getStatusCode();
-                redirectCount++;
-            }
-            return response.getEntity().getContent();
+            Request request = new Request.Builder().url(imageUri).build();
+            ResponseBody responseBody = client.newCall(request).execute().body();
+            InputStream inputStream = responseBody.byteStream();
+            int contentLength = (int) responseBody.contentLength();
+            return new ContentLengthInputStream(inputStream, contentLength);
         }
-
-        protected HttpResponse getResponse(String url) throws IOException {
-            HttpParams params = new BasicHttpParams();
-            HttpClient httpClient = new DefaultHttpClient(params);
-            HttpUriRequest request = new HttpGet(url);
-            return httpClient.execute(request);
-        }
-
     }
 
     public static ChhApplication getInstance() {

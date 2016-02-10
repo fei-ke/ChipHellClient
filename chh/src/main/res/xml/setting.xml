@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<MultiSelectListPreference
+	<android.support.v14.preference.MultiSelectListPreference
 		android:defaultValue="@array/swipe_edges_values"
 		android:dialogTitle="@string/swipe_edge"
 		android:entries="@array/swipe_edges_entries"

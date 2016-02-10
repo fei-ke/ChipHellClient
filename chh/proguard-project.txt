@@ -20,11 +20,11 @@
 -dontwarn org.apache.commons.httpclient.**
 -dontwarn org.androidannotations.api.rest.**
 
+
+#umeng
 -keepclassmembers class * {
    public <init>(org.json.JSONObject);
 }
-
-
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
@@ -34,6 +34,9 @@
 -keep public class com.fei_ke.chiphellclient.R$*{
 public static final int *;
 }
+-dontwarn com.umeng.update.**
+
+# jsoup
 -keep public class org.jsoup.** {
 public *;
 }
@@ -41,6 +44,11 @@ public *;
 #Eventbus
 -keepclassmembers class ** {
     public void onEvent*(**);
+}
+-keepattributes *Annotation*
+-keep class de.greenrobot.** {*;}
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
 }
 
 #android-gif-drawable
@@ -50,3 +58,14 @@ public *;
 
 -dontwarn org.androidannotations.**
 -dontwarn com.sun.codemodel.util.SingleByteEncoder
+
+
+# OkHttp
+-dontwarn com.squareup.okhttp.**
+-dontwarn okio.**
+-dontwarn retrofit2.**
+
+-dontwarn u.aly.bt
+
+#photo View
+-dontwarn uk.co.senab.photoview.**

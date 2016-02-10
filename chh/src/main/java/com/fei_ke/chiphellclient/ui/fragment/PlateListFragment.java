@@ -9,12 +9,12 @@ import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
-import com.diegocarloslima.fgelv.lib.FloatingGroupExpandableListView;
 import com.diegocarloslima.fgelv.lib.WrapperExpandableListAdapter;
 import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.api.support.ApiCallBack;
+import com.fei_ke.chiphellclient.api.support.ApiHelper;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.User;
@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 /**
  * 版块列表
@@ -48,7 +49,7 @@ public class PlateListFragment extends BaseContentFragment {
     private static final String TAG = "PlateListFragment";
 
     @ViewById(R.id.expandableList_plates)
-    protected FloatingGroupExpandableListView mExpandableListView;
+    protected ExpandableListView mExpandableListView;
     @ViewById(R.id.swipeRefreshLayout)
     protected SwipeRefreshLayout swipeRefreshLayout;
 
@@ -151,8 +152,30 @@ public class PlateListFragment extends BaseContentFragment {
 
     private void getPlateGroups() {
 
-        ChhApi api = new ChhApi();
-        api.getUserInfo(new ApiCallBack<User>() {
+        //Retrofit retrofit = new Retrofit.Builder()
+        //        .baseUrl(Constants.BASE_URL)
+        //        .addConverterFactory(new Converter.Factory() {
+        //            @Override
+        //            public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+        //                retrofit.
+        //                return super.responseBodyConverter(type, annotations, retrofit);
+        //            }
+        //        })
+        //        .build();
+        //API api = retrofit.create(API.class);
+        //api.getPlateGroups().enqueue(new Callback<List<PlateGroup>>() {
+        //    @Override
+        //    public void onResponse(Response<List<PlateGroup>> response) {
+        //        response.body();
+        //    }
+        //
+        //    @Override
+        //    public void onFailure(Throwable t) {
+        //
+        //    }
+        //});
+
+        ApiHelper.requestApi(ChhApi.getUserInfo(), new ApiCallBack<User>() {
             @Override
             public void onSuccess(User result) {
                 LogMessage.i(TAG, result);
@@ -161,7 +184,7 @@ public class PlateListFragment extends BaseContentFragment {
             }
         });
 
-        api.getPlateGroups(getActivity(), new ApiCallBack<List<PlateGroup>>() {
+        ApiHelper.requestApi(ChhApi.getPlateGroups(), new com.fei_ke.chiphellclient.api.support.ApiCallBack<List<PlateGroup>>() {
             @Override
             public void onCache(List<PlateGroup> result) {
                 onSuccess(result);
@@ -179,18 +202,19 @@ public class PlateListFragment extends BaseContentFragment {
 
             @Override
             public void onFailure(Throwable error, String content) {
+                error.printStackTrace();
                 ToastUtil.show(getActivity(), "oops 刷新失败了");
             }
 
             @Override
             public void onStart() {
-                mMainActivity.onStartRefresh();
+                mMainActivity.postStartRefresh();
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFinish() {
-                mMainActivity.onEndRefresh();
+                mMainActivity.postEndRefresh();
             }
         });
 
@@ -229,6 +253,7 @@ public class PlateListFragment extends BaseContentFragment {
         super.onDestroy();
     }
 
+    @Subscribe
     public void onEvent(FavoriteChangeEvent event) {
         if (event.getFavoritePlate() == null) {
             update();

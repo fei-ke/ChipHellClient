@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -459,7 +461,7 @@ public class SwipeBackLayout extends FrameLayout {
         int background = a.getResourceId(0, 0);
         a.recycle();
 
-        ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView().findViewById(Window.ID_ANDROID_CONTENT);
+        ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
         ViewGroup decorChild = (ViewGroup) decor.getChildAt(0);
         decorChild.setBackgroundResource(background);
         decor.removeView(decorChild);
@@ -594,5 +596,14 @@ public class SwipeBackLayout extends FrameLayout {
                 }
             }
         }
+    }
+
+    Drawable mStatusBarBackground=new ColorDrawable(Color.GREEN);
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        mStatusBarBackground.setBounds(0, 0, getWidth(), 600);
+        mStatusBarBackground.draw(canvas);
     }
 }

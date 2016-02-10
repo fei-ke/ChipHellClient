@@ -1,18 +1,7 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-    dependencies {
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:latest.integration'
-    }
-}
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+def AAVersion = '3.3.2'
+
 apt {
     arguments {
         androidManifestFile variant.outputs[0].processResources.manifestFile
@@ -21,33 +10,34 @@ apt {
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.1'
-
+    compileSdkVersion CHH_COMPILE_SDK_VERSION
+    buildToolsVersion CHH_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        versionCode 12
-        versionName "1.2.5"
+        versionCode 13
+        versionName "1.3.0-alpha"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 22
+        ndk {
+            //支持的SO库架构
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
-    productFlavors {
-        Develop {}
-        ChipHellForum {}
-        GooglePlay {}
-        Baidu {}
-        WanDouJia {}
+//    productFlavors {
+//        Develop {}
+//        ChipHellForum {}
+//        GooglePlay {}
+//        Baidu {}
+//        WanDouJia {}
+//
+//    }
 
-    }
-    productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
     signingConfigs {
         chh {
-            storeFile file("../" + chh_storeFile)
-            storePassword chh_storePassword
-            keyAlias chh_keyAlias
-            keyPassword chh_keyPassword
+            storeFile file(CHH_STORE_FILE)
+            storePassword CHH_STORE_PASSWORD
+            keyAlias CHH_KEY_ALIAS
+            keyPassword CHH_KEY_PASSWORD
         }
     }
     buildTypes {
@@ -56,16 +46,18 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
             signingConfig signingConfigs.chh
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: 'Develop']
         }
         debug {
-            signingConfig signingConfigs.chh
+//            signingConfig signingConfigs.chh
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: 'debug']
         }
     }
     lintOptions {
 //        abortOnError false
     }
 
-    applicationVariants.all { variant ->
+    applicationVariants.all {variant ->
         if (variant.productFlavors[0] == null) {
             variant.outputs[0].outputFile = new File(variant.outputs[0].outputFile.parent,
                     project.name + "_"
@@ -81,23 +73,31 @@ android {
     }
 
     dependencies {
-        compile fileTree(dir: 'libs', include: '*.jar')
-        compile 'com.nostra13.universalimageloader:universal-image-loader:latest.integration'
-//        compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
-        compile 'pl.droidsonroids.gif:android-gif-drawable:latest.integration'
-        compile 'org.androidannotations:androidannotations:latest.integration'
-        compile 'com.android.support:support-v4:22.1.0'
-        compile 'com.android.support:appcompat-v7:22.1.0'
-        compile 'com.sothree.slidinguppanel:library:latest.integration'
-        compile 'com.diegocarloslima:fgelv:0.1.+@aar'
-        compile 'de.greenrobot:eventbus:latest.integration'
-        compile 'org.jsoup:jsoup:latest.integration'
-        compile 'com.umeng.analytics:analytics:latest.integration'
-        compile 'in.srain.cube:ultra-ptr:1.0.9'
+        apt "org.androidannotations:androidannotations:$AAVersion"
 
-        apt "org.androidannotations:androidannotations:latest.integration"
-        compile project(':libraries:AsyncHttpClient')
+        compile fileTree(dir: 'libs', include: '*.jar')
+
+        compile "org.androidannotations:androidannotations:$AAVersion"
+        compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+        compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
+        compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.7'
+        compile 'com.sothree.slidinguppanel:library:3.2.1'
+        compile 'com.diegocarloslima:fgelv:0.1.2@aar'
+        compile 'de.greenrobot:eventbus:3.0.0-beta1'
+        compile 'org.jsoup:jsoup:1.8.3'
+        compile 'com.umeng.analytics:analytics:5.6.4'
+        compile 'com.squareup.okhttp:okhttp:2.6.0'
+        compile 'com.squareup.okhttp:okhttp-urlconnection:2.6.0'
+        compile 'com.mcxiaoke.volley:library:1.0.19'
+
+        compile "com.android.support:support-v4:$CHH_SUPPORT_VERSION"
+        compile "com.android.support:appcompat-v7:$CHH_SUPPORT_VERSION"
+        compile "com.android.support:preference-v14:$CHH_SUPPORT_VERSION"
+        compile "com.android.support:design:$CHH_SUPPORT_VERSION"
+
         compile project(':libraries:QuickReturn')
-//        compile project(':libraries:SwipeBack')
+        compile project(':libraries:SwipeBack')
+        compile project(':libraries:UmengUpdate')
+
     }
 }

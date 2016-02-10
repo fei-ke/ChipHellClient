@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.FloatMath;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -27,8 +26,9 @@ import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.ChhApplication;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ApiCallBack;
 import com.fei_ke.chiphellclient.api.ChhApi;
+import com.fei_ke.chiphellclient.api.support.ApiCallBack;
+import com.fei_ke.chiphellclient.api.support.ApiHelper;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.bean.PostListWrap;
@@ -116,7 +116,7 @@ public class ThreadDetailActivity extends BaseActivity {
 
 
         setTitle(mPlate.getTitle());
-        getSupportActionBar().setSubtitle(mThread.getTitle());
+        setSubtitle(mThread.getTitle());
         mPostPageAdapter = new PostPageAdapter(getSupportFragmentManager(), mThread);
         viewPagerPost.setAdapter(mPostPageAdapter);
 
@@ -154,7 +154,7 @@ public class ThreadDetailActivity extends BaseActivity {
 
             }
         });
-        viewPagerPost.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPagerPost.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
 
@@ -335,10 +335,10 @@ public class ThreadDetailActivity extends BaseActivity {
         //    webViewContentScale = webViewContent.getScale();
         //}
         //WebView的总高度
-        float webViewContentHeight = FloatMath.floor(webViewContent.getContentHeight() * webViewContent.getScale());
+        double webViewContentHeight = Math.floor(webViewContent.getContentHeight() * webViewContent.getScale());
         //WebView的现高度
         float webViewCurrentHeight = (webViewContent.getHeight() + webViewContent.getScrollY());
-        System.out.println(webViewCurrentHeight + ","+webViewContentHeight);
+        //System.out.println(webViewCurrentHeight + "," + webViewContentHeight);
         return webViewCurrentHeight >= webViewContentHeight - 20;
     }
 
@@ -432,12 +432,13 @@ public class ThreadDetailActivity extends BaseActivity {
     }
 
     private void favorite() {
-        new ChhApi().favorite(mThread.getTid(), ChhApi.TYPE_THREAD, ChhApplication.getInstance().getFormHash(), new ApiCallBack<String>() {
-            @Override
-            public void onSuccess(String result) {
-                ToastUtil.show(getApplicationContext(), result);
-            }
-        });
+        ApiHelper.requestApi(ChhApi.favorite(mThread.getTid(), ChhApi.TYPE_THREAD, ChhApplication.getInstance().getFormHash())
+                , new ApiCallBack<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        ToastUtil.show(getApplicationContext(), result);
+                    }
+                });
     }
 
     @Override
@@ -456,12 +457,17 @@ public class ThreadDetailActivity extends BaseActivity {
         }
         mIsFreshing = true;
 
-        ChhApi api = new ChhApi();
-        api.getPostList(this, mThread, 1, new ApiCallBack<PostListWrap>() {
+        ApiHelper.requestApi(ChhApi.getPostList(mThread, 1), new ApiCallBack<PostListWrap>() {
             @Override
             public void onStart() {
                 onStartRefresh();
-                mRefreshLayout.setRefreshing(true);
+                mRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRefreshLayout.setRefreshing(true);
+                    }
+                });
+
             }
 
             @Override
