@@ -3,8 +3,6 @@ package com.fei_ke.chiphellclient.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -13,9 +11,11 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
-import com.fei_ke.chiphellclient.bean.Thread;
+
+import com.fei_ke.chiphellclient.BuildConfig;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Plate;
+import com.fei_ke.chiphellclient.bean.Thread;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -39,13 +39,7 @@ public class AboutActivity extends BaseActivity {
     }
 
     protected void setVersion() {
-        PackageManager pm = getPackageManager();
-        try {
-            String versionName = pm.getPackageInfo(getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
-            textViewVersion.setText(getString(R.string.about_version, versionName));
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        textViewVersion.setText(getString(R.string.about_version, BuildConfig.VERSION_NAME));
     }
 
     private void setAboutText() {
@@ -87,7 +81,7 @@ public class AboutActivity extends BaseActivity {
         SpannableString weibo = new SpannableString("@与非");
         weibo.setSpan(weiboSpan, 0, weibo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         builder.append(weibo);
-        builder.append("进行反馈..\n源代码稍后开放。");
+        builder.append("进行反馈..\n");
 
         textViewAbout.setText(builder);
     }

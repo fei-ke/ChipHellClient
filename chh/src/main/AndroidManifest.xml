@@ -66,11 +66,6 @@
             android:process=":DownloadingService">
         </service>
 
-        <activity
-            android:name="com.umeng.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="539dc70d56240ba62712fe72"/>
