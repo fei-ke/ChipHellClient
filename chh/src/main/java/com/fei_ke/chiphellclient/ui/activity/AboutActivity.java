@@ -57,7 +57,7 @@ public class AboutActivity extends BaseActivity {
                 plate.setUrl("http://www.chiphell.com/forum.php?mod=forumdisplay&fid=201&mobile=2");
                 Thread thread = new Thread();
                 thread.setTitle("ChipHell非官方客户端发布页");
-                thread.setUrl("http://www.chiphell.com/forum.php?mod=viewthread&tid=1058176&extra=page%3D1&mobile=2");
+                thread.setUrl("https://www.chiphell.com/forum.php?mod=viewthread&tid=1528335&mobile=2");
                 Intent intent = ThreadDetailActivity.getStartIntent(AboutActivity.this, plate, thread);
                 // Intent intent = new Intent(Intent.ACTION_VIEW);
                 // intent.setData(Uri.parse("http://www.chiphell.com/forum.php?mod=viewthread&tid=1058176&extra=page%3D1&mobile=2"));
