@@ -1,29 +1,25 @@
 
 package com.fei_ke.chiphellclient.ui.activity;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.api.ChhApi;
-import com.fei_ke.chiphellclient.api.support.ApiCallBack;
-import com.fei_ke.chiphellclient.api.support.ApiHelper;
-import com.fei_ke.chiphellclient.bean.AlbumWrap;
 import com.fei_ke.chiphellclient.ui.adapter.AlbumAdapter;
-import com.fei_ke.chiphellclient.utils.LogMessage;
+import com.fei_ke.chiphellclient.ui.fragment.GridPicFragment;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.ViewById;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 相册
@@ -36,7 +32,9 @@ public class AlbumActivity extends BaseActivity {
     private static final String TAG = "AlbumActivity";
 
     @Extra
-    String mUrl;
+    ArrayList<String> pics;
+    @Extra
+    int index;
 
     @ViewById(R.id.viewPager)
     ViewPager mViewPager;
@@ -47,131 +45,52 @@ public class AlbumActivity extends BaseActivity {
     @ViewById(R.id.textView_current)
     TextView textViewCurrent;
 
-    AlbumAdapter mAdapter;
+    @FragmentById(R.id.gridPicFragment)
+    GridPicFragment gridPicFragment;
 
-    @ViewById(R.id.progressBar)
-    ProgressBar mProgressBar;
+    AlbumAdapter mViewPagerAdapter;
 
-    public static Intent getStartIntent(Context context, String url) {
-        return AlbumActivity_.intent(context).mUrl(url).get();
-    }
-
-    @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        //        Window window = getWindow();
-        //        // window.addFlags(Window.FEATURE_ACTION_BAR_OVERLAY);
-        //        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        //        tintManager.setStatusBarTintEnabled(true);
-        //        tintManager.setNavigationBarTintEnabled(true);
-        //        tintManager.setNavigationBarAlpha(0);
-        //        tintManager.setStatusBarAlpha(0);
-        //        if (Build.VERSION.SDK_INT < 19) {
-        //            getActionBar().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-        //        } else {
-        //            getActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        //        }
-        toggleHideyBar();
+    public static Intent getStartIntent(Context context, List<String> pics, int index) {
+        return AlbumActivity_.intent(context).pics(new ArrayList<String>(pics)).index(index).get();
     }
 
     @Override
     protected void onAfterViews() {
-        mAdapter = new AlbumAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mAdapter);
+        getToolbar().setBackgroundColor(Color.parseColor("#20000000"));
 
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+        mViewPagerAdapter = new AlbumAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mViewPagerAdapter);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
                 textViewCurrent.setText(String.valueOf(position + 1));
             }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-
-            }
         });
 
-        ApiHelper.requestApi(ChhApi.getAlbum(mUrl), new ApiCallBack<AlbumWrap>() {
-
-            @Override
-            public void onStart() {
-                onStartRefresh();
-            }
-
-            @Override
-            public void onSuccess(AlbumWrap result) {
-                LogMessage.i("AlbumActivity#onAfterViews#getAlbum#onSuccess", result);
-                mAdapter.update(result.getUrls());
-
-                mViewPager.setCurrentItem(result.getCurPosition(), false);
-
-                textViewTotal.setText(String.valueOf(result.getUrls().size()));
-            }
-
-            @Override
-            public void onFailure(Throwable error, String content) {
-                error.printStackTrace();
-            }
-
-            @Override
-            public void onFinish() {
-                mProgressBar.setVisibility(View.GONE);
-                onEndRefresh();
-            }
-        });
+        initPic(pics, index);
     }
 
-    /**
-     * Detects and toggles immersive mode (also known as "hidey bar" mode).
-     */
-    public void toggleHideyBar() {
+    private void initPic(List<String> pics, int index) {
+        mViewPagerAdapter.update(pics);
+        mViewPager.setCurrentItem(index);
+        textViewTotal.setText(String.valueOf(pics.size()));
+        textViewCurrent.setText(String.valueOf(index + 1));
+    }
 
-        // BEGIN_INCLUDE (get_current_ui_flags)
-        // The UI options currently enabled are represented by a bitfield.
-        // getSystemUiVisibility() gives us that bitfield.
-        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
-        // END_INCLUDE (get_current_ui_flags)
-        // BEGIN_INCLUDE (toggle_ui_flags)
-        boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-        if (isImmersiveModeEnabled) {
-            Log.i(TAG, "Turning immersive mode mode off. ");
-        } else {
-            Log.i(TAG, "Turning immersive mode mode on.");
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.album, menu);
+        return true;
+    }
 
-        // Navigation bar hiding: Backwards compatible to ICS.
-        if (Build.VERSION.SDK_INT >= 14) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_switch) {
+            //gridPicFragment.update(pics);
+            return true;
         }
-
-        // Status bar hiding: Backwards compatible to Jellybean
-        if (Build.VERSION.SDK_INT >= 16) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        }
-
-        // Immersive mode: Backward compatible to KitKat.
-        // Note that this flag doesn't do anything by itself, it only augments the behavior
-        // of HIDE_NAVIGATION and FLAG_FULLSCREEN. For the purposes of this sample
-        // all three flags are being toggled together.
-        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-        // Sticky immersive mode differs in that it makes the navigation and status bars
-        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-        // the screen.
-        if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        }
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -49,6 +49,7 @@ android {
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: 'Develop']
         }
         debug {
+            signingConfig signingConfigs.chh
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: 'debug']
         }
 
@@ -97,6 +98,7 @@ android {
 
         compile "com.android.support:support-v4:$CHH_SUPPORT_VERSION"
         compile "com.android.support:appcompat-v7:$CHH_SUPPORT_VERSION"
+        compile "com.android.support:palette-v7:$CHH_SUPPORT_VERSION"
         compile "com.android.support:preference-v14:$CHH_SUPPORT_VERSION"
         compile "com.android.support:design:$CHH_SUPPORT_VERSION"
 

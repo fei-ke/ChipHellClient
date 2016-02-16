@@ -1,6 +1,8 @@
 
 package com.fei_ke.chiphellclient.bean;
 
+import java.util.List;
+
 /**
  * 回帖
  *
@@ -13,6 +15,7 @@ public class Post extends BaseBean {
     private String content;
     private String authi;// 名字，楼层，时间 html
     private String imgList;// 图片附件列表
+    private List<String> images;//图片列表
 
     public String getAvatarUrl() {
         return avatarUrl;
@@ -59,4 +62,11 @@ public class Post extends BaseBean {
         return "Post [avatarUrl=" + avatarUrl + ", replyUrl=" + replyUrl + ", content=" + content + ", authi=" + authi + "]";
     }
 
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
 }

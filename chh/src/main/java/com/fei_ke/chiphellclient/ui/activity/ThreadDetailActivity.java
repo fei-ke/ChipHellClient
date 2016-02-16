@@ -47,8 +47,10 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.FragmentByTag;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,6 +73,7 @@ public class ThreadDetailActivity extends BaseActivity {
     Plate mPlate;
 
     @Extra
+    @InstanceState
     Thread mThread;
 
     @FragmentByTag("fast_reply")
@@ -100,6 +103,7 @@ public class ThreadDetailActivity extends BaseActivity {
     PostPageAdapter mPostPageAdapter;
     private boolean mIsFreshing;
 
+    private List<String> images = new ArrayList<>();
 
     public static Intent getStartIntent(Context context, Plate plate, Thread thread) {
         return ThreadDetailActivity_.intent(context).mThread(thread).mPlate(plate).get();
@@ -107,7 +111,6 @@ public class ThreadDetailActivity extends BaseActivity {
 
     @Override
     protected void onAfterViews() {
-        // mRefreshListView.setMode(Mode.DISABLED);
         if (mThread == null) {
             handExportUrl();
         }
@@ -127,13 +130,6 @@ public class ThreadDetailActivity extends BaseActivity {
                 getPostList();
             }
         });
-        //ActionBarPullToRefresh.from(this)
-        //        .allChildrenArePullable()
-        //        .listener(onRefreshListener)
-        //        .options(Options.create()
-        //                .scrollDistance(.30f)
-        //                .build())
-        //        .setup(mRefreshLayout);
 
         spinnerPage.setTag(0);
         spinnerPage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -301,7 +297,6 @@ public class ThreadDetailActivity extends BaseActivity {
         this.mThread = new Thread();
         mThread.setUrl(url);
         mPlate = new Plate();
-        mPlate.setTitle("返回");
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -349,11 +344,18 @@ public class ThreadDetailActivity extends BaseActivity {
             return true;
         }
         // 点击图片
-        if (url.contains("from=album")) {
-            Intent intent = AlbumActivity.getStartIntent(ThreadDetailActivity.this, url);
+        int imageIndex = images.indexOf(url);
+        if (imageIndex != -1) {
+            Intent intent = AlbumActivity.getStartIntent(ThreadDetailActivity.this, images, imageIndex);
             startActivity(intent);
             return true;
         }
+
+        //if (url.contains("from=album")) {
+        //    Intent intent = AlbumActivity.getStartIntent(ThreadDetailActivity.this, url);
+        //    startActivity(intent);
+        //    return true;
+        //}
         // 登录
         if (url.startsWith(Constants.BASE_URL + "member.php?mod=logging&action=login")) {
             Intent intent = LoginActivity.getStartIntent(this);
@@ -381,6 +383,17 @@ public class ThreadDetailActivity extends BaseActivity {
         if (post.getImgList() != null) {
             content += post.getImgList();
         }
+        images.clear();
+        images.addAll(post.getImages());
+
+        String imgClick = "<script> var images=document.getElementsByTagName('img');\n" +
+                "  var imgLen=images.length;\n" +
+                "  for(var i=0;i<imgLen;i++){\n" +
+                "    images[i].onclick=function(){" +
+                "       window.open(this.src)" +
+                "    }\n" +
+                "  }</script>";
+        content = "<style>img{display: inline;height: auto;max-width: 100%;}</style>" + content + imgClick;
         webViewContent.loadDataWithBaseURL(Constants.BASE_URL, content, "text/html", "utf-8", null);
     }
 
@@ -486,6 +499,7 @@ public class ThreadDetailActivity extends BaseActivity {
                 }
 
                 loadMainContent(result.getPosts().get(0));
+                setSubtitle(result.getTitle());
                 int totalPage = result.getTotalPage();
                 mPostPageAdapter.setSize(totalPage);
                 textViewTotalPage.setText(totalPage + "");

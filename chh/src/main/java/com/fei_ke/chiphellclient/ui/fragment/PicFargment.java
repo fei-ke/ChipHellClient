@@ -1,15 +1,20 @@
 
 package com.fei_ke.chiphellclient.ui.fragment;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.fei_ke.chiphellclient.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
@@ -17,6 +22,9 @@ import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -35,7 +43,7 @@ public class PicFargment extends BaseFragment {
 
     private static DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
             .cacheInMemory(true).cacheOnDisc(true)
-                    // .imageScaleType(ImageScaleType.NONE)
+            // .imageScaleType(ImageScaleType.NONE)
             .showImageForEmptyUri(R.drawable.logo)
             .showImageOnFail(R.drawable.logo)
             .build();
@@ -51,6 +59,9 @@ public class PicFargment extends BaseFragment {
     @ViewById(R.id.progressBar)
     ProgressBar mProgressBar;
 
+    @ViewById
+    View mainFrame;
+
     public static PicFargment getInstance(String url) {
         return PicFargment_.builder().mUrl(url).build();
     }
@@ -62,20 +73,13 @@ public class PicFargment extends BaseFragment {
     @Override
     protected void onAfterViews() {
         mPhotoViewAttacher = new PhotoViewAttacher(mImageView);
-        ImageLoader.getInstance().displayImage(mUrl, mImageView, imageOptions, new ImageLoadingListener() {
-
-            @Override
-            public void onLoadingStarted(String arg0, View arg1) {
-
-            }
-
-            @Override
-            public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-
-            }
+        ImageLoader.getInstance().displayImage(mUrl, mImageView, imageOptions, new SimpleImageLoadingListener() {
+            final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
 
             @Override
             public void onLoadingComplete(String url, View view, Bitmap bitmap) {
+                if (bitmap == null) return;
+
                 if (url.endsWith(".gif") || url.endsWith(".GIF")) {
                     File file = ImageLoader.getInstance().getDiscCache().get(url);
                     try {
@@ -85,13 +89,24 @@ public class PicFargment extends BaseFragment {
                         e.printStackTrace();
                     }
                 }
+
+                boolean firstDisplay = !displayedImages.contains(url);
+                if (firstDisplay) {
+                    FadeInBitmapDisplayer.animate(mImageView, 500);
+                    displayedImages.add(url);
+                }
+
                 mPhotoViewAttacher.update();
                 mProgressBar.setVisibility(View.GONE);
-            }
 
-            @Override
-            public void onLoadingCancelled(String arg0, View arg1) {
+                Palette p = Palette.from(bitmap).generate();
+                //mainFrame.setBackgroundColor(p.getLightMutedColor(Color.BLACK));
 
+                ColorDrawable background = (ColorDrawable) mainFrame.getBackground();
+                ObjectAnimator animator = ObjectAnimator.ofInt(mainFrame, "backgroundColor", background.getColor(), p.getLightMutedColor(Color.BLACK));
+                animator.setEvaluator(new ArgbEvaluator());
+                animator.setDuration(500);
+                animator.start();
             }
         });
 

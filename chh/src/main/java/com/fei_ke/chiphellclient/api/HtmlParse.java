@@ -199,6 +199,12 @@ class HtmlParse {
         List<Post> posts = new ArrayList<Post>();
         Document document = Jsoup.parse(content);
         document.setBaseUri(Constants.BASE_URL);
+
+        String fullTitle = document.title();
+        String[] titles = fullTitle.split("-");
+        String title = titles[0].trim();
+        postListWrap.setTitle(title);
+
         Elements elements = document.getElementsByClass("plc");
         for (Element plc : elements) {
             try {
@@ -220,6 +226,18 @@ class HtmlParse {
                 // String authi = display.child(0).html();
                 // Element message = display.child(1);
                 // post.setContent(message.html().trim());
+
+                List<String> images = new ArrayList<>();
+                Elements img = message.getElementsByTag("img");
+                for (Element element : img) {
+                    String picSrc = element.absUrl("src");
+                    if (picSrc.contains("static/image/smiley")) {
+                        //表情
+                    } else {
+                        images.add(picSrc);
+                    }
+                }
+                post.setImages(images);
 
                 try {// 主贴没有replyUrl
                     String replyUrl = plc.getElementsByClass("replybtn").first().child(0).absUrl("href");

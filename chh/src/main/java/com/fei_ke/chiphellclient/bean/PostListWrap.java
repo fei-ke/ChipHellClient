@@ -6,9 +6,18 @@ import java.util.List;
  * Created by fei-ke on 2014/11/2.
  */
 public class PostListWrap extends BaseBean {
+    private String title;
     private List<Post> posts;
     private int totalPage;
     private int curPage;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public List<Post> getPosts() {
         return posts;
