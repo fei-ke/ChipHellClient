@@ -22,8 +22,8 @@ import com.fei_ke.chiphellclient.api.support.ApiCallBack;
 import com.fei_ke.chiphellclient.api.support.ApiHelper;
 import com.fei_ke.chiphellclient.bean.Plate;
 import com.fei_ke.chiphellclient.bean.Post;
-import com.fei_ke.chiphellclient.bean.PostListWrap;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
+import com.fei_ke.chiphellclient.bean.ReplyResult;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.constant.SmileTable;
 import com.fei_ke.chiphellclient.ui.activity.LoginActivity;
@@ -238,19 +238,23 @@ public class FastReplyFragment extends BaseFragment implements OnClickListener {
         this.onReplySuccess = onReplySuccess;
     }
 
-    private class ReplyApiCallBack extends ApiCallBack<PostListWrap> {
+    private class ReplyApiCallBack extends ApiCallBack<ReplyResult> {
         ProgressDialog dialog;
 
         @Override
-        public void onSuccess(PostListWrap result) {
+        public void onSuccess(ReplyResult result) {
             if (getActivity() != null && result != null) {
-                Toast.makeText(getActivity(), "回复成功", Toast.LENGTH_SHORT).show();
-                SmileyPickerUtility.hideSoftInput(editTextFastReply);
-                hide();
-                if (onReplySuccess != null) {
-                    onReplySuccess.onSuccess(result.getPosts());
+                if (result.isSuccess()) {
+                    ToastUtil.show(getActivity(), "回复成功");
+                    SmileyPickerUtility.hideSoftInput(editTextFastReply);
+                    hide();
+                    if (onReplySuccess != null) {
+                        onReplySuccess.onSuccess(result.getPostListWrap().getPosts());
+                    }
+                    editTextFastReply.setText("");
+                } else {
+                    ToastUtil.show(getActivity(), result.getMessage());
                 }
-                editTextFastReply.setText("");
             }
         }
 

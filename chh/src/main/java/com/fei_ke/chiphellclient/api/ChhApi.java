@@ -12,6 +12,7 @@ import com.fei_ke.chiphellclient.bean.AppUpdate;
 import com.fei_ke.chiphellclient.bean.PlateGroup;
 import com.fei_ke.chiphellclient.bean.PostListWrap;
 import com.fei_ke.chiphellclient.bean.PrepareQuoteReply;
+import com.fei_ke.chiphellclient.bean.ReplyResult;
 import com.fei_ke.chiphellclient.bean.Thread;
 import com.fei_ke.chiphellclient.bean.ThreadListWrap;
 import com.fei_ke.chiphellclient.bean.User;
@@ -117,24 +118,26 @@ public class ChhApi {
      * @param formhash
      * @param message
      */
-    public static ApiRequest<PostListWrap> reply(String fid, String tid, String formhash, String message) {
-        return new RequestBuilder<PostListWrap>()
+    public static ApiRequest<ReplyResult> reply(String fid, String tid, String formhash, final String message) {
+        return new RequestBuilder<ReplyResult>()
                 .url(Constants.BASE_URL + "forum.php?mod=post&action=reply&replysubmit=yes&mobile=2")
                 .method(Request.Method.POST)
                 .putParameter("message", message)
                 .putParameter("fid", fid)
                 .putParameter("tid", tid)
                 .putParameter("formhash", formhash)
-                .objectParser(new ObjectParser<PostListWrap>() {
+                .objectParser(new ObjectParser<ReplyResult>() {
                     @Override
-                    public PostListWrap parse(String content) {
+                    public ReplyResult parse(String content) {
+                        ReplyResult result = new ReplyResult();
+
                         String messagetext = HtmlParse.parseMessageText(content);
                         if (messagetext != null) {
-                            // TODO: 16/1/29
-                            //sendFailureMessage(0, null, messagetext.getBytes(), new Throwable(messagetext));
-                            return null;
+                            result.setMessage(messagetext);
+                            return result;
                         }
-                        return HtmlParse.parsePostList(content);
+                        result.setPostListWrap(HtmlParse.parsePostList(content));
+                        return result;
                     }
                 })
                 .build();
@@ -165,8 +168,8 @@ public class ChhApi {
      *
      * @param quoteReply
      */
-    public static ApiRequest<PostListWrap> quotrReply(PrepareQuoteReply quoteReply) {
-        return new RequestBuilder<PostListWrap>()
+    public static ApiRequest<ReplyResult> quotrReply(PrepareQuoteReply quoteReply) {
+        return new RequestBuilder<ReplyResult>()
                 .url(quoteReply.getUrl())
                 .method(Request.Method.POST)
                 .putParameter("formhash", quoteReply.getFormhash())
@@ -178,14 +181,18 @@ public class ChhApi {
                 .putParameter("replysubmit", quoteReply.getReplysubmit())
                 .putParameter("reppid", quoteReply.getReppid())
                 .putParameter("reppost", quoteReply.getReppost())
-                .objectParser(new ObjectParser<PostListWrap>() {
+                .objectParser(new ObjectParser<ReplyResult>() {
                     @Override
-                    public PostListWrap parse(String content) {
+                    public ReplyResult parse(String content) {
+                        ReplyResult result = new ReplyResult();
+
                         String messagetext = HtmlParse.parseMessageText(content);
                         if (messagetext != null) {
-                            return null;
+                            result.setMessage(messagetext);
+                            return result;
                         }
-                        return HtmlParse.parsePostList(content);
+                        result.setPostListWrap(HtmlParse.parsePostList(content));
+                        return result;
                     }
                 })
                 .build();
