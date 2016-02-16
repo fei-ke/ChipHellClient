@@ -167,6 +167,7 @@ public class ChhApi {
      */
     public static ApiRequest<PostListWrap> quotrReply(PrepareQuoteReply quoteReply) {
         return new RequestBuilder<PostListWrap>()
+                .url(quoteReply.getUrl())
                 .method(Request.Method.POST)
                 .putParameter("formhash", quoteReply.getFormhash())
                 .putParameter("message", quoteReply.getMessage())
