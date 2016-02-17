@@ -5,7 +5,7 @@ import com.fei_ke.chiphellclient.utils.UrlParamsMap;
 
 /**
  * 帖子列表item
- * 
+ *
  * @author fei-ke
  * @2014-6-15
  */
@@ -108,4 +108,25 @@ public class Thread extends BaseBean {
         return tid;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (getTid() == null) return false;
+
+        Thread thread = (Thread) o;
+
+        UrlParamsMap l = new UrlParamsMap(url);
+        UrlParamsMap r = new UrlParamsMap(thread.getUrl());
+
+        return (getTid().equals(r.get("tid")))
+                && ("viewthread".equals(l.get("mod")) && "viewthread".equals(r.get("mod")))
+                ;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getTid() != null ? getTid().hashCode() : 0;
+    }
 }

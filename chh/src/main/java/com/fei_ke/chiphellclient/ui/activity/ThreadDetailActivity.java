@@ -362,6 +362,15 @@ public class ThreadDetailActivity extends BaseActivity {
             startActivityForResult(intent, MainActivity.REQUEST_CODE_LOGIN);
             return true;
         }
+
+        //本帖地址
+        Thread tmp = new Thread();
+        tmp.setUrl(url);
+        if (mThread.equals(tmp)) {
+            getPostList();
+            return true;
+        }
+
         // 其他链接
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
