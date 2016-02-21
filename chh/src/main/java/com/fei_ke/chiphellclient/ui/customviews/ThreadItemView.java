@@ -2,7 +2,6 @@
 package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,21 +11,16 @@ import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Thread;
+import com.fei_ke.chiphellclient.ui.commen.AnimateFirstDisplayListener;
 import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * 帖子列表的一个item
- * 
+ *
  * @author fei-ke
  * @2014-6-16
  */
@@ -52,6 +46,8 @@ public class ThreadItemView extends FrameLayout {
 
     ThreadStatusUtil statusUtil;
 
+    private AnimateFirstDisplayListener firstDisplayListener = new AnimateFirstDisplayListener();
+
     public static ThreadItemView getInstance(Context context) {
         return ThreadItemView_.build(context);
     }
@@ -71,7 +67,7 @@ public class ThreadItemView extends FrameLayout {
             imageViewIcon.setVisibility(GONE);
         } else {
             imageViewIcon.setVisibility(VISIBLE);
-            ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon, new AnimateFirstDisplayListener());
+            ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon, firstDisplayListener);
         }
 
         if (thread.getTitleColor() != 0) {
@@ -94,23 +90,4 @@ public class ThreadItemView extends FrameLayout {
     public void setOnFastReplyClickListener(OnClickListener listener) {
         textViewCount.setOnClickListener(listener);
     }
-
-    private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
-
-        static final List<String> displayedImages = Collections
-                .synchronizedList(new LinkedList<String>());
-
-        @Override
-        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            if (loadedImage != null) {
-                ImageView imageView = (ImageView) view;
-                boolean firstDisplay = !displayedImages.contains(imageUri);
-                if (firstDisplay) {
-                    FadeInBitmapDisplayer.animate(imageView, 500);
-                    displayedImages.add(imageUri);
-                }
-            }
-        }
-    }
-
 }
