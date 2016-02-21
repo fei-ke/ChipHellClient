@@ -1,12 +1,15 @@
 package com.fei_ke.chiphellclient.ui.fragment;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.fei_ke.chiphellclient.R;
+import com.fei_ke.chiphellclient.ui.commen.AnimateFirstDisplayListener;
 import com.fei_ke.chiphellclient.ui.customviews.SquareImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -30,6 +33,7 @@ public class GridPicFragment extends BaseFragment {
     protected void onAfterViews() {
         mAdapter = new GridAdapter();
         gridView.setAdapter(mAdapter);
+
     }
 
     public void update(List<String> pics) {
@@ -37,8 +41,17 @@ public class GridPicFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
 
+    public void setSelection(int position) {
+        gridView.setSelection(position);
+    }
+
+    public void setOnItemClickListener(@Nullable AdapterView.OnItemClickListener listener) {
+        gridView.setOnItemClickListener(listener);
+    }
+
     static class GridAdapter extends BaseAdapter {
         private List<String> pics = new ArrayList<>();
+        private AnimateFirstDisplayListener firstDisplayListener = new AnimateFirstDisplayListener();
 
         public void update(List<String> pics) {
             this.pics.clear();
@@ -69,7 +82,7 @@ public class GridPicFragment extends BaseFragment {
                 imageView = new SquareImageView(parent.getContext());
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
-            ImageLoader.getInstance().displayImage(getItem(position), imageView);
+            ImageLoader.getInstance().displayImage(getItem(position), imageView, firstDisplayListener);
             return imageView;
         }
     }

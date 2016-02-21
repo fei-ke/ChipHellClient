@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
@@ -45,6 +47,12 @@ public class AlbumActivity extends BaseActivity {
     @ViewById(R.id.textView_current)
     TextView textViewCurrent;
 
+    @ViewById(R.id.layout_grid)
+    View layoutGrid;
+
+    @ViewById(R.id.layout_viewpager)
+    View layoutViewpager;
+
     @FragmentById(R.id.gridPicFragment)
     GridPicFragment gridPicFragment;
 
@@ -69,6 +77,15 @@ public class AlbumActivity extends BaseActivity {
             }
         });
 
+        gridPicFragment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                layoutGrid.setVisibility(View.GONE);
+                layoutViewpager.setVisibility(View.VISIBLE);
+                mViewPager.setCurrentItem(position, false);
+            }
+        });
+
         initPic(pics, index);
     }
 
@@ -88,7 +105,15 @@ public class AlbumActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_switch) {
-            //gridPicFragment.update(pics);
+            if (layoutGrid.getVisibility() != View.VISIBLE) {
+                gridPicFragment.update(pics);
+                gridPicFragment.setSelection(mViewPager.getCurrentItem());
+                layoutGrid.setVisibility(View.VISIBLE);
+                layoutViewpager.setVisibility(View.GONE);
+            } else {
+                layoutGrid.setVisibility(View.GONE);
+                layoutViewpager.setVisibility(View.VISIBLE);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
