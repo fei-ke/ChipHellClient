@@ -177,6 +177,11 @@ public class PlateListFragment extends BaseContentFragment {
 
         ApiHelper.requestApi(ChhApi.getUserInfo(), new ApiCallBack<User>() {
             @Override
+            public void onCache(User result) {
+                onSuccess(result);
+            }
+
+            @Override
             public void onSuccess(User result) {
                 LogMessage.i(TAG, result);
                 mUserView.bindValue(result);

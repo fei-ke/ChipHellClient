@@ -59,6 +59,7 @@ public class ChhApi {
     public static ApiRequest<User> getUserInfo() {
         return new RequestBuilder<User>()
                 .url(Constants.BASE_URL + "home.php?mod=space&mobile=2")
+                .shouldCache()
                 .objectParser(new ObjectParser<User>() {
                     @Override
                     public User parse(String content) {
