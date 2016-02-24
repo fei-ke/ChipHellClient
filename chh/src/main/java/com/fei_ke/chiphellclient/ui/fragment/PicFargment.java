@@ -42,10 +42,9 @@ public class PicFargment extends BaseFragment {
     private static final String TAG = "PicFargment";
 
     private static DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
-            .cacheInMemory(true).cacheOnDisc(true)
-            // .imageScaleType(ImageScaleType.NONE)
-            .showImageForEmptyUri(R.drawable.logo)
-            .showImageOnFail(R.drawable.logo)
+            .cacheInMemory(true).cacheOnDisk(true)
+            .showImageForEmptyUri(R.drawable.default_img)
+            .showImageOnFail(R.drawable.default_img)
             .build();
 
     private OnViewTapListener mViewTapListener;

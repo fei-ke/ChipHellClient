@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.ui.commen.AnimateFirstDisplayListener;
 import com.fei_ke.chiphellclient.ui.customviews.SquareImageView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.EFragment;
@@ -50,6 +51,12 @@ public class GridPicFragment extends BaseFragment {
     }
 
     static class GridAdapter extends BaseAdapter {
+        private static DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true).cacheOnDisk(true)
+                .showImageForEmptyUri(R.drawable.default_img)
+                .showImageOnFail(R.drawable.default_img)
+                .showImageOnLoading(R.drawable.default_img)
+                .build();
         private List<String> pics = new ArrayList<>();
         private AnimateFirstDisplayListener firstDisplayListener = new AnimateFirstDisplayListener();
 
@@ -82,7 +89,7 @@ public class GridPicFragment extends BaseFragment {
                 imageView = new SquareImageView(parent.getContext());
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
-            ImageLoader.getInstance().displayImage(getItem(position), imageView, firstDisplayListener);
+            ImageLoader.getInstance().displayImage(getItem(position), imageView, imageOptions, firstDisplayListener);
             return imageView;
         }
     }
