@@ -3,22 +3,27 @@ package com.fei_ke.chiphellclient;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.CookieSyncManager;
 
+import com.fei_ke.chiphellclient.api.support.WebViewCookieHandler;
 import com.fei_ke.chiphellclient.utils.LogMessage;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ContentLengthInputStream;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.ResponseBody;
 import com.umeng.update.UmengUpdateAgent;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class ChhApplication extends Application {
     private static ChhApplication instance;
@@ -27,8 +32,6 @@ public class ChhApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        CookieSyncManager.createInstance(this);
 
         instance = this;
 
@@ -64,9 +67,11 @@ public class ChhApplication extends Application {
                 // .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(10, TimeUnit.SECONDS);
-        client.setReadTimeout(10, TimeUnit.SECONDS);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(40, TimeUnit.SECONDS)
+                .cookieJar(new JavaNetCookieJar(WebViewCookieHandler.getInstance()))
+                .build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .denyCacheImageMultipleSizesInMemory()
                 .defaultDisplayImageOptions(defaultDisplayImageOptions)

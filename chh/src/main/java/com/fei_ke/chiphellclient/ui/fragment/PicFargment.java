@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.graphics.Palette;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -71,6 +72,7 @@ public class PicFargment extends BaseFragment {
 
     @Override
     protected void onAfterViews() {
+        Log.i(TAG, "onAfterViews: url "+mUrl);
         mPhotoViewAttacher = new PhotoViewAttacher(mImageView);
         ImageLoader.getInstance().displayImage(mUrl, mImageView, imageOptions, new SimpleImageLoadingListener() {
             final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());

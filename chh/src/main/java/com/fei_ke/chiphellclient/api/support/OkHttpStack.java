@@ -1,12 +1,13 @@
 package com.fei_ke.chiphellclient.api.support;
 
 import com.android.volley.toolbox.HurlStack;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.OkUrlFactory;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import okhttp3.OkHttpClient;
+import okhttp3.OkUrlFactory;
 
 /**
  * Created by 杨金阳 on 2015/11/26.

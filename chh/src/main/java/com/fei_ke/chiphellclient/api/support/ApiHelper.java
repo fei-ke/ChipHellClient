@@ -4,12 +4,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.fei_ke.chiphellclient.ChhApplication;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.OkUrlFactory;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
+import okhttp3.OkUrlFactory;
 
 /**
  * Created by fei on 15/11/21.
@@ -17,8 +19,9 @@ import java.util.concurrent.TimeoutException;
 public class ApiHelper {
     // TODO: 15/11/21 queue
     static {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setCookieHandler(new WebViewCookieHandler());
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cookieJar(new JavaNetCookieJar(WebViewCookieHandler.getInstance()))
+                .build();
         OkHttpStack stack = new OkHttpStack(new OkUrlFactory(okHttpClient));
         requestQueue = Volley.newRequestQueue(ChhApplication.getInstance(), stack);
     }

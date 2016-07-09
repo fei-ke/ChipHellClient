@@ -15,7 +15,23 @@ import java.util.Map;
  * Created by fei on 16/2/1.
  */
 public class WebViewCookieHandler extends CookieHandler {
+    private static WebViewCookieHandler singleton;
+
     private CookieManager cookieManager = CookieManager.getInstance();
+
+    public static WebViewCookieHandler getInstance() {
+        if (singleton == null) {
+            synchronized (WebViewCookieHandler.class) {
+                if (singleton == null) {
+                    singleton = new WebViewCookieHandler();
+                }
+            }
+        }
+        return singleton;
+    }
+
+    private WebViewCookieHandler() {
+    }
 
     @Override
     public Map<String, List<String>> get(URI uri, Map<String, List<String>> requestHeaders) throws IOException {
