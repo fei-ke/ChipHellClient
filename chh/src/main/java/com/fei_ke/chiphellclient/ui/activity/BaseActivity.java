@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.fei_ke.chiphellclient.R;
+import com.fei_ke.chiphellclient.analytics.Analytics;
 import com.fei_ke.chiphellclient.utils.GlobalSetting;
-import com.umeng.analytics.MobclickAgent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -96,13 +96,13 @@ public abstract class BaseActivity extends SwipeBackActivity {
     @Override
     public void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        Analytics.onResume(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        Analytics.onPause(this);
     }
 
     @Override

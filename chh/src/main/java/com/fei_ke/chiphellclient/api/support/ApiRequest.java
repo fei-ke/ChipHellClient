@@ -14,9 +14,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.fei_ke.chiphellclient.BuildConfig;
-import com.fei_ke.chiphellclient.ChhApplication;
+import com.fei_ke.chiphellclient.analytics.Analytics;
 import com.fei_ke.chiphellclient.utils.LogMessage;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -276,7 +275,7 @@ public class ApiRequest<T> extends Request<T> {
                     mCallback.onSuccess(result);
                 } catch (Exception e) {
                     mCallback.onFailure(new NullPointerException("出错啦，请稍后重试"), "出错啦，请稍后重试");
-                    MobclickAgent.reportError(ChhApplication.getInstance(), e);
+                    Analytics.reportError(e);
                 }
             } else {
                 mCallback.onSuccess(result);
@@ -293,7 +292,7 @@ public class ApiRequest<T> extends Request<T> {
                 try {
                     mCallback.onCache(result);
                 } catch (Exception e) {
-                    MobclickAgent.reportError(ChhApplication.getInstance(), e);
+                    Analytics.reportError(e);
                 }
             } else {
                 mCallback.onCache(result);
