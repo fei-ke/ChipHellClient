@@ -17,10 +17,6 @@ import com.fei_ke.chiphellclient.ui.fragment.PlateListFragment.OnPlateClickListe
 import com.fei_ke.chiphellclient.ui.fragment.ThreadListFragment;
 import com.fei_ke.chiphellclient.utils.ThemeUtil;
 import com.fei_ke.chiphellclient.utils.ToastUtil;
-import com.umeng.update.UmengUpdateAgent;
-import com.umeng.update.UmengUpdateListener;
-import com.umeng.update.UpdateResponse;
-import com.umeng.update.UpdateStatus;
 
 import org.afinal.simplecache.ACache;
 import org.androidannotations.annotations.EActivity;
@@ -95,7 +91,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        umengUpdate(true);
+        // TODO: 16/10/2 auto check update
     }
 
     @Override
@@ -176,7 +172,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(AboutActivity.getStartIntent(this));
                 break;
             case R.id.action_version_update:
-                umengUpdate(false);
+                // TODO: 16/10/2 check update
                 break;
             case R.id.action_exit:
                 finish();
@@ -186,39 +182,6 @@ public class MainActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void umengUpdate(final boolean auto) {
-        if (!auto) {
-            ToastUtil.show(getApplicationContext(), "正在检查新版本");
-        }
-        UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
-            @Override
-            public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
-                switch (updateStatus) {
-                    case UpdateStatus.Yes: // has update
-                        startActivity(UpdateActivity.getStartIntent(getApplicationContext(), updateInfo));
-                        break;
-                    case UpdateStatus.No: // has no update
-                        if (!auto) {
-                            ToastUtil.show(getApplicationContext(), "没有新版本");
-                        }
-                        break;
-                    case UpdateStatus.NoneWifi: // none wifi
-                        break;
-                    case UpdateStatus.Timeout: // time out
-                        if (!auto) {
-                            ToastUtil.show(getApplicationContext(), "网络超时");
-                        }
-                        break;
-                }
-            }
-        });
-        if (auto) {
-            UmengUpdateAgent.update(this);
-        } else {
-            UmengUpdateAgent.forceUpdate(this);
-        }
     }
 
     protected void refresh() {

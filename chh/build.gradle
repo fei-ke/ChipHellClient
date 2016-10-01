@@ -104,7 +104,7 @@ android {
 
         compile project(':libraries:QuickReturn')
         compile project(':libraries:SwipeBack')
-        compile project(':libraries:UmengUpdate')
+//        compile project(':libraries:UmengUpdate')
 
     }
 }

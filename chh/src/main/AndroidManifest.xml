@@ -57,15 +57,8 @@
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.AboutActivity_"/>
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.SoftwareNoticesActivity"/>
         <activity android:name="com.fei_ke.chiphellclient.ui.activity.SettingActivity"/>
-        <activity
-            android:name=".ui.activity.UpdateActivity_"
-            android:theme="@style/AppTheme.UpdateActivity"/>
-        <!-- 友盟相关 -->
-        <service
-            android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService">
-        </service>
 
+        <!-- 友盟相关 -->
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="539dc70d56240ba62712fe72"/>

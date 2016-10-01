@@ -1,4 +1,3 @@
 include ':chh'
 include ':libraries:QuickReturn'
 include ':libraries:SwipeBack'
-include ':libraries:UmengUpdate'
