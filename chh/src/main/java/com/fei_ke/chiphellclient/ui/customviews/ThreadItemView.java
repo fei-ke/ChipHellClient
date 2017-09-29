@@ -9,11 +9,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Thread;
-import com.fei_ke.chiphellclient.ui.commen.AnimateFirstDisplayListener;
+import com.fei_ke.chiphellclient.ui.commen.GlideApp;
 import com.fei_ke.chiphellclient.utils.ThreadStatusUtil;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -46,7 +46,6 @@ public class ThreadItemView extends FrameLayout {
 
     ThreadStatusUtil statusUtil;
 
-    private AnimateFirstDisplayListener firstDisplayListener = new AnimateFirstDisplayListener();
 
     public static ThreadItemView getInstance(Context context) {
         return ThreadItemView_.build(context);
@@ -67,7 +66,12 @@ public class ThreadItemView extends FrameLayout {
             imageViewIcon.setVisibility(GONE);
         } else {
             imageViewIcon.setVisibility(VISIBLE);
-            ImageLoader.getInstance().displayImage(imgSrc, imageViewIcon, firstDisplayListener);
+            GlideApp.with(imageViewIcon)
+                    .load(imgSrc)
+                    .placeholder(R.drawable.default_img)
+                    .error(R.drawable.default_img)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(imageViewIcon);
         }
 
         if (thread.getTitleColor() != 0) {

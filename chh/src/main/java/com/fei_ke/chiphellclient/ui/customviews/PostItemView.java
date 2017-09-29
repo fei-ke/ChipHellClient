@@ -10,13 +10,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.Post;
 import com.fei_ke.chiphellclient.constant.Constants;
-import com.fei_ke.chiphellclient.ui.commen.AnimateFirstDisplayListener;
+import com.fei_ke.chiphellclient.ui.commen.GlideApp;
 import com.fei_ke.chiphellclient.utils.LogMessage;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -38,8 +37,6 @@ public class PostItemView extends FrameLayout {
     @ViewById(R.id.textView_authi)
     TextView textViewAuthi;
 
-    private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
-
     public static PostItemView newInstance(Context context) {
         return PostItemView_.build(context);
     }
@@ -57,7 +54,13 @@ public class PostItemView extends FrameLayout {
     }
 
     public void bindValue(Post post) {
-        ImageLoader.getInstance().displayImage(post.getAvatarUrl(), imageViewAvatar, Constants.avatarDisplayOption, animateFirstListener);
+        GlideApp.with(imageViewAvatar)
+                .load(post.getAvatarUrl())
+                .placeholder(R.drawable.noavatar)
+                .error(R.drawable.noavatar)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageViewAvatar);
+
         textViewAuthi.setText(Html.fromHtml(post.getAuthi()));
         String content = post.getContent();
         if (post.getImgList() != null) {

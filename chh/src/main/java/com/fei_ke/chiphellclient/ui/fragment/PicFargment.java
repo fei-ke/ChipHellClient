@@ -3,31 +3,29 @@ package com.fei_ke.chiphellclient.ui.fragment;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.fei_ke.chiphellclient.R;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.fei_ke.chiphellclient.ui.commen.GlideApp;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
@@ -42,11 +40,6 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 public class PicFargment extends BaseFragment {
     private static final String TAG = "PicFargment";
 
-    private static DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
-            .cacheInMemory(true).cacheOnDisk(true)
-            .showImageForEmptyUri(R.drawable.default_img)
-            .showImageOnFail(R.drawable.default_img)
-            .build();
 
     private OnViewTapListener mViewTapListener;
     PhotoViewAttacher mPhotoViewAttacher;
@@ -72,44 +65,47 @@ public class PicFargment extends BaseFragment {
 
     @Override
     protected void onAfterViews() {
-        Log.i(TAG, "onAfterViews: url "+mUrl);
+        Log.i(TAG, "onAfterViews: url " + mUrl);
         mPhotoViewAttacher = new PhotoViewAttacher(mImageView);
-        ImageLoader.getInstance().displayImage(mUrl, mImageView, imageOptions, new SimpleImageLoadingListener() {
-            final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
-
-            @Override
-            public void onLoadingComplete(String url, View view, Bitmap bitmap) {
-                if (bitmap == null) return;
-
-                if (url.endsWith(".gif") || url.endsWith(".GIF")) {
-                    File file = ImageLoader.getInstance().getDiscCache().get(url);
-                    try {
-                        GifDrawable drawable = new GifDrawable(file);
-                        mImageView.setImageDrawable(drawable);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        mPhotoViewAttacher.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        GlideApp.with(this)
+                .load(mUrl)
+                .placeholder(R.drawable.default_img)
+                .error(R.drawable.default_img)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        mProgressBar.setVisibility(View.GONE);
+                        return false;
                     }
-                }
 
-                boolean firstDisplay = !displayedImages.contains(url);
-                if (firstDisplay) {
-                    FadeInBitmapDisplayer.animate(mImageView, 500);
-                    displayedImages.add(url);
-                }
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        mImageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mPhotoViewAttacher.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                                mPhotoViewAttacher.update();
+                            }
+                        });
 
-                mPhotoViewAttacher.update();
-                mProgressBar.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.GONE);
 
-                Palette p = Palette.from(bitmap).generate();
-                //mainFrame.setBackgroundColor(p.getLightMutedColor(Color.BLACK));
+                        if (resource instanceof BitmapDrawable) {
+                            Palette p = Palette.from(((BitmapDrawable) resource).getBitmap()).generate();
 
-                ColorDrawable background = (ColorDrawable) mainFrame.getBackground();
-                ObjectAnimator animator = ObjectAnimator.ofInt(mainFrame, "backgroundColor", background.getColor(), p.getLightMutedColor(Color.BLACK));
-                animator.setEvaluator(new ArgbEvaluator());
-                animator.setDuration(500);
-                animator.start();
-            }
-        });
+                            ColorDrawable background = (ColorDrawable) mainFrame.getBackground();
+                            ObjectAnimator animator = ObjectAnimator.ofInt(mainFrame, "backgroundColor", background.getColor(), p.getLightMutedColor(Color.BLACK));
+                            animator.setEvaluator(new ArgbEvaluator());
+                            animator.setDuration(500);
+                            animator.start();
+                        }
+                        return false;
+                    }
+                })
+                .into(mImageView);
+
 
         mPhotoViewAttacher.setOnPhotoTapListener(new OnPhotoTapListener() {
 

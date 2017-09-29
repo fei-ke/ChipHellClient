@@ -8,11 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.fei_ke.chiphellclient.R;
-import com.fei_ke.chiphellclient.ui.commen.AnimateFirstDisplayListener;
+import com.fei_ke.chiphellclient.ui.commen.GlideApp;
 import com.fei_ke.chiphellclient.ui.customviews.SquareImageView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -51,14 +50,7 @@ public class GridPicFragment extends BaseFragment {
     }
 
     static class GridAdapter extends BaseAdapter {
-        private static DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true).cacheOnDisk(true)
-                .showImageForEmptyUri(R.drawable.default_img)
-                .showImageOnFail(R.drawable.default_img)
-                .showImageOnLoading(R.drawable.default_img)
-                .build();
         private List<String> pics = new ArrayList<>();
-        private AnimateFirstDisplayListener firstDisplayListener = new AnimateFirstDisplayListener();
 
         public void update(List<String> pics) {
             this.pics.clear();
@@ -89,7 +81,12 @@ public class GridPicFragment extends BaseFragment {
                 imageView = new SquareImageView(parent.getContext());
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
-            ImageLoader.getInstance().displayImage(getItem(position), imageView, imageOptions, firstDisplayListener);
+            GlideApp.with(imageView)
+                    .load(getItem(position))
+                    .placeholder(R.drawable.default_img)
+                    .error(R.drawable.default_img)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(imageView);
             return imageView;
         }
     }

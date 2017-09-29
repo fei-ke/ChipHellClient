@@ -14,8 +14,8 @@ android {
     buildToolsVersion CHH_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        versionCode 15
-        versionName "1.3.0-alpha4"
+        versionCode 16
+        versionName "1.3.0-alpha6"
         minSdkVersion 15
         targetSdkVersion 22
         ndk {
@@ -84,7 +84,6 @@ android {
         compile fileTree(dir: 'libs', include: '*.jar')
 
         compile "org.androidannotations:androidannotations:$AAVersion"
-        compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
         compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
         compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.7'
         compile 'com.sothree.slidinguppanel:library:3.2.1'
@@ -92,9 +91,17 @@ android {
         compile 'de.greenrobot:eventbus:3.0.0-beta1'
         compile 'org.jsoup:jsoup:1.8.3'
         compile 'com.umeng.analytics:analytics:5.6.4'
-        compile 'com.squareup.okhttp3:okhttp:3.4.0'
-        compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.0'
+        compile 'com.squareup.okhttp3:okhttp:3.8.1'
+        compile 'com.squareup.okhttp3:okhttp-urlconnection:3.8.1'
         compile 'com.mcxiaoke.volley:library:1.0.19'
+
+        compile('com.github.bumptech.glide:glide:4.1.1'){
+            exclude group: 'com.android.support'
+        }
+        compile ("com.github.bumptech.glide:okhttp3-integration:4.1.1"){
+            exclude group: 'com.android.support'
+        }
+        apt 'com.github.bumptech.glide:compiler:4.1.1'
 
         compile "com.android.support:support-v4:$CHH_SUPPORT_VERSION"
         compile "com.android.support:appcompat-v7:$CHH_SUPPORT_VERSION"

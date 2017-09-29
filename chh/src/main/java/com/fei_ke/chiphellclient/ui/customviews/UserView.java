@@ -2,7 +2,6 @@ package com.fei_ke.chiphellclient.ui.customviews;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.text.Html;
 import android.util.AttributeSet;
@@ -13,9 +12,7 @@ import android.widget.TextView;
 
 import com.fei_ke.chiphellclient.R;
 import com.fei_ke.chiphellclient.bean.User;
-import com.fei_ke.chiphellclient.constant.Constants;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.fei_ke.chiphellclient.ui.commen.GlideApp;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -69,19 +66,11 @@ public class UserView extends FrameLayout {
     }
 
     public void bindValue(User user) {
-        ImageLoader.getInstance().displayImage(user.getAvatarUrl(), imageViewAvatar, Constants.avatarDisplayOption,
-                new SimpleImageLoadingListener() {
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        super.onLoadingComplete(imageUri, view, loadedImage);
-                        /*if (loadedImage != null) {
-                            Bitmap bg = BitmapUtil.fastblur(loadedImage, 30);
-                            mainFrame.setBackgroundDrawable(new BitmapDrawable(bg));
-                        } else {
-                            mainFrame.setBackgroundResource(R.drawable.card_bg_normal);
-                        }*/
-                    }
-                });
+        GlideApp.with(imageViewAvatar)
+                .load(user.getAvatarUrl())
+                .error(R.drawable.noavatar)
+                .into(imageViewAvatar);
+
         textViewName.setText(user.getName());
         textViewInfo.setText(Html.fromHtml(user.getInfo()));
     }

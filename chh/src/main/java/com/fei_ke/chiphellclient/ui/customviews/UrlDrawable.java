@@ -7,8 +7,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.fei_ke.chiphellclient.ui.commen.GlideApp;
 
 /**
  * 一个异步加载的Drawable
@@ -35,19 +36,21 @@ public class UrlDrawable extends BitmapDrawable {
 
     public void setUrl(String url) {
         setBounds(0, 0, 100, 100);
-        ImageLoader.getInstance().loadImage(url, new SimpleImageLoadingListener() {
+        GlideApp.with(container)
+                .asBitmap()
+                .load(url)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                        Drawable drawable = new BitmapDrawable(bitmap);
+                        int width = bitmap.getWidth() * 2;
+                        int height = bitmap.getHeight() * 2;
+                        drawable.setBounds(0, 0, width, height);
+                        UrlDrawable.this.drawable = drawable;
+                        setBounds(0, 0, width, height);
 
-            @Override
-            public void onLoadingComplete(String url, View arg1, Bitmap bitmap) {
-                Drawable drawable = new BitmapDrawable(bitmap);
-                int width = bitmap.getWidth() * 2;
-                int height = bitmap.getHeight() * 2;
-                drawable.setBounds(0, 0, width, height);
-                UrlDrawable.this.drawable = drawable;
-                setBounds(0, 0, width, height);
-
-                container.invalidate();
-            }
-        });
+                        container.invalidate();
+                    }
+                });
     }
 }
